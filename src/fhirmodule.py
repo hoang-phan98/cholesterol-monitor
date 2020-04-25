@@ -1,3 +1,4 @@
+from datetime import *
 import requests
 from abc import ABC, abstractmethod
 
@@ -28,8 +29,18 @@ class FHIRClient(ABC):
                     next_page = True
                     next_url = link['url']
                     page_count += 1
-            
+
+        print(page_count)
         return patient_list
+
+    def get_basic_info(self, patient_id):
+        res = requests.get(self.root_url + "Patient/" + patient_id)
+        data = res.json()
+        gender = data["gender"]
+        birth = data["birthDate"]
+        birth_date = datetime.strptime(birth, '%Y-%m-%d').date()
+        address = data["address"]
+        return gender, birth_date, address
 
     @abstractmethod
     def get_patient_data(self, patient_id):
