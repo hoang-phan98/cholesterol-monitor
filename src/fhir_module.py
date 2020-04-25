@@ -57,8 +57,9 @@ class CholesterolDataClient(FHIRClient):
         # Convert to json & extract relevant data
         data = res.json()
         cholesterol_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
+        cholesterol_unit = data["entry"][0]["resource"]["valueQuantity"]["unit"]
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
-        return cholesterol_value, effective_date_time
+        return cholesterol_value, cholesterol_unit, effective_date_time
 
 
 if __name__ == '__main__':
