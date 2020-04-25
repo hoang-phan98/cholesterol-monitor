@@ -20,13 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49c4bcf7-ec3d-4ac5-8cef-b12a3ee47399" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/address_module.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/subject_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PatientList.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -115,6 +109,14 @@
       <option name="presentableId" value="Default" />
       <updated>1587445311843</updated>
     </task>
+    <task id="LOCAL-00001" summary="creating address, person and subject modules (WIP)">
+      <created>1587805906355</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1587805906355</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -132,6 +134,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="creating address, person and subject modules (WIP)" />
+    <option name="LAST_COMMIT_MESSAGE" value="creating address, person and subject modules (WIP)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser" />
