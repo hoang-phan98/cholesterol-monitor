@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from src.fhir_module import *
 from datetime import *
 
 
@@ -28,5 +29,4 @@ class CholesterolData(PatientData):
 
 
 if __name__ == '__main__':
-    patient_data = CholesterolData(200.48, "mg/ML", "20/3/19")
-    print(patient_data.get_data())
+    client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")

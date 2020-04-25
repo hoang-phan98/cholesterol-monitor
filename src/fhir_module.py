@@ -1,6 +1,10 @@
 from datetime import *
 import requests
 from abc import ABC, abstractmethod
+from src.patientdata_module import CholesterolData
+from src.person_module import Patient
+from src.address_module import Address
+from src.subject_module import PatientList
 
 
 class FHIRClient(ABC):
@@ -11,23 +15,25 @@ class FHIRClient(ABC):
         next_page = True
         next_url = self.root_url+"Encounter?practitioner="+str(practitioner_id)+"&_count=10"
         page_count = 0
-        patient_list = []
+        patient_list = PatientList()
 
         while next_page:
             res = requests.get(next_url)
             data = res.json()
             for encounter in data["entry"]:
                 patient_name = encounter["resource"]["subject"]["display"]
+                patient_id = encounter["resource"]["subject"]["reference"].split("/")[1]
                 if patient_name not in patient_list:
-                    patient_list.append(patient_name)
+                    patient = self.get_basic_info(patient_id)
+                    patient_list.add_patient(patient)
 
             next_page = False
             links = data["link"]
             for i in range(len(links)):
                 link = links[i]
-                if link['relation'] == 'next':
+                if link["relation"] == "next":
                     next_page = True
-                    next_url = link['url']
+                    next_url = link["url"]
                     page_count += 1
 
         print(page_count)
@@ -36,11 +42,22 @@ class FHIRClient(ABC):
     def get_basic_info(self, patient_id):
         res = requests.get(self.root_url + "Patient/" + patient_id)
         data = res.json()
+
+        # Assign first and last name
+        name = data["name"]
+        for i in range(len(name)):
+            if name[i]["use"] == "official":
+                first_name = name[i]["given"]
+                last_name = name[i]["family"]
+        # Assign gender and birth date
         gender = data["gender"]
         birth = data["birthDate"]
         birth_date = datetime.strptime(birth, '%Y-%m-%d').date()
-        address = data["address"]
-        return gender, birth_date, address
+        # Assign address object
+        address = data["address"][0]
+        patient_address = Address(address["line"], address["city"], address["state"], address["country"])
+        # Return patient object
+        return Patient(first_name, last_name, patient_id, birth_date, gender, patient_address)
 
     @abstractmethod
     def get_patient_data(self, patient_id):
@@ -59,12 +76,14 @@ class CholesterolDataClient(FHIRClient):
         cholesterol_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
         cholesterol_unit = data["entry"][0]["resource"]["valueQuantity"]["unit"]
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
-        return cholesterol_value, cholesterol_unit, effective_date_time
+        return CholesterolData(cholesterol_value, cholesterol_unit, effective_date_time)
 
 
 if __name__ == '__main__':
     client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
     patients = client.get_patient_list(4821912)
-    patient_cholesterol = client.get_patient_data(1840080)
+    patient = client.get_basic_info(1840080)
+    patient_cholesterol_data = client.get_patient_data(1840080)
+    patient.update_data(patient_cholesterol_data)
     print(patients)
-    print(patient_cholesterol)
+    print(patient)

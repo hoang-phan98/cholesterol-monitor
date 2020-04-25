@@ -23,6 +23,12 @@ class PatientList:
     def remove_patient(self, patient):
         self.patient_list.pop(patient)
 
+    def __contains__(self, patient_name):
+        for patient in self.patient_list:
+            if (patient.first_name in patient_name) and (patient.last_name in patient_name):
+                return True
+        return False
+
     #def select_patient(self):
 
     def calculate_avg_cholesterol(self):

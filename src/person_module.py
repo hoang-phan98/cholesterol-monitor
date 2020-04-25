@@ -1,5 +1,5 @@
 from src import address_module
-from src import fhir_module
+from src.fhir_module import CholesterolDataClient
 
 
 class Person:
@@ -8,6 +8,7 @@ class Person:
         self.first_name = first_name
         self.last_name = last_name
         self.id = person_id
+
 
 class Patient(Person):
 
@@ -19,10 +20,25 @@ class Patient(Person):
         self.patient_data = patient_data
 
     def get_address(self):
-        self.address = address_module.Address
         return self.address
 
-    def update_data(self, person_id):
-        self.patient_data = fhir_module.CholesterolDataClient.get_patient_data(person_id)
-        return self.patient_data
+    def update_data(self, patient_data):
+        self.patient_data = patient_data
+        return
 
+
+class HealthPractitioner(Person):
+    def __init__(self, first_name, last_name, practitioner_id, patient_list=None,
+                 monitored_patient=None, update_interval=None):
+        super().__init__(first_name, last_name, practitioner_id)
+        self.patient_list = patient_list
+        self.monitored_patients = monitored_patient
+        self.update_interval = update_interval
+        self.client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
+
+    def get_patient_list(self):
+        self.patient_list = self.client.get_patient_list(self.id)
+
+    def get_patient_data(self):
+        for patient in self.monitored_patients:
+            patient.update_data(self.client.get_patient_data(patient.id))
