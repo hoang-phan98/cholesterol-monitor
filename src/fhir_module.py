@@ -14,17 +14,16 @@ class FHIRClient(ABC):
     def get_patient_list(self, practitioner_id):
         next_page = True
         next_url = self.root_url+"Encounter?practitioner="+str(practitioner_id)+"&_count=10"
-        page_count = 0
+        page_count = 1
         patient_list = PatientList()
 
         while next_page:
             res = requests.get(next_url)
             data = res.json()
             for encounter in data["entry"]:
-                patient_name = encounter["resource"]["subject"]["display"]
                 patient_id = encounter["resource"]["subject"]["reference"].split("/")[1]
-                if patient_name not in patient_list:
-                    patient = self.get_basic_info(patient_id)
+                patient = self.get_basic_info(patient_id)
+                if patient not in patient_list:
                     patient_list.add_patient(patient)
 
             next_page = False
@@ -40,15 +39,16 @@ class FHIRClient(ABC):
         return patient_list
 
     def get_basic_info(self, patient_id):
-        res = requests.get(self.root_url + "Patient/" + patient_id)
+        res = requests.get(self.root_url + "Patient/" + str(patient_id))
         data = res.json()
 
         # Assign first and last name
         name = data["name"]
         for i in range(len(name)):
             if name[i]["use"] == "official":
-                first_name = name[i]["given"]
-                last_name = name[i]["family"]
+                first_name = "".join(x for x in name[i]["given"][0] if not x.isdigit())
+                last_name = "".join(x for x in name[i]["family"] if not x.isdigit())
+
         # Assign gender and birth date
         gender = data["gender"]
         birth = data["birthDate"]
@@ -85,5 +85,6 @@ if __name__ == '__main__':
     patient = client.get_basic_info(1840080)
     patient_cholesterol_data = client.get_patient_data(1840080)
     patient.update_data(patient_cholesterol_data)
-    print(patients)
-    print(patient)
+    for i in range(len(patients)):
+        print(str(patients.get_patient_list()[i].first_name)+" "+patients.get_patient_list()[i].last_name)
+    print(str(patient.first_name)+" "+str(patient.last_name))
