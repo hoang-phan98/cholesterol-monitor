@@ -8,7 +8,11 @@ def add_monitor_patient(new_patient):
 if __name__ == '__main__':
     practitioner_id = input("Enter your Practitioner ID: ")
     client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
-    current_practitioner = client.get_practitioner_info(practitioner_id)
+    try:
+        current_practitioner = client.get_practitioner_info(practitioner_id)
+    except KeyError:
+        exit("Invalid practitioner ID")
+
     current_practitioner.get_patient_list()
     current_practitioner.monitored_patients = current_practitioner.patient_list
     current_practitioner.get_patient_data()
