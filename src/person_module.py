@@ -25,6 +25,9 @@ class Patient(Person):
         self.patient_data = patient_data
         return
 
+    def get_data(self):
+        return self.patient_data.get_data()
+
 
 class HealthPractitioner(Person):
     def __init__(self, first_name, last_name, practitioner_id, client, patient_list=None,
@@ -39,5 +42,11 @@ class HealthPractitioner(Person):
         self.patient_list = self.client.get_patient_list(self.id)
 
     def get_patient_data(self):
-        for patient in self.monitored_patients:
+        for patient in self.monitored_patients.get_patient_list():
             patient.update_data(self.client.get_patient_data(patient.id))
+
+    def get_all_patients(self):
+        return self.patient_list
+
+    def get_monitored_patients(self):
+        return self.monitored_patients

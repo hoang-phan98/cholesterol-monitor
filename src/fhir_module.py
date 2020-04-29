@@ -2,7 +2,7 @@ from datetime import *
 import requests
 from abc import ABC, abstractmethod
 from src.patientdata_module import CholesterolData
-from src.person_module import Patient
+from src.person_module import Patient, HealthPractitioner
 from src.address_module import Address
 from src.subject_module import PatientList
 
@@ -22,7 +22,7 @@ class FHIRClient(ABC):
             data = res.json()
             for encounter in data["entry"]:
                 patient_id = encounter["resource"]["subject"]["reference"].split("/")[1]
-                patient = self.get_basic_info(patient_id)
+                patient = self.get_basic_patient_info(patient_id)
                 if patient not in patient_list:
                     patient_list.add_patient(patient)
 
@@ -35,10 +35,17 @@ class FHIRClient(ABC):
                     next_url = link["url"]
                     page_count += 1
 
-        print(page_count)
         return patient_list
 
-    def get_basic_info(self, patient_id):
+    def get_practitioner_info(self, practitioner_id):
+        res = requests.get(self.root_url + "Practitioner/" + str(practitioner_id))
+        data = res.json()
+        name = data["name"][0]
+        first_name = "".join(x for x in name["given"][0] if not x.isdigit())
+        last_name = "".join(x for x in name["family"] if not x.isdigit())
+        return HealthPractitioner(first_name, last_name, practitioner_id, self)
+
+    def get_basic_patient_info(self, patient_id):
         res = requests.get(self.root_url + "Patient/" + str(patient_id))
         data = res.json()
 
@@ -73,6 +80,12 @@ class CholesterolDataClient(FHIRClient):
 
         # Convert to json & extract relevant data
         data = res.json()
+
+        # Check if response contains cholesterol data
+        if data["total"] == 0:
+            return None
+
+        # Assign cholesterol data
         cholesterol_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
         cholesterol_unit = data["entry"][0]["resource"]["valueQuantity"]["unit"]
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
@@ -81,8 +94,8 @@ class CholesterolDataClient(FHIRClient):
 
 if __name__ == '__main__':
     client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
-    patients = client.get_patient_list(4821912)
-    patient = client.get_basic_info(1840080)
+    patients = client.get_patient_list(1840082)
+    patient = client.get_basic_patient_info(1840080)
     patient_cholesterol_data = client.get_patient_data(1840080)
     patient.update_data(patient_cholesterol_data)
     for i in range(len(patients)):
