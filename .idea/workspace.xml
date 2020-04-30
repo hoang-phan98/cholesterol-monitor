@@ -20,9 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49c4bcf7-ec3d-4ac5-8cef-b12a3ee47399" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/observer_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/subject_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/subject_module.py" afterDir="false" />
     </list>
@@ -174,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587807077175</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Updating Subject class methods.&#10;Creating observer_module.&#10;adding select_patient method to PatientList class.">
+      <created>1587965070131</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1587965070132</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -205,7 +209,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="creating address, person and subject modules (WIP)" />
-    <option name="LAST_COMMIT_MESSAGE" value="creating address, person and subject modules (WIP)" />
+    <MESSAGE value="Updating Subject class methods.&#10;Creating observer_module.&#10;adding select_patient method to PatientList class." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating Subject class methods.&#10;Creating observer_module.&#10;adding select_patient method to PatientList class." />
   </component>
   <component name="WindowStateProjectService">
     <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1587807984543" />

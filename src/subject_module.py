@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from src.patientdata_module import CholesterolData
 
+
 class Subject:
 
     def __init__(self):
@@ -54,12 +55,3 @@ class PatientList:
         n = len(self.patient_list)
         average = self.average_cholesterol_level // n
         return average
-
-    # def get_patient_data(self):
-    #     for patient in range(len(self.patient_list)):
-    #         return CholesterolData()
-
-
-
-
-
