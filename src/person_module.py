@@ -30,20 +30,19 @@ class Patient(Person):
 
 
 class HealthPractitioner(Person):
-    def __init__(self, first_name, last_name, practitioner_id, client, patient_list=None,
+    def __init__(self, first_name, last_name, practitioner_id, patient_list=None,
                  monitored_patient=None, update_interval=None):
         super().__init__(first_name, last_name, practitioner_id)
         self.patient_list = patient_list
         self.monitored_patients = monitored_patient
         self.update_interval = update_interval
-        self.client = client
 
-    def get_patient_list(self):
-        self.patient_list = self.client.get_patient_list(self.id)
+    def get_patient_list(self, client):
+        self.patient_list = client.get_patient_list(self.id)
 
-    def get_patient_data(self):
+    def get_patient_data(self, client):
         for patient in self.monitored_patients.get_patient_list():
-            patient.update_data(self.client.get_patient_data(patient.id))
+            patient.update_data(client.get_patient_data(patient.id))
 
     def get_all_patients(self):
         return self.patient_list

@@ -43,7 +43,7 @@ class FHIRClient(ABC):
         name = data["name"][0]
         first_name = "".join(x for x in name["given"][0] if not x.isdigit())
         last_name = "".join(x for x in name["family"] if not x.isdigit())
-        return HealthPractitioner(first_name, last_name, practitioner_id, self)
+        return HealthPractitioner(first_name, last_name, practitioner_id)
 
     def get_basic_patient_info(self, patient_id):
         res = requests.get(self.root_url + "Patient/" + str(patient_id))
@@ -63,8 +63,9 @@ class FHIRClient(ABC):
         # Assign address object
         address = data["address"][0]
         patient_address = Address(address["line"], address["city"], address["state"], address["country"])
+        patient_data = self.get_patient_data(patient_id)
         # Return patient object
-        return Patient(first_name, last_name, patient_id, birth_date, gender, patient_address)
+        return Patient(first_name, last_name, patient_id, birth_date, gender, patient_address, patient_data)
 
     @abstractmethod
     def get_patient_data(self, patient_id):

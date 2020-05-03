@@ -1,11 +1,35 @@
 import tkinter as tk
 from tkinter import ttk
+from src.fhir_module import *
 
 
 def get_patients():
-    for patient in patient_list:
-        if not duplicate_item(all_patients, patient):
-            all_patients.insert("", "end", values=patient)
+    practitioner_id = entry_field.get()
+    try:
+        current_practitioner = client.get_practitioner_info(practitioner_id)
+    except KeyError:
+        exit("Invalid practitioner ID")
+
+    # Updating the UI with the practitioner's name
+    practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
+    label = tk.Label(main_UI, text=practitioner_name, font=("Arial", 20))
+    entry_field.destroy()
+    entry_label.destroy()
+    get_patients_button.destroy()
+    label.grid(row=0, column=0, columnspan=4)
+
+    # get the practitioner's patient list
+    current_practitioner.get_patient_list(client)
+    patient_list = current_practitioner.get_all_patients()
+
+    for patient in patient_list.get_patient_list():
+        patient_name = patient.first_name+" "+patient.last_name
+        patient_data = patient.get_data()
+        cholesterol_level = str(patient_data[0])+" "+patient_data[1]
+        effective_time = patient_data[2]
+        new_entry = (patient_name, cholesterol_level, effective_time)
+        if not duplicate_item(all_patients, new_entry):
+            all_patients.insert("", "end", values=new_entry)
 
 
 def add_monitored_patient(patient):
@@ -34,14 +58,18 @@ def duplicate_item(tree, item):
 
 
 # Assign some dummy data
+client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
 health_practitioner = "Dr. James Smith"
-patient_list = [('ZHANG WEI', '20 mg/dL', '2005-09-27 48:33+10:00'),
-                ('ANIKA AADESH', '33 mg/dL', '2015-09-07 48:33+12:00'),
-                ('HILAL AKAY', '12 mg/dL', '2015-09-17 48:33+11:00')]
 
 # Create the main Tkinter UI
 main_UI = tk.Tk("Cholesterol Monitor")
-label = tk.Label(main_UI, text=health_practitioner, font=("Arial", 20)).grid(row=0, columnspan=3)
+entry_label = tk.Label(main_UI, text="Enter your ID")
+entry_label.grid(row=0, column=0)
+entry_field = tk.Entry(main_UI)
+entry_field.grid(row=0, column=1)
+get_patients_button = tk.Button(main_UI, text="Get patients", width=15, command=get_patients)
+get_patients_button.grid(row=0, column=2)
+
 
 # create all patients treeview
 all_patients = ttk.Treeview(main_UI, columns="Name", show='headings')
@@ -56,10 +84,9 @@ monitored_patients = ttk.Treeview(main_UI, columns=cols, show='headings')
 # set column headings
 for col in cols:
     monitored_patients.heading(col, text=col)
-monitored_patients.grid(row=1, column=1, columnspan=2)
+monitored_patients.grid(row=1, column=1, columnspan=3)
 monitored_patients.bind("<Double-1>", remove_monitored_patient)
 
-getPatients = tk.Button(main_UI, text="Get patients", width=15, command=get_patients).grid(row=4, column=0)
 closeButton = tk.Button(main_UI, text="Close", width=15, command=exit).grid(row=4, column=2)
 
 # Run main UI
