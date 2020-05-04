@@ -1,4 +1,5 @@
 from src import address_module
+from src.subject_module import PatientList
 
 
 class Person:
@@ -19,7 +20,7 @@ class Patient(Person):
         self.patient_data = patient_data
 
     def get_address(self):
-        return self.address
+        return self.address.line[0]+", "+self.address.city+", "+self.address.state+", "+self.address.country
 
     def update_data(self, patient_data):
         self.patient_data = patient_data
@@ -31,10 +32,10 @@ class Patient(Person):
 
 class HealthPractitioner(Person):
     def __init__(self, first_name, last_name, practitioner_id, patient_list=None,
-                 monitored_patient=None, update_interval=None):
+                 update_interval=None):
         super().__init__(first_name, last_name, practitioner_id)
         self.patient_list = patient_list
-        self.monitored_patients = monitored_patient
+        self.monitored_patients = PatientList()
         self.update_interval = update_interval
 
     def get_patient_list(self, client):
@@ -49,3 +50,12 @@ class HealthPractitioner(Person):
 
     def get_monitored_patients(self):
         return self.monitored_patients
+
+    def add_patient_monitor(self, patient_name):
+        first_name = patient_name.split(' ')[0]
+        last_name = patient_name.split(' ')[1]
+        for patient in self.patient_list.get_patient_list():
+            if first_name==patient.first_name and last_name==patient.last_name:
+                self.monitored_patients.add_patient(patient)
+
+
