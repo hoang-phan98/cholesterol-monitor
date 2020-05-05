@@ -58,4 +58,5 @@ class HealthPractitioner(Person):
             if first_name==patient.first_name and last_name==patient.last_name:
                 self.monitored_patients.add_patient(patient)
 
-
+    def remove_patient_monitor(self, patient_name):
+        self.monitored_patients.remove_patient(patient_name)

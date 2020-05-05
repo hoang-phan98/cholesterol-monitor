@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from src.fhir_module import *
+import pickle
 import asyncio
 from threading import *
 
@@ -24,11 +25,21 @@ class App:
 
 def get_patients(event=None):
     practitioner_id = entry_field.get()
+
     try:
         if practitioner_id == "":
             raise KeyError
 
-        current_practitioner = client.get_practitioner_info(practitioner_id)
+        try:
+            filename = "Practitioner Data/" + practitioner_id
+            file = open(filename, 'rb')
+            current_practitioner = pickle.load(file)
+            file.close()
+        except FileNotFoundError:
+            print("No data found in storage, requesting from server...")
+            current_practitioner = client.get_practitioner_info(practitioner_id)
+            current_practitioner.get_patient_list(client)
+
         # Updating the UI with the practitioner's name
         practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
         label = tk.Label(main_UI, text=practitioner_name)
@@ -38,7 +49,6 @@ def get_patients(event=None):
         label.grid(row=0, column=0, columnspan=4)
 
         # get the practitioner's patient list
-        current_practitioner.get_patient_list(client)
         patient_list = current_practitioner.get_all_patients()
 
         # display patient list
@@ -52,6 +62,7 @@ def get_patients(event=None):
                 all_patients.insert("", "end", values=new_entry)
 
         application.set_practitioner(current_practitioner)
+
     except KeyError:
         messagebox.showinfo("Error", "Invalid practitioner identifier")
 
@@ -61,11 +72,11 @@ def highlight_patients():
     for child in children:
         values = monitored_patients.item(child, "values")
         patient_cholesterol = values[1].split(' ')[0]
-        if not patient_cholesterol.isdigit():
-            if float(patient_cholesterol) == application.practitioner.monitored_patients.average_cholesterol_level:
+        if not isinstance(patient_cholesterol, float):
+            if float(patient_cholesterol) > application.practitioner.monitored_patients.average_cholesterol_level:
                 monitored_patients.item(child, tags=('high',))
 
-    monitored_patients.tag_configure('high', foreground='#E8E8E8')
+    monitored_patients.tag_configure('high', foreground='red')
 
 
 def update_data():
@@ -120,6 +131,8 @@ async def get_patient_data():
 
 def remove_monitored_patient(event=None):
     item = monitored_patients.selection()
+    values = monitored_patients.item(item, "values")
+    application.practitioner.remove_patient_monitor(values[0])
     monitored_patients.delete(item)
 
 
@@ -145,6 +158,14 @@ def duplicate_item(tree, item):
         if values == item:
             return True
     return False
+
+
+def exit_program():
+    filename = "Practitioner Data/"+str(application.practitioner.id)
+    outfile = open(filename, 'wb')
+    pickle.dump(application.practitioner, outfile)
+    outfile.close()
+    exit(0)
 
 
 if __name__ == '__main__':
@@ -186,7 +207,7 @@ if __name__ == '__main__':
     # create buttons
     add_patient_button = tk.Button(main_UI, text="Add Monitor", width=15, command=add_monitored_patient)
     add_patient_button.grid(row=4, column=0)
-    close_button = tk.Button(main_UI, text="Close", width=15, command=exit)
+    close_button = tk.Button(main_UI, text="Close", width=15, command=exit_program)
     close_button.grid(row=4, column=3)
     more_info_button = tk.Button(main_UI, text="More Info", width=15, command=display_patient_info)
     more_info_button.grid(row=4, column=1)

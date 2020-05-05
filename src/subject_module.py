@@ -39,8 +39,16 @@ class PatientList:
         self.patient_list.append(patient)
         self.calculate_avg_cholesterol()
 
-    def remove_patient(self, patient):
-        self.patient_list.pop(patient)
+    def remove_patient(self, patient_name):
+        first_name = patient_name.split(' ')[0]
+        last_name = patient_name.split(' ')[1]
+        for i in range(len(self)):
+            selected_patient = self.patient_list[i]
+            if selected_patient.first_name == first_name and selected_patient.last_name == last_name:
+                self.patient_list.pop(i)
+                self.calculate_avg_cholesterol()
+                return True
+        return False
 
     def get_patient_list(self):
         return self.patient_list
@@ -56,9 +64,11 @@ class PatientList:
 
     def calculate_avg_cholesterol(self):
         total = 0
+        no_of_valid_patients = 0
         for patient in self.patient_list:
             if isinstance(patient.get_data()[0], float):
-                total = total + patient.get_data()[0]
-        average = total/len(self.patient_list)
+                total += patient.get_data()[0]
+                no_of_valid_patients += 1
+        average = total/no_of_valid_patients
         self.average_cholesterol_level = average
         return average
