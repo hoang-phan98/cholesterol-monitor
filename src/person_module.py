@@ -1,5 +1,5 @@
 from src import address_module
-from src.subject_module import PatientList
+from src.patient_list_module import PatientList
 
 
 class Person:

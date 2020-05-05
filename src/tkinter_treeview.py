@@ -179,7 +179,7 @@ if __name__ == '__main__':
     # Create the main Tkinter UI
     main_UI = tk.Tk("Cholesterol Monitor")
     # main_UI.title("Quarantine Coders' Application")
-    # entry_icon = tk.PhotoImage(file="C:/Users/jason/Pictures/Saved Pictures/Monash_Uni_Logo.jpg")
+    # entry_icon = tk.PhotoImage(file="C:/Users/****/Pictures/Saved Pictures/Monash_Uni_Logo.jpg")
     # icon_label = tk.Label(main_UI, image=entry_icon)
     # icon_label.grid(row=0, column=0)
     entry_label = tk.Label(main_UI, text="Enter your ID")

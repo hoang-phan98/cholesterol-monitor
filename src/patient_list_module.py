@@ -1,24 +1,3 @@
-from abc import abstractmethod
-from src.patientdata_module import CholesterolData
-
-
-class Subject:
-
-    def __init__(self):
-        self.observer_list = []
-
-    def attach(self, observer):
-        self.observer_list.append(observer)
-
-    def detach(self, observer):
-        self.observer_list.pop(observer)
-
-    @abstractmethod
-    def notify(self, message):
-        for observer in self.observer_list:
-            observer.update(message)
-
-
 class PatientList:
 
     def __init__(self):
