@@ -13,7 +13,9 @@ class FHIRClient(ABC):
 
     def get_patient_list(self, practitioner_id):
         next_page = True
-        next_url = self.root_url+"Encounter?practitioner="+str(practitioner_id)+"&_count=10"
+        next_url = self.root_url+"Encounter?_include=Encounter.participant.individual&_include=" \
+                                 "Encounter.patient&participant.identifier=" \
+                                 "http://hl7.org/fhir/sid/us-npi|"+str(practitioner_id)+"&_count=50"
         page_count = 1
         patient_list = PatientList()
 
@@ -35,12 +37,13 @@ class FHIRClient(ABC):
                     next_url = link["url"]
                     page_count += 1
 
+            print(page_count)
         return patient_list
 
     def get_practitioner_info(self, practitioner_id):
-        res = requests.get(self.root_url + "Practitioner/" + str(practitioner_id))
+        res = requests.get(self.root_url + "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id))
         data = res.json()
-        name = data["name"][0]
+        name = data["entry"][0]["resource"]["name"][0]
         first_name = "".join(x for x in name["given"][0] if not x.isdigit())
         last_name = "".join(x for x in name["family"] if not x.isdigit())
         return HealthPractitioner(first_name, last_name, practitioner_id)
@@ -84,7 +87,7 @@ class CholesterolDataClient(FHIRClient):
 
         # Check if response contains cholesterol data
         if data["total"] == 0:
-            return None
+            return CholesterolData("No Data", "", "No Data")
 
         # Assign cholesterol data
         cholesterol_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
