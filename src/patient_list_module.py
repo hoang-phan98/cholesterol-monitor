@@ -48,6 +48,8 @@ class PatientList:
             if isinstance(patient.get_data()[0], float):
                 total += patient.get_data()[0]
                 no_of_valid_patients += 1
+        if no_of_valid_patients == 0:
+            return 0
         average = total/no_of_valid_patients
         self.average_cholesterol_level = average
         return average
