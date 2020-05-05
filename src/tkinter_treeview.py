@@ -146,6 +146,7 @@ if __name__ == '__main__':
 
     # Create the main Tkinter UI
     main_UI = tk.Tk("Cholesterol Monitor")
+    main_UI.title("Quarantine Coder's Application")
     entry_label = tk.Label(main_UI, text="Enter your ID")
     entry_label.grid(row=0, column=0)
     entry_field = tk.Entry(main_UI)
