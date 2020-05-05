@@ -57,7 +57,8 @@ class PatientList:
     def calculate_avg_cholesterol(self):
         total = 0
         for patient in self.patient_list:
-            total = total + patient.get_data()[0]
+            if isinstance(patient.get_data()[0], float):
+                total = total + patient.get_data()[0]
         average = total/len(self.patient_list)
         self.average_cholesterol_level = average
         return average

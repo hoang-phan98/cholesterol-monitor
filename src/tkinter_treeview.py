@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from src.fhir_module import *
 import asyncio
+from threading import *
 
 
 class App:
@@ -23,41 +25,45 @@ class App:
 def get_patients(event=None):
     practitioner_id = entry_field.get()
     try:
+        if practitioner_id == "":
+            raise KeyError
+
         current_practitioner = client.get_practitioner_info(practitioner_id)
+        # Updating the UI with the practitioner's name
+        practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
+        label = tk.Label(main_UI, text=practitioner_name)
+        entry_field.destroy()
+        entry_label.destroy()
+        get_patients_button.destroy()
+        label.grid(row=0, column=0, columnspan=4)
+
+        # get the practitioner's patient list
+        current_practitioner.get_patient_list(client)
+        patient_list = current_practitioner.get_all_patients()
+
+        # display patient list
+        for patient in patient_list.get_patient_list():
+            patient_name = patient.first_name + " " + patient.last_name
+            patient_data = patient.get_data()
+            cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
+            effective_time = patient_data[2]
+            new_entry = (patient_name, cholesterol_level, effective_time)
+            if not duplicate_item(all_patients, new_entry):
+                all_patients.insert("", "end", values=new_entry)
+
+        application.set_practitioner(current_practitioner)
     except KeyError:
-        exit("Invalid practitioner ID")
-
-    # Updating the UI with the practitioner's name
-    practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
-    label = tk.Label(main_UI, text=practitioner_name)
-    entry_field.destroy()
-    entry_label.destroy()
-    get_patients_button.destroy()
-    label.grid(row=0, column=0, columnspan=4)
-
-    # get the practitioner's patient list
-    current_practitioner.get_patient_list(client)
-    patient_list = current_practitioner.get_all_patients()
-
-    # display patient list
-    for patient in patient_list.get_patient_list():
-        patient_name = patient.first_name+" "+patient.last_name
-        patient_data = patient.get_data()
-        cholesterol_level = str(patient_data[0])+" "+patient_data[1]
-        effective_time = patient_data[2]
-        new_entry = (patient_name, cholesterol_level, effective_time)
-        if not duplicate_item(all_patients, new_entry):
-            all_patients.insert("", "end", values=new_entry)
-
-    application.set_practitioner(current_practitioner)
+        messagebox.showinfo("Error", "Invalid practitioner identifier")
 
 
 def highlight_patients():
     children = monitored_patients.get_children('')
     for child in children:
         values = monitored_patients.item(child, "values")
-        if float(values[1].split(' ')[0]) == application.practitioner.monitored_patients.average_cholesterol_level:
-            monitored_patients.item(child, tags=('high',))
+        patient_cholesterol = values[1].split(' ')[0]
+        if not patient_cholesterol.isdigit():
+            if float(patient_cholesterol) == application.practitioner.monitored_patients.average_cholesterol_level:
+                monitored_patients.item(child, tags=('high',))
 
     monitored_patients.tag_configure('high', foreground='#E8E8E8')
 
@@ -119,12 +125,17 @@ def remove_monitored_patient(event=None):
 
 def add_monitored_patient(event=None):
     item = all_patients.selection()
-    patient = all_patients.item(item, "values")
-    new_entry = (patient[0], patient[1], patient[2])
-    if not duplicate_item(monitored_patients, new_entry):
-        monitored_patients.insert("", "end", values=new_entry)
-        application.practitioner.add_patient_monitor(patient[0])
-        highlight_patients()
+    try:
+        patient = all_patients.item(item, "values")
+        new_entry = (patient[0], patient[1], patient[2])
+        if not duplicate_item(monitored_patients, new_entry):
+            monitored_patients.insert("", "end", values=new_entry)
+            application.practitioner.add_patient_monitor(patient[0])
+            highlight_patients()
+    except IndexError:
+        return
+    except ValueError:
+        print("No patient data for " + patient[0])
 
 
 def duplicate_item(tree, item):
