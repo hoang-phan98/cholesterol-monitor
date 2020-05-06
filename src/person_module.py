@@ -69,10 +69,8 @@ class HealthPractitioner(Person):
         :param patient_name: full name of patient to be added
         :return: None
         """
-        first_name = patient_name.split(' ')[0]
-        last_name = patient_name.split(' ')[1]
         for patient in self._patient_list.get_patient_list():
-            if first_name==patient.first_name and last_name==patient.last_name:
+            if patient_name == patient.first_name + " " + patient.last_name:
                 self._monitored_patients.add_patient(patient)
 
     def remove_patient_monitor(self, patient_name):
@@ -116,11 +114,9 @@ class PatientList:
         :param patient_name: Full name of the patient to be removed
         :return: None
         """
-        first_name = patient_name.split(' ')[0]
-        last_name = patient_name.split(' ')[1]
         for i in range(len(self)):
             selected_patient = self._patient_list[i]
-            if selected_patient.first_name == first_name and selected_patient.last_name == last_name:
+            if patient_name == selected_patient.first_name + " " + selected_patient.last_name:
                 self._patient_list.pop(i)
                 self.calculate_avg_cholesterol()
                 return True
@@ -139,11 +135,9 @@ class PatientList:
         :param patient_name: name of the patient
         :return: Patient object if matching patient found, None otherwise
         """
-        first_name = patient_name.split(' ')[0]
-        last_name = patient_name.split(' ')[1]
         for i in range(len(self)):
             selected_patient = self._patient_list[i]
-            if selected_patient.first_name == first_name and selected_patient.last_name == last_name:
+            if patient_name == selected_patient.first_name + " " + selected_patient.last_name:
                 return selected_patient
         return None
 
