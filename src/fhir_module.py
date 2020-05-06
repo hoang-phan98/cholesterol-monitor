@@ -117,6 +117,7 @@ class CholesterolDataClient(FHIRClient):
         cholesterol_unit = data["entry"][0]["resource"]["valueQuantity"]["unit"]
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
 
+        print("returning patient data...")
         return CholesterolData(cholesterol_value, cholesterol_unit, effective_date_time)
 
 

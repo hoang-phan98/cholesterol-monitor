@@ -1,18 +1,19 @@
+import threading
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from src.fhir_module import *
 import pickle
-import asyncio
+import time
 from PIL import ImageTk, Image
-from threading import *
 
 
 class App:
     def __init__(self):
         self.practitioner = None
         self.client = None
-        self.update_interval = None
+        self.update_interval = 5
+        self.subthread = None
 
     def set_client(self, client):
         self.client = client
@@ -45,13 +46,21 @@ def get_patients(event=None):
             current_practitioner = client.get_practitioner_info(practitioner_id)
             current_practitioner.get_patient_list(client)
 
-        # Updating the UI with the practitioner's name
-        practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
-        label = tk.Label(main_UI, text=practitioner_name)
+        # Updating the UI with the practitioner's name and time interval input
         entry_field.destroy()
         entry_label.destroy()
         get_patients_button.destroy()
-        label.grid(row=0, column=0, columnspan=4)
+        practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
+        label = tk.Label(main_UI, text=practitioner_name)
+        label.grid(row=0, column=0)
+        interval_entry_label = tk.Label(main_UI, text="Current update interval: "+str(application.update_interval))
+        interval_entry_label.grid(row=0, column=1)
+        global time_entry_field
+        time_entry_field = tk.Entry(main_UI)
+        time_entry_field.grid(row=0, column=2)
+        time_entry_field.bind("<Return>", set_update_interval)
+        time_entry_button = tk.Button(main_UI, text="Set update interval", width=15, command=set_update_interval)
+        time_entry_button.grid(row=0, column=3)
 
         # get the practitioner's patient list
         patient_list = current_practitioner.get_all_patients()
@@ -67,9 +76,18 @@ def get_patients(event=None):
                 all_patients.insert("", "end", values=new_entry)
 
         application.set_practitioner(current_practitioner)
+        application.subthread = threading.Thread(target=get_patient_data)
+        application.subthread.setDaemon(True)
+        application.subthread.start()
 
     except KeyError:
         messagebox.showinfo("Error", "Invalid practitioner identifier")
+
+
+def set_update_interval(event=None):
+    application.set_interval(int(time_entry_field.get()))
+    interval_entry_label = tk.Label(main_UI, text="Current update interval: " + str(application.update_interval))
+    interval_entry_label.grid(row=0, column=1)
 
 
 def update_data():
@@ -100,9 +118,11 @@ def highlight_patients():
     for child in children:
         values = monitored_patients.item(child, "values")
         patient_cholesterol = values[1].split(' ')[0]
-        if not isinstance(patient_cholesterol, float):
+        try:
             if float(patient_cholesterol) > application.practitioner.get_monitored_patients().average_cholesterol_level:
                 monitored_patients.item(child, tags=('high',))
+        except ValueError:
+            None
 
     monitored_patients.tag_configure('high', foreground='red')
 
@@ -139,14 +159,16 @@ def display_patient_info(event=None):
     patient_info.insert("", "end", values=new_entry)
 
 
-async def get_patient_data():
+def get_patient_data():
     """
     Request new patient data from server and update display every N seconds
     """
     while True:
-        application.practitioner.get_patient_data(application.client)
-        update_data()
-        await asyncio.sleep(application.update_interval)
+        if len(application.practitioner.get_monitored_patients()) > 0:
+            print("Retrieving patient data...")
+            application.practitioner.get_patient_data(application.client)
+            update_data()
+            time.sleep(application.update_interval)
 
 
 def remove_monitored_patient(event=None):
@@ -199,6 +221,7 @@ def exit_program():
     Close the program and persists current practitioner's data using pickle
     """
     try:
+        application.practitioner.clear_monitor()
         filename = "Practitioner Data/"+str(application.practitioner.id)
         outfile = open(filename, 'wb')
         pickle.dump(application.practitioner, outfile)
@@ -228,6 +251,7 @@ if __name__ == '__main__':
     entry_field.bind("<Return>", get_patients)
     get_patients_button = tk.Button(main_UI, text="Get patients", width=15, command=get_patients)
     get_patients_button.grid(row=0, column=2)
+    global time_entry_field
 
     # create all patients treeview
     all_patients = ttk.Treeview(main_UI, columns="Name", show='headings')

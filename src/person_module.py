@@ -81,6 +81,13 @@ class HealthPractitioner(Person):
         """
         self._monitored_patients.remove_patient(patient_name)
 
+    def clear_monitor(self):
+        """
+        Reset the monitored patients list
+        :return: None
+        """
+        self._monitored_patients = PatientList()
+
 
 class PatientList:
 
