@@ -2,20 +2,24 @@ from datetime import *
 import requests
 from abc import ABC, abstractmethod
 from src.patientdata_module import CholesterolData
-from src.person_module import Patient, HealthPractitioner
+from src.person_module import Patient, HealthPractitioner, PatientList
 from src.address_module import Address
-from src.patient_list_module import PatientList
 
 
 class FHIRClient(ABC):
     def __init__(self, root_url):
-        self.root_url = root_url
+        self._root_url = root_url
 
     def get_patient_list(self, practitioner_id):
+        """
+        Query server and return a PatientList object for the corresponding practitioner identifier
+        :param practitioner_id: identifier
+        :return: PatientList
+        """
         next_page = True
-        next_url = self.root_url+"Encounter?_include=Encounter.participant.individual&_include=" \
+        next_url = self._root_url + "Encounter?_include=Encounter.participant.individual&_include=" \
                                  "Encounter.patient&participant.identifier=" \
-                                 "http://hl7.org/fhir/sid/us-npi|"+str(practitioner_id)+"&_count=50"
+                                 "http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id) +"&_count=50"
         page_count = 1
         patient_list = PatientList()
 
@@ -37,11 +41,16 @@ class FHIRClient(ABC):
                     next_url = link["url"]
                     page_count += 1
 
-            print(page_count)
+            # print(page_count)
         return patient_list
 
     def get_practitioner_info(self, practitioner_id):
-        res = requests.get(self.root_url + "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id))
+        """
+        Retrieve practitioner's info from the server
+        :param practitioner_id: identifier
+        :return: HealthPractitioner object
+        """
+        res = requests.get(self._root_url + "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id))
         data = res.json()
         name = data["entry"][0]["resource"]["name"][0]
         first_name = "".join(x for x in name["given"][0] if not x.isdigit())
@@ -49,7 +58,12 @@ class FHIRClient(ABC):
         return HealthPractitioner(first_name, last_name, practitioner_id)
 
     def get_basic_patient_info(self, patient_id):
-        res = requests.get(self.root_url + "Patient/" + str(patient_id))
+        """
+        Retrieve patient's info from the server
+        :param patient_id: patient's id
+        :return: Patient Object
+        """
+        res = requests.get(self._root_url + "Patient/" + str(patient_id))
         data = res.json()
 
         # Assign first and last name
@@ -63,10 +77,14 @@ class FHIRClient(ABC):
         gender = data["gender"]
         birth = data["birthDate"]
         birth_date = datetime.strptime(birth, '%Y-%m-%d').date()
+
         # Assign address object
         address = data["address"][0]
         patient_address = Address(address["line"], address["city"], address["state"], address["country"])
+
+        # Get patient data
         patient_data = self.get_patient_data(patient_id)
+
         # Return patient object
         return Patient(first_name, last_name, patient_id, birth_date, gender, patient_address, patient_data)
 
@@ -77,8 +95,13 @@ class FHIRClient(ABC):
 
 class CholesterolDataClient(FHIRClient):
     def get_patient_data(self, patient_id):
+        """
+        Get the patient's cholesterol data from the server
+        :param patient_id: patient's id
+        :return: CholesterolData object
+        """
         # Sort by decreasing date, only need 1 entry for latest value
-        res = requests.get(self.root_url + "Observation?patient=" +
+        res = requests.get(self._root_url + "Observation?patient=" +
                            str(patient_id) +
                            "&code=2093-3&_sort=-date&_count=1")
 
@@ -93,6 +116,7 @@ class CholesterolDataClient(FHIRClient):
         cholesterol_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
         cholesterol_unit = data["entry"][0]["resource"]["valueQuantity"]["unit"]
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
+
         return CholesterolData(cholesterol_value, cholesterol_unit, effective_date_time)
 
 

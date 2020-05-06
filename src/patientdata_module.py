@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from datetime import *
 
 
 class PatientData(ABC):
