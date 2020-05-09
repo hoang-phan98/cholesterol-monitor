@@ -25,6 +25,19 @@ class App:
         self.update_interval = interval
 
 
+def fixed_map(option, style):
+    # Fix for setting text colour for Tkinter 8.6.9
+    # From: https://core.tcl.tk/tk/info/509cafafae
+    #
+    # Returns the style map for 'option' with any styles starting with
+    # ('!disabled', '!selected', ...) filtered out.
+
+    # style.map() returns an empty list for missing options, so this
+    # should be future-safe.
+    return [elm for elm in style.map('Treeview', query_opt=option) if
+      elm[:2] != ('!disabled', '!selected')]
+
+
 def get_patients(event=None):
     """
     Retrieve and display the list of all patients of the practitioner with the given identifier
@@ -67,14 +80,20 @@ def get_patients(event=None):
 
         # display patient list
         for patient in patient_list.get_patient_list():
+            # Assign patient name
             patient_name = patient.first_name + " " + patient.last_name
+            # Assign patient data values
             patient_data = patient.get_data()
             cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
             effective_time = patient_data[2]
+            # Assign new entry values
             new_entry = (patient_name, cholesterol_level, effective_time)
+
+            # Insert into treeview if the patient does not already exist
             if not duplicate_item(all_patients, new_entry):
                 all_patients.insert("", "end", values=new_entry)
 
+        # Start a separate thread to update the patient's data concurrently
         application.set_practitioner(current_practitioner)
         application.subthread = threading.Thread(target=get_patient_data)
         application.subthread.setDaemon(True)
@@ -85,46 +104,55 @@ def get_patients(event=None):
 
 
 def set_update_interval(event=None):
+    """
+    Set the update interval for requesting patient's data from the server
+    """
     application.set_interval(int(time_entry_field.get()))
     interval_entry_label = tk.Label(main_UI, text="Current update interval: " + str(application.update_interval))
     interval_entry_label.grid(row=0, column=1)
 
 
-def update_data():
+def update_data(tree):
     """
     Request new data from the server for each patient in the practitioner's monitored patients list
     Update the information in the GUI display accordingly
     """
+    # Get the practitioner's list of monitored patients
     patient_list = application.practitioner.get_monitored_patients()
-    children = monitored_patients.get_children('')
+    children = tree.get_children('')
 
     # for each item, collect corresponding patient data and update
     for child in children:
-        values = monitored_patients.item(child, "values")
+        values = tree.item(child, "values")
+        # Get patient and patient data based on their full name
         current_patient = patient_list.select_patient(values[0])
         patient_data = current_patient.get_data()
+        # Update table with newly retrieved patient data
         update_entry = (values[0], str(patient_data[0])+" "+patient_data[1], patient_data[2])
-        monitored_patients.item(child, values=update_entry)
+        tree.item(child, values=update_entry)
 
-    highlight_patients()
+    # Highlight patients with abnormal cholesterol value
+    highlight_patients(tree)
 
 
-def highlight_patients():
+def highlight_patients(tree):
     """
     Check the cholesterol level of each monitored patient
     If the level is higher than the average of all monitored patients, highlight this patient in red
     """
-    children = monitored_patients.get_children('')
-    for child in children:
-        values = monitored_patients.item(child, "values")
-        patient_cholesterol = values[1].split(' ')[0]
-        try:
-            if float(patient_cholesterol) > application.practitioner.get_monitored_patients().average_cholesterol_level:
-                monitored_patients.item(child, tags=('high',))
-        except ValueError:
-            None
-
-    monitored_patients.tag_configure('high', foreground='red')
+    try:
+        children = tree.get_children('')
+        for child in children:
+            values = tree.item(child, "values")
+            patient_cholesterol = values[1].split(' ')[0]
+            try:
+                if float(patient_cholesterol) > application.practitioner.get_monitored_patients().average_cholesterol_level:
+                    tree.item(child, tags=['high'])
+                    tree.tag_configure('high', foreground='red')
+            except ValueError:
+                continue
+    except tk.TclError:
+        return
 
 
 def display_patient_info(event=None):
@@ -164,10 +192,10 @@ def get_patient_data():
     Request new patient data from server and update display every N seconds
     """
     while True:
+        # Execute if there's at least one patient being monitored
         if len(application.practitioner.get_monitored_patients()) > 0:
-            print("Retrieving patient data...")
             application.practitioner.get_patient_data(application.client)
-            update_data()
+            update_data(monitored_patients)
             time.sleep(application.update_interval)
 
 
@@ -178,7 +206,9 @@ def remove_monitored_patient(event=None):
     """
     item = monitored_patients.selection()
     values = monitored_patients.item(item, "values")
+    # Remove item from practitioner's monitored patient list
     application.practitioner.remove_patient_monitor(values[0])
+    # Remove item from treeview
     monitored_patients.delete(item)
 
 
@@ -192,9 +222,11 @@ def add_monitored_patient(event=None):
         patient = all_patients.item(item, "values")
         new_entry = (patient[0], patient[1], patient[2])
         if not duplicate_item(monitored_patients, new_entry):
+            # Add patient to treeview
             monitored_patients.insert("", "end", values=new_entry)
+            # Add patient to practitioner's monitored patient list
             application.practitioner.add_patient_monitor(patient[0])
-            highlight_patients()
+            highlight_patients(monitored_patients)
     except IndexError:
         return
     except ValueError:
@@ -221,7 +253,9 @@ def exit_program():
     Close the program and persists current practitioner's data using pickle
     """
     try:
+        # Clear the practitioner's monitored patient list for next run
         application.practitioner.clear_monitor()
+        # Copy the practitioner object to a binary file
         filename = "Practitioner Data/"+str(application.practitioner.id)
         outfile = open(filename, 'wb')
         pickle.dump(application.practitioner, outfile)
@@ -276,6 +310,10 @@ if __name__ == '__main__':
     more_info_button.grid(row=4, column=1)
     remove_patient_button = tk.Button(main_UI, text="Remove Monitor", width=15, command=remove_monitored_patient)
     remove_patient_button.grid(row=4, column=2)
+
+    style = ttk.Style()
+    style.map('Treeview', foreground=fixed_map('foreground', style),
+              background=fixed_map('background', style))
 
     # Run main UI
     main_UI.mainloop()

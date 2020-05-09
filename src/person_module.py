@@ -49,6 +49,7 @@ class HealthPractitioner(Person):
         :return: None
         """
         for patient in self._monitored_patients.get_patient_list():
+            print("Requesting data for " + patient.first_name+" "+patient.last_name+"...")
             patient.update_data(client.get_patient_data(patient.id))
 
     def get_all_patients(self):

@@ -19,7 +19,7 @@ class FHIRClient(ABC):
         next_page = True
         next_url = self._root_url + "Encounter?_include=Encounter.participant.individual&_include=" \
                                  "Encounter.patient&participant.identifier=" \
-                                 "http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id) +"&_count=50"
+                                 "http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id) + "&_count=50"
         page_count = 1
         patient_list = PatientList()
 
@@ -117,13 +117,13 @@ class CholesterolDataClient(FHIRClient):
         cholesterol_unit = data["entry"][0]["resource"]["valueQuantity"]["unit"]
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
 
-        print("returning patient data...")
+        # print("Returning patient data...")
         return CholesterolData(cholesterol_value, cholesterol_unit, effective_date_time)
 
 
 if __name__ == '__main__':
     client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
-    patients = client.get_patient_list(1840082)
+    patients = client.get_patient_list(21550)
     patient = client.get_basic_patient_info(1840080)
     patient_cholesterol_data = client.get_patient_data(1840080)
     patient.update_data(patient_cholesterol_data)
