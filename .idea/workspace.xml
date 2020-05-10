@@ -20,15 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/Hoang.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Practitioner Data/21550" beforeDir="false" afterPath="$PROJECT_DIR$/src/Practitioner Data/21550" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fhir_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fhir_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/person_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,6 +61,18 @@
       <recent name="C:\Users\Hoang\Desktop\project\src" />
       <recent name="C:\Users\jason\Documents\Monash University\Year_3\FIT3077\Assignment_2\Assignment2_Code\src" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager" selected="Python.application">
     <configuration name="TKInter" type="PythonConfigurationType" factoryName="Python">
@@ -152,10 +160,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.TKInter" />
       <item itemvalue="Python.address_module" />
-      <item itemvalue="Python.application" />
       <item itemvalue="Python.fhir_module" />
+      <item itemvalue="Python.TKInter" />
+      <item itemvalue="Python.application" />
     </list>
     <recent_temporary>
       <list>
@@ -223,7 +231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588824423388</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Updating machine_learning_module to use linear regression (WIP)">
+      <created>1589110226584</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1589110226584</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -244,12 +259,13 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="creating address, person and subject modules (WIP)" />
@@ -258,7 +274,8 @@
     <MESSAGE value="Adding title to the GUI window." />
     <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
     <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
-    <option name="LAST_COMMIT_MESSAGE" value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
+    <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating machine_learning_module to use linear regression (WIP)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">

@@ -18,7 +18,7 @@ def get_cholesterol_values():
         print(str(patients.get_patient_list()[patient][2]))
 
     for patient_id in patient_ids:
-        patient_data.append(client.get_patient_data(patient_id))
+        patient_data.append(client.get_patient_data(patient_id)[0])
 
     return patient_data
 
