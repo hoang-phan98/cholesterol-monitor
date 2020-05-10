@@ -152,10 +152,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.address_module" />
-      <item itemvalue="Python.fhir_module" />
       <item itemvalue="Python.TKInter" />
+      <item itemvalue="Python.address_module" />
       <item itemvalue="Python.application" />
+      <item itemvalue="Python.fhir_module" />
     </list>
     <recent_temporary>
       <list>
