@@ -20,11 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fhir_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fhir_module.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/person_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +54,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/fhir_module.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/application.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -76,7 +75,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.fhir_module">
+  <component name="RunManager" selected="Python.application">
     <configuration name="TKInter" type="PythonConfigurationType" factoryName="Python">
       <module name="project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -126,9 +125,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\Hoang\Desktop\project\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/application.py" />
@@ -212,8 +211,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.person_module" />
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.person_module" />
       </list>
     </recent_temporary>
   </component>
@@ -284,7 +283,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589110226584</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)">
+      <created>1589266806195</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1589266806195</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -321,7 +327,8 @@
     <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
     <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
     <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating machine_learning_module to use linear regression (WIP)" />
+    <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
+    <option name="LAST_COMMIT_MESSAGE" value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">

@@ -3,7 +3,6 @@ import requests
 from abc import ABC, abstractmethod
 from src.patientdata_module import CholesterolData
 from src.person_module import Patient, HealthPractitioner, PatientList
-from src.address_module import Address
 
 
 class FHIRClient(ABC):
@@ -87,33 +86,6 @@ class FHIRClient(ABC):
 
         # Return patient object
         return Patient(first_name, last_name, patient_id, birth_date, gender, patient_address, patient_data)
-
-    def get_patient_diagnostics(self, practitioner_id):
-        next_page = True
-        next_url = self._root_url + "Encounter?_include=Encounter.participant.individual&_include=" \
-                                    "Encounter.patient&participant.identifier=" \
-                                    "http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id) + "&_count=50"
-        page_count = 1
-        patient_illness = []
-
-        while next_page:
-            res = requests.get(next_url)
-            data = res.json()
-            for encounter in data["entry"]:
-                patient = encounter["resource"]["subject"]["display"].rstrip("0123456789")[1]
-                patient_diagnostic = encounter["resource"]["reasonCode"]["coding"]["display"]
-                patient_illness.append(patient, patient_diagnostic)
-
-            next_page = False
-            links = data["link"]
-            for i in range(len(links)):
-                link = links[i]
-                if link["relation"] == "next":
-                    next_page = True
-                    next_url = link["url"]
-                    page_count += 1
-
-        return patient_illness
 
     @abstractmethod
     def get_patient_data(self, patient_id):
