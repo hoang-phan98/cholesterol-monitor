@@ -22,7 +22,6 @@ def get_cholesterol_values():
 
     return patient_data
 
-
 def plot_cholesterol_values():
 
     cholesterol_values = get_cholesterol_values()
