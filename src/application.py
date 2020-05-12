@@ -1,11 +1,11 @@
-import threading
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from src.fhir_module import *
+from PIL import ImageTk, Image
 import pickle
 import time
-from PIL import ImageTk, Image
+import threading
 
 
 class App:
@@ -59,6 +59,7 @@ class App:
             self.monitored_patients.heading(col, text=col)
         self.monitored_patients.grid(row=1, column=1, columnspan=3)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
+        self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
 
         # create buttons
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
@@ -256,12 +257,15 @@ class App:
         Remove a patient from the list of monitored patients
         also remove the patient to the practitioner's monitored patients list object
         """
-        item = self.monitored_patients.selection()
-        values = self.monitored_patients.item(item, "values")
-        # Remove item from practitioner's monitored patient list
-        self.practitioner.remove_patient_monitor(values[0])
-        # Remove item from treeview
-        self.monitored_patients.delete(item)
+        try:
+            item = self.monitored_patients.selection()
+            values = self.monitored_patients.item(item, "values")
+            # Remove item from practitioner's monitored patient list
+            self.practitioner.remove_patient_monitor(values[0])
+            # Remove item from treeview
+            self.monitored_patients.delete(item)
+        except IndexError:
+            return
 
     def update_display(self, tree):
         """
