@@ -3,6 +3,7 @@ import requests
 from abc import ABC, abstractmethod
 from src.patientdata_module import CholesterolData
 from src.person_module import Patient, HealthPractitioner, PatientList
+from src.address_module import Address
 
 
 class FHIRClient(ABC):

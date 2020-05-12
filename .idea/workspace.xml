@@ -20,10 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fhir_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fhir_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/person_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -290,7 +287,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589266806195</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="removing unnecessary method after re evaluating the specs.">
+      <created>1589279446555</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1589279446556</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -328,7 +332,8 @@
     <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
     <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
     <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
-    <option name="LAST_COMMIT_MESSAGE" value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
+    <MESSAGE value="removing unnecessary method after re evaluating the specs." />
+    <option name="LAST_COMMIT_MESSAGE" value="removing unnecessary method after re evaluating the specs." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">
