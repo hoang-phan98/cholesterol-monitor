@@ -124,7 +124,6 @@ class CholesterolDataClient(FHIRClient):
 if __name__ == '__main__':
     client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
     patients = client.get_patient_list(21550)
-    patients_diagnostics = client.get_patient_diagnostics(21550)
     patient = client.get_basic_patient_info(1840080)
     patient_cholesterol_data = client.get_patient_data(1840080)
     patient.update_data(patient_cholesterol_data)
