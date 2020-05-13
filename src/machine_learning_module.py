@@ -6,10 +6,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import csv
 
-class MachineLeraningClient():
+
+class MachineLeraningClient:
 
     def __init__(self):
-        self._root_url = "https://fhir.monash.edu/hapi-fhir-jpaserver/fhir"
+        self._root_url = "https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/"
 
     def get_all_patient_id(self):
 
@@ -20,7 +21,7 @@ class MachineLeraningClient():
             file_writer.writeheader()
 
             next_page = True
-            next_url = self._root_url + "?_getpages=12f58cf4-e0b7-41db-b929-3287f1573dec&_getpagesoffset=50&" \
+            next_url = self._root_url + "?_getpages=86b6f312-bbb3-42f3-9e52-69f2d8cdb2f2&_getpagesoffset=50&_" \
                                         "count=50&_pretty=true&_bundletype=searchset"
             page_count = 1
             patient_ids_array = []
@@ -31,9 +32,10 @@ class MachineLeraningClient():
                 # Convert to json & extract relevant data
                 data = res.json()
 
-                for patients in data["entry"]:
-                    patient_ids = patients["resource"]["id"]
+                for patient in data["entry"]:
+                    patient_ids = patient["resource"]["id"]
                     if patient_ids not in patient_ids_array:
+                        patient_ids_array.append(patient_ids)
                         file_writer.writerow({"PATIENT ID": patient_ids})
 
                 next_page = False
@@ -45,8 +47,30 @@ class MachineLeraningClient():
                         next_url = link["url"]
                         page_count += 1
 
-                if page_count >= 3:
+                if page_count >= 20:
                     break
+
+    def get_patient_data_codes(self):
+
+        with open("patient_ids.csv", "r") as id_file:
+            read_id_file = csv.reader(id_file, delimiter=",")
+            next(id_file)
+
+            for row in read_id_file:
+                # Gets patients other diagnostics
+                url = self._root_url + "Observation?patient=" + str(row)
+                res = requests.get(url)
+                # Convert to json & extract relevant data
+                data = res.json()
+                useful_data_codes = []
+
+                for data_code in data["entry"]:
+                    data_codes = data_code["resource"]["code"]["coding"]["code"]
+                    if data_codes not in useful_data_codes:
+                        useful_data_codes.append(data_codes)
+                        print(useful_data_codes)
+
+
 
         # def plot_cholesterol_values(self):
         #
@@ -70,4 +94,5 @@ class MachineLeraningClient():
 
 if __name__ == '__main__':
     client = MachineLeraningClient()
-    client.get_all_patient_id()
+    #client.get_all_patient_id()
+    client.get_patient_data_codes()
