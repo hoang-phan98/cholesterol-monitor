@@ -80,24 +80,40 @@ class MachineLearningClient:
             for data_code in data_codes:
                 file_writer.writerow({"DATA CODES": data_code})
 
-    def data_chart(self):
-
+    def read_id_csv(self):
         with open("patient_ids.csv", "r") as patient_id_file:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
             patient_id_file.readline()
-            patient_data = []
-            data_codes = self.get_patient_data_codes()
-
+            patient_list = []
             for patient_id in read_id_file:
-                for data_code in range(len(data_codes)):
-                    res = requests.get(self._root_url + "Observation?patient=" + str(patient_id[0]) +
-                                       "&code=" + str(data_codes[data_code]))
-                    data = res.json()
+                patient_list.append(patient_id)
+            return patient_list
 
-                    data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
-                    data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
-                    patient_data_value = patient_id, data_description, data_value
-                    patient_data.append(patient_data_value)
+    def read_data_csv(self):
+        with open("data_codes.csv", "r") as data_codes_file:
+            read_data_code_file = csv.reader(data_codes_file, delimiter=",")
+            data_codes_file.readline()
+            data_codes = []
+            for data_code in read_data_code_file:
+                data_codes.append(data_code)
+            return data_codes
+
+    def data_chart(self):
+
+        patient_ids = self.read_id_csv()
+        data_codes = self.read_data_csv()
+        patient_data = []
+
+        for patient_id in patient_ids:
+            for data_code in data_codes:
+                res = requests.get(self._root_url + "Observation?patient=" + str(patient_id[0]) +
+                                   "&code=" + str(data_code[0]))
+                data = res.json()
+
+                data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
+                data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
+                patient_data_value = patient_id, data_description, data_value
+                patient_data.append(patient_data_value)
 
             return patient_data
 
@@ -126,4 +142,4 @@ if __name__ == '__main__':
     client = MachineLearningClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
     # client.patient_id_csv()
     # client.data_codes_csv()
-    client.data_chart()
+    print(client.data_chart())
