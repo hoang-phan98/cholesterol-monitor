@@ -21,7 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -359,7 +358,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589437271173</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="updating data_chart method (WIP)">
+      <created>1589438886786</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1589438886786</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -404,7 +410,8 @@
     <MESSAGE value="Adding data_chart method, which returns the patient id, data description and data value." />
     <MESSAGE value="Creating CSV files for the data codes." />
     <MESSAGE value="updating data_chart method, need to fix bug. (WIP)" />
-    <option name="LAST_COMMIT_MESSAGE" value="updating data_chart method, need to fix bug. (WIP)" />
+    <MESSAGE value="updating data_chart method (WIP)" />
+    <option name="LAST_COMMIT_MESSAGE" value="updating data_chart method (WIP)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">
