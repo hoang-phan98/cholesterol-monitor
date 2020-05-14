@@ -52,7 +52,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/machine_learning_module.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -338,7 +338,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589354652297</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Adding data_chart method, which returns the patient id, data description and data value.">
+      <created>1589359564673</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1589359564673</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -380,7 +387,8 @@
     <MESSAGE value="Adding necessary import to fhir_module." />
     <MESSAGE value="Adding patient_id csv file." />
     <MESSAGE value="Adding get_patient_data_codes method." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding get_patient_data_codes method." />
+    <MESSAGE value="Adding data_chart method, which returns the patient id, data description and data value." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding data_chart method, which returns the patient id, data description and data value." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">
