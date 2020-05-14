@@ -110,10 +110,14 @@ class MachineLearningClient:
                                    "&code=" + str(data_code[0]))
                 data = res.json()
 
-                data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
-                data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
-                patient_data_value = patient_id, data_description, data_value
-                patient_data.append(patient_data_value)
+                if data["total"] == 0:
+                    patient_data_value = patient_id[0], "No Data", "No Data"
+                    patient_data.append(patient_data_value)
+                else:
+                    data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
+                    data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
+                    patient_data_value = patient_id[0], data_description, data_value
+                    patient_data.append(patient_data_value)
 
             return patient_data
 
