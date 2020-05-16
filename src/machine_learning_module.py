@@ -85,40 +85,50 @@ class MachineLearningClient:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
             patient_id_file.readline()
             patient_list = []
-            for patient_id in read_id_file:
-                patient_list.append(patient_id)
+            for patient_ids in read_id_file:
+                for patient_id in patient_ids:
+                    patient_list.append(patient_id)
             return patient_list
 
     def read_data_csv(self):
         with open("data_codes.csv", "r") as data_codes_file:
             read_data_code_file = csv.reader(data_codes_file, delimiter=",")
             data_codes_file.readline()
-            data_codes = []
-            for data_code in read_data_code_file:
-                data_codes.append(data_code)
-            return data_codes
+            all_data_codes = []
+            for data_codes in read_data_code_file:
+                for data_code in data_codes:
+                    all_data_codes.append(data_code)
+            return all_data_codes
 
     def data_chart(self):
+        with open("patient_data.csv", "w", newline="") as patient_data_file:
+            fieldnames = ["PATIENT ID", "DIAGNOSTIC DESCRIPTION", "VALUE"]
+            file_writer = csv.DictWriter(patient_data_file, fieldnames=fieldnames)
+            file_writer.writeheader()
 
-        patient_ids = self.read_id_csv()
-        data_codes = self.read_data_csv()
-        patient_data = []
+            patient_ids = self.read_id_csv()
+            data_codes = self.read_data_csv()
+            patient_data = []
 
-        for patient_id in patient_ids:
-            for data_code in data_codes:
-                res = requests.get(self._root_url + "Observation?patient=" + str(patient_id[0]) +
-                                   "&code=" + str(data_code[0]))
-                data = res.json()
+            for patient_id in patient_ids:
+                for data_code in data_codes:
+                    res = requests.get(self._root_url + "Observation?patient=" + str(patient_id) +
+                                       "&code=" + str(data_code))
+                    data = res.json()
 
-                if data["total"] == 0:
-                    patient_data_value = patient_id[0], "No Data", "No Data"
-                    patient_data.append(patient_data_value)
-                else:
-                    data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
-                    data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
-                    patient_data_value = patient_id[0], data_description, data_value
-                    patient_data.append(patient_data_value)
-
+                    if data["total"] == 0:
+                        patient_data_value = patient_id, "No Data", "No Data"
+                        patient_data.append(patient_data_value)
+                    else:
+                        try:
+                            data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
+                            data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
+                            patient_data_value = patient_id, data_description, data_value
+                            patient_data.append(patient_data_value)
+                        except KeyError:
+                            print("Error!", "Cant find valueQuantity")
+            file_writer.writerow({"PATIENT ID": patient_data_value[0],
+                                  "DIAGNOSTIC DESCRIPTION": patient_data_value[1], "VALUE": patient_data_value[2]})
             return patient_data
 
     # def plot_cholesterol_values(self):
@@ -146,4 +156,5 @@ if __name__ == '__main__':
     client = MachineLearningClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
     # client.patient_id_csv()
     # client.data_codes_csv()
+    # print(client.read_data_csv())
     print(client.data_chart())
