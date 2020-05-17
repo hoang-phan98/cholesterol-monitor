@@ -193,20 +193,21 @@ class App:
         Add a patient from the list of all patients to the list of monitored patients
         also add the patient to the practitioner's monitored patients list object
         """
-        item = self.all_patients.selection()
-        try:
-            patient = self.all_patients.item(item, "values")
-            new_entry = (patient[0], patient[1], patient[2])
-            if not duplicate_item(self.monitored_patients, new_entry):
-                # Add patient to treeview
-                self.monitored_patients.insert("", "end", values=new_entry)
-                # Add patient to practitioner's monitored patient list
-                self.practitioner.add_patient_monitor(patient[0])
-                self.highlight_patients(self.monitored_patients)
-        except IndexError:
-            return
-        except ValueError:
-            print("No patient data for " + patient[0])
+        selected = self.all_patients.selection()
+        for item in selected:
+            try:
+                patient = self.all_patients.item(item, "values")
+                new_entry = (patient[0], patient[1], patient[2])
+                if not duplicate_item(self.monitored_patients, new_entry):
+                    # Add patient to treeview
+                    self.monitored_patients.insert("", "end", values=new_entry)
+                    # Add patient to practitioner's monitored patient list
+                    self.practitioner.add_patient_monitor(patient[0])
+                    self.highlight_patients(self.monitored_patients)
+            except IndexError:
+                return
+            except ValueError:
+                print("No patient data for " + patient[0])
 
     def display_patient_info(self, event=None):
         """
@@ -265,12 +266,13 @@ class App:
         also remove the patient to the practitioner's monitored patients list object
         """
         try:
-            item = self.monitored_patients.selection()
-            values = self.monitored_patients.item(item, "values")
-            # Remove item from practitioner's monitored patient list
-            self.practitioner.remove_patient_monitor(values[0])
-            # Remove item from treeview
-            self.monitored_patients.delete(item)
+            selected = self.monitored_patients.selection()
+            for item in selected:
+                values = self.monitored_patients.item(item, "values")
+                # Remove item from practitioner's monitored patient list
+                self.practitioner.remove_patient_monitor(values[0])
+                # Remove item from treeview
+                self.monitored_patients.delete(item)
         except IndexError:
             return
 
