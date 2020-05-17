@@ -12,7 +12,7 @@ class App:
     def __init__(self):
         self.practitioner = None
         self.client = None
-        self.update_interval = 5
+        self.update_interval = 30
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
@@ -92,6 +92,7 @@ class App:
                 raise KeyError
 
             try:
+                # Try to get load data from local storage
                 filename = "Practitioner Data/" + practitioner_id
                 file = open(filename, 'rb')
                 current_practitioner = pickle.load(file)
@@ -177,8 +178,14 @@ class App:
         while True:
             # Execute if there's at least one patient being monitored
             if len(self.practitioner.get_monitored_patients()) > 0:
+
+                # Request data from server
                 self.practitioner.get_patient_data(self.client)
+
+                # Update display
                 self.update_display(self.monitored_patients)
+
+                # Sleep
                 time.sleep(self.update_interval)
 
     def add_monitored_patient(self, event=None):
