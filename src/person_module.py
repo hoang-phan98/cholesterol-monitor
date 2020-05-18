@@ -166,3 +166,11 @@ class PatientList:
         average = total/no_of_valid_patients
         self.average_cholesterol_level = average
         return average
+
+
+class Address:
+    def __init__(self, line, city, state, country):
+        self.line = line
+        self.city = city
+        self.state = state
+        self.country = country
