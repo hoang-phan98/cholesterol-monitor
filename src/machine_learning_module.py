@@ -14,7 +14,7 @@ class MachineLearningClient:
     def patient_id_csv(self):
 
         # Creating csv file with all the patient ids
-        with open("patient_ids.csv", "w", newline="") as patient_id_file:
+        with open("Machine Learning Data/patient_ids.csv", "w", newline="") as patient_id_file:
             fieldnames = ["PATIENT ID"]
             file_writer = csv.DictWriter(patient_id_file, fieldnames=fieldnames)
             file_writer.writeheader()
@@ -50,10 +50,12 @@ class MachineLearningClient:
 
     def get_patient_data_codes(self):
 
-        with open("patient_ids.csv", "r") as patient_id_file:
+        with open("Machine Learning Data/patient_ids.csv", "r") as patient_id_file:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
             # Skips first line of the csv file
             patient_id_file.readline()
+            useful_data_types = ["Glucose", "Diastolic Blood Pressure", "Systolic Blood Pressure",
+                                 "Body Mass Index", "Tobacco smoking status NHIS"]
             useful_data_codes = []
 
             for patient_id in read_id_file:
@@ -62,16 +64,17 @@ class MachineLearningClient:
                 # Convert to json & extract relevant data
                 data = res.json()
 
-                for data_code in data["entry"]:
-                    data_codes = data_code["resource"]["code"]["coding"][0]["code"]
-                    if data_codes not in useful_data_codes:
-                        useful_data_codes.append(data_codes)
+                for observation in data["entry"]:
+                    data_type = observation["resource"]["code"]["coding"][0]["display"]
+                    data_code = observation["resource"]["code"]["coding"][0]["code"]
+                    if data_type in useful_data_types:
+                        useful_data_codes.append(data_code)
 
             return useful_data_codes
 
     def data_codes_csv(self):
 
-        with open("data_codes.csv", "w", newline="") as data_code_file:
+        with open("Machine Learning Data/data_codes.csv", "w", newline="") as data_code_file:
             fieldnames = ["DATA CODES"]
             file_writer = csv.DictWriter(data_code_file, fieldnames=fieldnames)
             file_writer.writeheader()
@@ -81,7 +84,7 @@ class MachineLearningClient:
                 file_writer.writerow({"DATA CODES": data_code})
 
     def read_id_csv(self):
-        with open("patient_ids.csv", "r") as patient_id_file:
+        with open("Machine Learning Data/patient_ids.csv", "r") as patient_id_file:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
             patient_id_file.readline()
             patient_list = []
@@ -91,7 +94,7 @@ class MachineLearningClient:
             return patient_list
 
     def read_data_csv(self):
-        with open("data_codes.csv", "r") as data_codes_file:
+        with open("Machine Learning Data/data_codes.csv", "r") as data_codes_file:
             read_data_code_file = csv.reader(data_codes_file, delimiter=",")
             data_codes_file.readline()
             all_data_codes = []
@@ -101,7 +104,7 @@ class MachineLearningClient:
             return all_data_codes
 
     def data_chart(self):
-        with open("patient_data.csv", "w", newline="") as patient_data_file:
+        with open("Machine Learning Data/patient_data.csv", "w", newline="") as patient_data_file:
             fieldnames = ["PATIENT ID", "DIAGNOSTIC DESCRIPTION", "VALUE"]
             file_writer = csv.DictWriter(patient_data_file, fieldnames=fieldnames)
             file_writer.writeheader()
@@ -113,22 +116,36 @@ class MachineLearningClient:
             for patient_id in patient_ids:
                 for data_code in data_codes:
                     res = requests.get(self._root_url + "Observation?patient=" + str(patient_id) +
-                                       "&code=" + str(data_code))
+                                       "&code=" + str(data_code)+"&_sort=-date")
                     data = res.json()
 
-                    if data["total"] == 0:
-                        patient_data_value = patient_id, "No Data", "No Data"
-                        patient_data.append(patient_data_value)
-                    else:
-                        try:
-                            data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
+                    try:
+                        data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
+                        data_value = data["entry"][0]["resource"]["valueQuantity"]["value"]
+                    except KeyError:
+
+                        if data_code == "55284-4":  # Blood pressure
+                            components = data["entry"][0]["resource"]["component"]
+                            for component in components:
+                                if component["code"]["coding"][0]["code"] == "8480-6":  # Systolic Blood Pressure
+                                    data_description = component["code"]["coding"][0]["display"]
+                                    data_value = component["valueQuantity"]["value"]
+                                    break
+
+                        elif data_code == "72166-2":    # Smoking status
                             data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
-                            patient_data_value = patient_id, data_description, data_value
-                            patient_data.append(patient_data_value)
-                        except KeyError:
-                            print("Error!", "Cant find valueQuantity")
-            file_writer.writerow({"PATIENT ID": patient_data_value[0],
-                                  "DIAGNOSTIC DESCRIPTION": patient_data_value[1], "VALUE": patient_data_value[2]})
+                            data_value = data["entry"][0]["resource"]["valueCodeableConcept"]["coding"][0]["code"]
+
+                        else:
+                            data_description = "No Data"
+                            data_value = "No Data"
+
+                    patient_data_value = patient_id, data_description, data_value
+                    patient_data.append(patient_data_value)
+
+                    file_writer.writerow({"PATIENT ID": patient_data_value[0],
+                                          "DIAGNOSTIC DESCRIPTION": patient_data_value[1],
+                                          "VALUE": patient_data_value[2]})
             return patient_data
 
     # def plot_cholesterol_values(self):
@@ -152,7 +169,6 @@ class MachineLearningClient:
 
 
 if __name__ == '__main__':
-
     client = MachineLearningClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
     # client.patient_id_csv()
     # client.data_codes_csv()
