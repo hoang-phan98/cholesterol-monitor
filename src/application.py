@@ -6,6 +6,32 @@ from PIL import ImageTk, Image
 import pickle
 import time
 import threading
+from abc import ABC, abstractmethod
+
+
+class Observer(ABC):
+    def set_subject(self, subject):
+        self._subject = subject
+
+    @abstractmethod
+    def update(self):
+        pass
+
+
+class MonitoredTreeview(Observer, ttk.Treeview):
+    def update(self):
+        """
+        Update the view according to the Patient List object being observed
+        :return: None
+        """
+        if self._subject is not None:   # If subject has not been specified, do nothing
+            children = self.get_children('')
+            for item in children:
+                values = self.item(item, "values")
+                patient_name = values[0]
+                current_patient = self._subject.select_patient(patient_name)
+                if is_new_data(values, current_patient):    # Check if the new values are different
+                    self.item(item, values=format_data(current_patient))    # update the display with new data
 
 
 class App:
@@ -43,7 +69,8 @@ class App:
         self.entry_field = tk.Entry(self.main_UI)
         self.entry_field.grid(row=0, column=1)
         self.entry_field.bind("<Return>", self.practitioner_login)
-        self.get_patients_button = tk.Button(self.main_UI, text="Get patients", width=15, command=self.practitioner_login)
+        self.get_patients_button = tk.Button(self.main_UI, text="Get patients", width=15,
+                                             command=self.practitioner_login)
         self.get_patients_button.grid(row=0, column=2)
 
         # create all patients treeview
@@ -54,7 +81,7 @@ class App:
 
         # create monitored patients treeview with 3 columns
         cols = ('Name', 'Total Cholesterol', 'Time')
-        self.monitored_patients = ttk.Treeview(self.main_UI, columns=cols, show='headings')
+        self.monitored_patients = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.monitored_patients.heading(col, text=col)
         self.monitored_patients.grid(row=1, column=1, columnspan=3)
@@ -124,24 +151,18 @@ class App:
 
             # display patient list
             for patient in patient_list.get_patient_list():
-                # Assign patient name
-                patient_name = patient.first_name + " " + patient.last_name
-                # Assign patient data values
-                patient_data = patient.get_data()
-                cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
-                effective_time = patient_data[2]
-                # Assign new entry values
-                new_entry = (patient_name, cholesterol_level, effective_time)
-
                 # Insert into treeview if the patient does not already exist
-                if not duplicate_item(self.all_patients, new_entry):
-                    self.all_patients.insert("", "end", values=new_entry)
+                if not duplicate_item(self.all_patients, format_data(patient)):
+                    self.all_patients.insert("", "end", values=format_data(patient))
 
             # Start a separate thread to update the patient's data concurrently
             self.set_practitioner(current_practitioner)
             subthread = threading.Thread(target=self.request_patient_data)
             subthread.setDaemon(True)
             subthread.start()
+
+            # Attach monitored patient list to treeview observer
+            self.practitioner.get_monitored_patients().attach(self.monitored_patients)
 
         except KeyError:
             messagebox.showinfo("Error", "Invalid practitioner identifier")
@@ -178,12 +199,12 @@ class App:
         while True:
             # Execute if there's at least one patient being monitored
             if len(self.practitioner.get_monitored_patients()) > 0:
-
                 # Request data from server
                 self.practitioner.get_patient_data(self.client)
 
-                # Update display
-                self.update_display(self.monitored_patients)
+                # Notify Treeview observer of data changes
+                self.practitioner.get_monitored_patients().notify()
+                self.highlight_patients(self.monitored_patients)
 
                 # Sleep
                 time.sleep(self.update_interval)
@@ -276,27 +297,48 @@ class App:
         except IndexError:
             return
 
-    def update_display(self, tree):
-        """
-        Request new data from the server for each patient in the practitioner's monitored patients list
-        Update the information in the GUI display accordingly
-        """
-        # Get the practitioner's list of monitored patients
-        patient_list = self.practitioner.get_monitored_patients()
-        children = tree.get_children('')
+    # def update_display(self, tree):
+    #     """
+    #     Request new data from the server for each patient in the practitioner's monitored patients list
+    #     Update the information in the GUI display accordingly
+    #     """
+    #     # Get the practitioner's list of monitored patients
+    #     patient_list = self.practitioner.get_monitored_patients()
+    #     children = tree.get_children('')
+    #
+    #     # for each item, collect corresponding patient data and update
+    #     for child in children:
+    #         values = tree.item(child, "values")
+    #         # Get patient and patient data based on their full name
+    #         current_patient = patient_list.select_patient(values[0])
+    #         patient_data = current_patient.get_data()
+    #         # Update table with newly retrieved patient data
+    #         update_entry = (values[0], str(patient_data[0]) + " " + patient_data[1], patient_data[2])
+    #         tree.item(child, values=update_entry)
+    #
+    #     # Highlight patients with abnormal cholesterol value
+    #     self.highlight_patients(tree)
 
-        # for each item, collect corresponding patient data and update
-        for child in children:
-            values = tree.item(child, "values")
-            # Get patient and patient data based on their full name
-            current_patient = patient_list.select_patient(values[0])
-            patient_data = current_patient.get_data()
-            # Update table with newly retrieved patient data
-            update_entry = (values[0], str(patient_data[0]) + " " + patient_data[1], patient_data[2])
-            tree.item(child, values=update_entry)
 
-        # Highlight patients with abnormal cholesterol value
-        self.highlight_patients(tree)
+def is_new_data(values, patient):
+    patient_data = patient.get_data()
+    cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
+    effective_time = patient_data[2]
+    if values[1] == cholesterol_level and values[2] == effective_time:
+        return False
+    return True
+
+
+def format_data(patient):
+    # Assign patient name
+    patient_name = patient.first_name + " " + patient.last_name
+    # Assign patient data values
+    patient_data = patient.get_data()
+    cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
+    effective_time = patient_data[2]
+    # Assign new entry values
+    new_entry = (patient_name, cholesterol_level, effective_time)
+    return new_entry
 
 
 def duplicate_item(tree, item):
@@ -324,7 +366,7 @@ def fixed_map(option, style):
     # style.map() returns an empty list for missing options, so this
     # should be future-safe.
     return [elm for elm in style.map('Treeview', query_opt=option) if
-      elm[:2] != ('!disabled', '!selected')]
+            elm[:2] != ('!disabled', '!selected')]
 
 
 if __name__ == '__main__':

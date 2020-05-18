@@ -95,6 +95,7 @@ class PatientList:
     def __init__(self):
         self._patient_list = []
         self.average_cholesterol_level = 0
+        self._observers = []
 
     def __len__(self):
         return len(self._patient_list)
@@ -166,6 +167,18 @@ class PatientList:
         average = total/no_of_valid_patients
         self.average_cholesterol_level = average
         return average
+
+    def attach(self, observer):
+        self._observers.append(observer)
+        observer.set_subject(self)
+
+    def detach(self, observer):
+        self._observers.remove(observer)
+        observer.set_subject(None)
+
+    def notify(self):
+        for observer in self._observers:
+            observer.update()
 
 
 class Address:

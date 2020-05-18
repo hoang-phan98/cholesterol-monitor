@@ -20,14 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Machine Learning Data/data_codes.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Practitioner Data/500" beforeDir="false" afterPath="$PROJECT_DIR$/src/Practitioner Data/500" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/address_module.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_codes.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fhir_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fhir_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/patient_ids.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/patient_ids.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/design_rationale.docx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/design_rationale.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Practitioner Data/21550" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Practitioner Data/500" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/person_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,7 +65,7 @@
       <recent name="C:\Users\jason\Documents\Monash University\Year_3\FIT3077\Assignment_2\Assignment2_Code\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.machine_learning_module">
+  <component name="RunManager" selected="Python.application">
     <configuration name="TKInter" type="PythonConfigurationType" factoryName="Python">
       <module name="project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -248,8 +245,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.__init__" />
         <item itemvalue="Python.application" />
+        <item itemvalue="Python.__init__" />
         <item itemvalue="Python.person_module" />
       </list>
     </recent_temporary>
@@ -461,46 +458,46 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="549" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1589787292095" />
-    <state width="1515" height="213" key="GridCell.Tab.0.bottom" timestamp="1589791110646">
+    <state width="1515" height="264" key="GridCell.Tab.0.bottom" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589791110646" />
-    <state width="1515" height="213" key="GridCell.Tab.0.center" timestamp="1589791110645">
+    <state width="1515" height="264" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
+    <state width="1515" height="264" key="GridCell.Tab.0.center" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589791110645" />
-    <state width="1515" height="213" key="GridCell.Tab.0.left" timestamp="1589791110645">
+    <state width="1515" height="264" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
+    <state width="1515" height="264" key="GridCell.Tab.0.left" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589791110645" />
-    <state width="1515" height="213" key="GridCell.Tab.0.right" timestamp="1589791110645">
+    <state width="1515" height="264" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
+    <state width="1515" height="264" key="GridCell.Tab.0.right" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589791110645" />
-    <state width="1515" height="264" key="GridCell.Tab.1.bottom" timestamp="1589790929388">
+    <state width="1515" height="264" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
+    <state width="1515" height="264" key="GridCell.Tab.1.bottom" timestamp="1589808055197">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587872382230" />
-    <state width="1515" height="264" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589790929388" />
-    <state width="1515" height="264" key="GridCell.Tab.1.center" timestamp="1589790929388">
+    <state width="1515" height="264" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589808055197" />
+    <state width="1515" height="264" key="GridCell.Tab.1.center" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" timestamp="1587872382229" />
-    <state width="1515" height="264" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1589790929388" />
-    <state width="1515" height="264" key="GridCell.Tab.1.left" timestamp="1589790929388">
+    <state width="1515" height="264" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
+    <state width="1515" height="264" key="GridCell.Tab.1.left" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" timestamp="1587872382229" />
-    <state width="1515" height="264" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1589790929388" />
-    <state width="1515" height="264" key="GridCell.Tab.1.right" timestamp="1589790929388">
+    <state width="1515" height="264" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
+    <state width="1515" height="264" key="GridCell.Tab.1.right" timestamp="1589808055196">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="1259" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" timestamp="1587872382230" />
-    <state width="1515" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1589790929388" />
+    <state width="1515" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
     <state x="277" y="62" key="SettingsEditor" timestamp="1588747559564">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
@@ -511,6 +508,7 @@
       <configuration name="PythonConfigurationType">
         <watch expression="self.client" language="Python" />
         <watch expression="read_data_code_file" language="Python" />
+        <watch expression="self.monitored_patients._subject" language="Python" />
       </configuration>
     </watches-manager>
   </component>
