@@ -19,6 +19,10 @@ class Observer(ABC):
 
 
 class MonitoredTreeview(Observer, ttk.Treeview):
+    """
+    This class is the table which displays all of the patients being monitored and their data
+    It observes the monitored patient list and update its display accordingly
+    """
     def update(self):
         """
         Update the view according to the Patient List object being observed
@@ -35,6 +39,9 @@ class MonitoredTreeview(Observer, ttk.Treeview):
 
 
 class App:
+    """
+    Driver class which contains the logged in practitioner, client and UI components
+    """
     def __init__(self):
         self.practitioner = None
         self.client = None
@@ -59,6 +66,10 @@ class App:
         self.update_interval = interval
 
     def run(self):
+        """
+        Initializes the GUI display
+        :return: None
+        """
         # Create the main Tkinter UI
         self.main_UI = tk.Tk("Cholesterol Monitor")
         self.main_UI.title("Quarantine Coders' Application")
@@ -112,12 +123,13 @@ class App:
         Retrieve and display the list of all patients of the practitioner with the given identifier
         First try to load data from local storage, if not found, request from server
         """
+
+        # Get practitioner id from entry field
         practitioner_id = self.entry_field.get()
 
         try:
-            if practitioner_id == "":
+            if practitioner_id == "":   # if no identifier specified
                 raise KeyError
-
             try:
                 # Try to get load data from local storage
                 filename = "Practitioner Data/" + practitioner_id
@@ -171,6 +183,7 @@ class App:
         """
         Set the update interval for requesting patient's data from the server
         """
+        # get interval value from entry field
         self.set_interval(int(self.time_entry_field.get()))
         interval_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
                                                            str(self.update_interval))
@@ -321,6 +334,12 @@ class App:
 
 
 def is_new_data(values, patient):
+    """
+    Check whether the new patient data is different to the current values
+    :param values: current cholesterol values being displayed by the app
+    :param patient: a patient object which contains new patient data
+    :return: True if data differs, False otherwise
+    """
     patient_data = patient.get_data()
     cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
     effective_time = patient_data[2]
@@ -330,6 +349,11 @@ def is_new_data(values, patient):
 
 
 def format_data(patient):
+    """
+    Return the patient data in a format which can be use by the display
+    :param patient: a patient which contains patient data
+    :return: a tuple of (patient_name, cholesterol_level, effective_time)
+    """
     # Assign patient name
     patient_name = patient.first_name + " " + patient.last_name
     # Assign patient data values
