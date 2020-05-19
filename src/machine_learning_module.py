@@ -1,9 +1,7 @@
+import numpy as np
 import requests
-from src.fhir_module import CholesterolDataClient, FHIRClient
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
 import csv
+from sklearn import linear_model
 
 
 class MachineLearningClient:
@@ -116,7 +114,7 @@ class MachineLearningClient:
             for patient_id in patient_ids:
                 for data_code in data_codes:
                     res = requests.get(self._root_url + "Observation?patient=" + str(patient_id) +
-                                       "&code=" + str(data_code)+"&_sort=-date")
+                                       "&code=" + str(data_code) + "&_sort=-date")
                     data = res.json()
 
                     try:
@@ -132,7 +130,7 @@ class MachineLearningClient:
                                     data_value = component["valueQuantity"]["value"]
                                     break
 
-                        elif data_code == "72166-2":    # Smoking status
+                        elif data_code == "72166-2":  # Smoking status
                             data_description = data["entry"][0]["resource"]["code"]["coding"][0]["display"]
                             data_value = data["entry"][0]["resource"]["valueCodeableConcept"]["coding"][0]["code"]
 
@@ -148,24 +146,44 @@ class MachineLearningClient:
                                           "VALUE": patient_data_value[2]})
             return patient_data
 
-    # def plot_cholesterol_values(self):
-    #
-    #     cholesterol_values = get_cholesterol_values()
-    #     y_axis = []
-    #     for y_points in range(min(cholesterol_values), max(cholesterol_values) + 1):
-    #         y_axis.append(y_points)
-    #
-    #     plt.scatter(cholesterol_values, y_axis)
-    #
-    #     # Using linear regression machine learning algorithm
-    #     x = cholesterol_values
-    #     y = y_axis
-    #     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=10)
-    #
-    #     clf = LinearRegression()
-    #     clf.fit(x_train, y_train)
-    #     clf.predict(x_test)
-    #     clf.score(x_test, y_test)
+    def set_data_values_array(self):
+
+        with open("Machine Learning Data/patient_data.csv", "r") as patient_data_file:
+            read_patient_data_file = csv.reader(patient_data_file, delimiter=",")
+            patient_data_file.readline()
+            data_values = []
+            for data in read_patient_data_file:
+                data_values.append(data[2])
+            data_values_array = np.array(data_values).reshape((-1, 4))
+            return data_values_array
+
+    def get_data_values_array(self):
+
+        with open("Machine Learning Data/patient_data_set.csv", "w", newline="") as patient_values_file:
+            fieldnames = ["PATIENT ID", "BLOOD PRESSURE", "GLUCOSE", "TOBACCO INTAKE", "BMI"]
+            file_writer = csv.DictWriter(patient_values_file, fieldnames=fieldnames)
+            file_writer.writeheader()
+
+            patient_values = self.set_data_values_array()
+            patient_ids = self.read_id_csv()
+            for patient_id in patient_ids:
+                patient_data_id = patient_id
+
+            for patient_value in patient_values:
+                patient_data_value = patient_value[0], patient_value[1], patient_value[2], patient_value[3]
+
+                file_writer.writerow({"PATIENT ID": patient_data_id,
+                                      "BLOOD PRESSURE": patient_data_value[0],
+                                      "GLUCOSE": patient_data_value[1],
+                                      "TOBACCO INTAKE": patient_data_value[2],
+                                      "BMI": patient_data_value[3]})
+
+    def machine_learning_LR(self):
+
+        data_values = self.get_data_values_array()
+        regr = linear_model.LinearRegression()
+        for patient_data in data_values:
+            regr.fit(patient_data[0], patient_data[1])
 
 
 if __name__ == '__main__':
@@ -173,4 +191,7 @@ if __name__ == '__main__':
     # client.patient_id_csv()
     # client.data_codes_csv()
     # print(client.read_data_csv())
-    print(client.data_chart())
+    # print(client.data_chart())
+    print(client.get_data_values_array())
+    # print(client.set_data_values_array())
+    # print(client.read_id_csv())
