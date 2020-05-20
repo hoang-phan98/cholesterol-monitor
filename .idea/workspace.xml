@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -418,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589961651094</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Adding docstrings to machine_learning_module methods.">
+      <created>1589962437904</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1589962437904</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -467,7 +474,8 @@
     <MESSAGE value="Creating data set for patients and their diagnostics." />
     <MESSAGE value="Completing data set csv method." />
     <MESSAGE value="Implementing machine learning method." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementing machine learning method." />
+    <MESSAGE value="Adding docstrings to machine_learning_module methods." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding docstrings to machine_learning_module methods." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">
