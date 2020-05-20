@@ -1,7 +1,10 @@
 import numpy as np
+import pandas as pd
 import requests
 import csv
-from sklearn import linear_model
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 
 class MachineLearningClient:
@@ -82,6 +85,7 @@ class MachineLearningClient:
                 file_writer.writerow({"DATA CODES": data_code})
 
     def read_id_csv(self):
+
         with open("Machine Learning Data/patient_ids.csv", "r") as patient_id_file:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
             patient_id_file.readline()
@@ -92,6 +96,7 @@ class MachineLearningClient:
             return patient_list
 
     def read_data_csv(self):
+
         with open("Machine Learning Data/data_codes.csv", "r") as data_codes_file:
             read_data_code_file = csv.reader(data_codes_file, delimiter=",")
             data_codes_file.readline()
@@ -102,6 +107,7 @@ class MachineLearningClient:
             return all_data_codes
 
     def data_chart(self):
+
         with open("Machine Learning Data/patient_data.csv", "w", newline="") as patient_data_file:
             fieldnames = ["PATIENT ID", "DIAGNOSTIC DESCRIPTION", "VALUE"]
             file_writer = csv.DictWriter(patient_data_file, fieldnames=fieldnames)
@@ -136,7 +142,7 @@ class MachineLearningClient:
 
                         else:
                             data_description = "No Data"
-                            data_value = "No Data"
+                            data_value = "0"
 
                     patient_data_value = patient_id, data_description, data_value
                     patient_data.append(patient_data_value)
@@ -156,13 +162,13 @@ class MachineLearningClient:
             for data in read_patient_data_file:
                 data_values.append(data[2])
 
-            data_values_array = np.array(data_values).reshape((-1, 4))
+            data_values_array = np.array(data_values).reshape((-1, 5))
             return data_values_array
 
     def get_data_values_array(self):
 
         with open("Machine Learning Data/patient_data_set.csv", "w", newline="") as patient_values_file:
-            fieldnames = ["PATIENT ID", "BLOOD PRESSURE", "GLUCOSE", "TOBACCO INTAKE", "BMI"]
+            fieldnames = ["PATIENT ID", "BLOOD PRESSURE", "GLUCOSE", "TOBACCO INTAKE", "BMI", "CHOLESTEROL"]
             file_writer = csv.DictWriter(patient_values_file, fieldnames=fieldnames)
             file_writer.writeheader()
 
@@ -173,24 +179,52 @@ class MachineLearningClient:
             while check_id:
                 for patient_value in patient_values:
                     for patient_id in patient_ids:
-                        #patient_data_value = patient_value[0], patient_value[1], patient_value[2], patient_value[3]
                         file_writer.writerow({"PATIENT ID": patient_id,
                                               "BLOOD PRESSURE": patient_value[0],
                                               "GLUCOSE": patient_value[1],
                                               "TOBACCO INTAKE": patient_value[2],
-                                              "BMI": patient_value[3]})
+                                              "BMI": patient_value[3],
+                                              "CHOLESTEROL": patient_value[4]})
                         patient_ids.pop(0)
                         check_id = False
                         if not check_id:
                             break
 
-
     def machine_learning_LR(self):
 
-        data_values = self.get_data_values_array()
-        regr = linear_model.LinearRegression()
-        for patient_data in data_values:
-            regr.fit(patient_data[0], patient_data[1])
+        # Loading Data Set
+        data = pd.read_csv("Machine Learning Data/patient_data_set.csv")
+        data.head()
+
+        # Exploratory Analysis
+        # Total percentage of missing data
+        missing_data = data.isnull().sum()
+        total_percentage = (missing_data.sum()/data.shape[0]) * 100
+        print(f"the total percentage of missing data is {round(total_percentage, 2)}%")
+
+        # Graphs to check predictions
+        plt.scatter(data["BLOOD PRESSURE"], data["CHOLESTEROL"])
+        #plt.show()
+        plt.scatter(data["GLUCOSE"], data["CHOLESTEROL"])
+        #plt.show()
+        plt.scatter(data["TOBACCO INTAKE"], data["CHOLESTEROL"])
+        #plt.show()
+        plt.scatter(data["BMI"], data["CHOLESTEROL"])
+        #plt.show()
+
+        # Prediction
+        X = data.drop(["PATIENT ID"], 1)
+        y = data["CHOLESTEROL"]
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        clf = LinearRegression()
+        clf.fit(X_train, y_train)
+        # Checking the tests
+        # print(clf.predict(X_test))
+        # print(y_test)
+
+        print("The accuracy of the model is " + str(clf.score(X_test, y_test)) + " out of 1.0")
+        return data
 
 
 if __name__ == '__main__':
@@ -199,6 +233,6 @@ if __name__ == '__main__':
     # client.data_codes_csv()
     # print(client.read_data_csv())
     # print(client.data_chart())
-    print(client.get_data_values_array())
-    print(client.set_data_values_array())
-    # print(client.read_id_csv())
+    # print(client.get_data_values_array())
+    # print(client.set_data_values_array())
+    print(client.machine_learning_LR())
