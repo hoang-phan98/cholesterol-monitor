@@ -20,10 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/patient_data_set.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/patient_data_set.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -400,7 +398,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589439866554</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Creating data set for patients and their diagnostics.">
+      <created>1589901205816</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1589901205816</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -446,7 +451,8 @@
     <MESSAGE value="Creating CSV files for the data codes." />
     <MESSAGE value="updating data_chart method, need to fix bug. (WIP)" />
     <MESSAGE value="updating data_chart method (WIP)" />
-    <option name="LAST_COMMIT_MESSAGE" value="updating data_chart method (WIP)" />
+    <MESSAGE value="Creating data set for patients and their diagnostics." />
+    <option name="LAST_COMMIT_MESSAGE" value="Creating data set for patients and their diagnostics." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">

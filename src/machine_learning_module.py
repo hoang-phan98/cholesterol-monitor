@@ -152,8 +152,10 @@ class MachineLearningClient:
             read_patient_data_file = csv.reader(patient_data_file, delimiter=",")
             patient_data_file.readline()
             data_values = []
+
             for data in read_patient_data_file:
                 data_values.append(data[2])
+
             data_values_array = np.array(data_values).reshape((-1, 4))
             return data_values_array
 
@@ -166,17 +168,22 @@ class MachineLearningClient:
 
             patient_values = self.set_data_values_array()
             patient_ids = self.read_id_csv()
-            for patient_id in patient_ids:
-                patient_data_id = patient_id
 
-            for patient_value in patient_values:
-                patient_data_value = patient_value[0], patient_value[1], patient_value[2], patient_value[3]
+            check_id = True
+            while check_id:
+                for patient_value in patient_values:
+                    for patient_id in patient_ids:
+                        #patient_data_value = patient_value[0], patient_value[1], patient_value[2], patient_value[3]
+                        file_writer.writerow({"PATIENT ID": patient_id,
+                                              "BLOOD PRESSURE": patient_value[0],
+                                              "GLUCOSE": patient_value[1],
+                                              "TOBACCO INTAKE": patient_value[2],
+                                              "BMI": patient_value[3]})
+                        patient_ids.pop(0)
+                        check_id = False
+                        if not check_id:
+                            break
 
-                file_writer.writerow({"PATIENT ID": patient_data_id,
-                                      "BLOOD PRESSURE": patient_data_value[0],
-                                      "GLUCOSE": patient_data_value[1],
-                                      "TOBACCO INTAKE": patient_data_value[2],
-                                      "BMI": patient_data_value[3]})
 
     def machine_learning_LR(self):
 
@@ -193,5 +200,5 @@ if __name__ == '__main__':
     # print(client.read_data_csv())
     # print(client.data_chart())
     print(client.get_data_values_array())
-    # print(client.set_data_values_array())
+    print(client.set_data_values_array())
     # print(client.read_id_csv())
