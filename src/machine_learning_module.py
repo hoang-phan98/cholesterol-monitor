@@ -13,6 +13,10 @@ class MachineLearningClient:
         self._root_url = root_url
 
     def patient_id_csv(self):
+        """
+        Writes a CSV file containing roughly 2000 patient ids, so the data is stored persistently.
+        :return: None
+        """
 
         # Creating csv file with all the patient ids
         with open("Machine Learning Data/patient_ids.csv", "w", newline="") as patient_id_file:
@@ -50,6 +54,10 @@ class MachineLearningClient:
                     break
 
     def get_patient_data_codes(self):
+        """
+        Obtains the data codes from the patients, using their ids.
+        :return: List of data codes.
+        """
 
         with open("Machine Learning Data/patient_ids.csv", "r") as patient_id_file:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
@@ -74,6 +82,10 @@ class MachineLearningClient:
             return useful_data_codes
 
     def data_codes_csv(self):
+        """
+        Writes the data codes into a CSV, so the data is stored persistently.
+        :return:
+        """
 
         with open("Machine Learning Data/data_codes.csv", "w", newline="") as data_code_file:
             fieldnames = ["DATA CODES"]
@@ -85,6 +97,10 @@ class MachineLearningClient:
                 file_writer.writerow({"DATA CODES": data_code})
 
     def read_id_csv(self):
+        """
+        Puts all the used patient ids into a list so it can be accessed easier.
+        :return: List of patient ids
+        """
 
         with open("Machine Learning Data/patient_ids.csv", "r") as patient_id_file:
             read_id_file = csv.reader(patient_id_file, delimiter=",")
@@ -96,6 +112,10 @@ class MachineLearningClient:
             return patient_list
 
     def read_data_csv(self):
+        """
+        puts all the used data codes in a list so it can be accessed easier.
+        :return: List of data codes.
+        """
 
         with open("Machine Learning Data/data_codes.csv", "r") as data_codes_file:
             read_data_code_file = csv.reader(data_codes_file, delimiter=",")
@@ -107,6 +127,11 @@ class MachineLearningClient:
             return all_data_codes
 
     def data_chart(self):
+        """
+        Writes a CSV file containing the most useful data codes and the value that is respective
+        to the patient, using their patient id.
+        :return: List of the patient data.
+        """
 
         with open("Machine Learning Data/patient_data.csv", "w", newline="") as patient_data_file:
             fieldnames = ["PATIENT ID", "DIAGNOSTIC DESCRIPTION", "VALUE"]
@@ -153,6 +178,10 @@ class MachineLearningClient:
             return patient_data
 
     def set_data_values_array(self):
+        """
+        Sets the data into a more readable view, and so that the data is organised in columns.
+        :return: List of data values.
+        """
 
         with open("Machine Learning Data/patient_data.csv", "r") as patient_data_file:
             read_patient_data_file = csv.reader(patient_data_file, delimiter=",")
@@ -166,6 +195,10 @@ class MachineLearningClient:
             return data_values_array
 
     def get_data_values_array(self):
+        """
+        Writes the data values out respective to the patient, using their patient id, to a CSV file.
+        :return: None
+        """
 
         with open("Machine Learning Data/patient_data_set.csv", "w", newline="") as patient_values_file:
             fieldnames = ["PATIENT ID", "BLOOD PRESSURE", "GLUCOSE", "TOBACCO INTAKE", "BMI", "CHOLESTEROL"]
@@ -191,6 +224,11 @@ class MachineLearningClient:
                             break
 
     def machine_learning_LR(self):
+        """
+        Predicts whether the a set of inputs respective to the data codes used can predict
+        a patients cholesterol level.
+        :return: data set.
+        """
 
         # Loading Data Set
         data = pd.read_csv("Machine Learning Data/patient_data_set.csv")
@@ -219,6 +257,7 @@ class MachineLearningClient:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         clf = LinearRegression()
         clf.fit(X_train, y_train)
+
         # Checking the tests
         # print(clf.predict(X_test))
         # print(y_test)
