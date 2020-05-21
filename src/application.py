@@ -75,7 +75,7 @@ class App:
         self.main_UI.title("Quarantine Coders' Application")
         entry_icon = ImageTk.PhotoImage(Image.open("Monash_Uni_Logo.png"))
         self.main_UI.iconphoto(True, entry_icon)
-        self.entry_label = tk.Label(self.main_UI, text="Enter your ID")
+        self.entry_label = tk.Label(self.main_UI, text="Enter your identifier")
         self.entry_label.grid(row=0, column=0)
         self.entry_field = tk.Entry(self.main_UI)
         self.entry_field.grid(row=0, column=1)
@@ -216,7 +216,11 @@ class App:
                 self.practitioner.get_patient_data(self.client)
 
                 # Notify Treeview observer of data changes
-                self.practitioner.get_monitored_patients().notify()
+                try:
+                    self.practitioner.get_monitored_patients().notify()
+                except AttributeError:
+                    time.sleep(1)
+
                 self.highlight_patients(self.monitored_patients)
 
                 # Sleep
@@ -288,7 +292,10 @@ class App:
                     if float(
                             patient_cholesterol) > self.practitioner.get_monitored_patients().average_cholesterol_level:
                         tree.item(child, tags=['high'])
-                        tree.tag_configure('high', foreground='red')
+                    else:
+                        tree.item(child, tags=['normal'])
+                    tree.tag_configure('normal', foreground=None)
+                    tree.tag_configure('high', foreground='red')
                 except ValueError:
                     continue
         except tk.TclError:
@@ -307,6 +314,7 @@ class App:
                 self.practitioner.remove_patient_monitor(values[0])
                 # Remove item from treeview
                 self.monitored_patients.delete(item)
+            self.highlight_patients(self.monitored_patients)
         except IndexError:
             return
 
