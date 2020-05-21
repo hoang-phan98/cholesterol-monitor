@@ -5,6 +5,7 @@ import csv
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from statistics import mean
 
 
 class MachineLearningClient:
@@ -240,30 +241,38 @@ class MachineLearningClient:
         total_percentage = (missing_data.sum()/data.shape[0]) * 100
         print(f"the total percentage of missing data is {round(total_percentage, 2)}%")
 
-        # Graphs to check predictions
-        plt.scatter(data["BLOOD PRESSURE"], data["CHOLESTEROL"])
-        #plt.show()
-        plt.scatter(data["GLUCOSE"], data["CHOLESTEROL"])
-        #plt.show()
-        plt.scatter(data["TOBACCO INTAKE"], data["CHOLESTEROL"])
-        #plt.show()
-        plt.scatter(data["BMI"], data["CHOLESTEROL"])
-        #plt.show()
-
         # Prediction
-        X = data.drop(["PATIENT ID"], 1)
+        X = data.drop(["PATIENT ID", "CHOLESTEROL"], 1)
         y = data["CHOLESTEROL"]
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         clf = LinearRegression()
         clf.fit(X_train, y_train)
 
         # Checking the tests
         # print(clf.predict(X_test))
+        # print(X_test)
         # print(y_test)
 
+        # Putting all the predicted cholesterol values into a list
+        predicted_cholesterol = []
+        for pred_chol in clf.predict(X_test):
+            predicted_cholesterol.append(pred_chol)
+
+        # Getting average value of cholesterol
+        avg = mean(predicted_cholesterol)
+
+        high_cholesterol_array = []
+        for value in data["CHOLESTEROL"]:
+            if value > avg:
+                high_cholesterol_array.append(1)
+            else:
+                high_cholesterol_array.append(0)
+
+        data["HIGH_CHOLESTEROL"] = high_cholesterol_array
+
         print("The accuracy of the model is " + str(clf.score(X_test, y_test)) + " out of 1.0")
-        return data
+        print(data)
 
 
 if __name__ == '__main__':
