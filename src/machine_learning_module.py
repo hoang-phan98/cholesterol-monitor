@@ -2,10 +2,8 @@ import numpy as np
 import pandas as pd
 import requests
 import csv
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from statistics import mean
 
 
 class MachineLearningClient:
@@ -192,7 +190,7 @@ class MachineLearningClient:
             for data in read_patient_data_file:
                 data_values.append(data[2])
 
-            data_values_array = np.array(data_values).reshape((-1, 5))
+            data_values_array = np.array(data_values).reshape((-1, 7))
             return data_values_array
 
     def get_data_values_array(self):
@@ -202,7 +200,8 @@ class MachineLearningClient:
         """
 
         with open("Machine Learning Data/patient_data_set.csv", "w", newline="") as patient_values_file:
-            fieldnames = ["PATIENT ID", "BLOOD PRESSURE", "GLUCOSE", "TOBACCO INTAKE", "BMI", "CHOLESTEROL"]
+            fieldnames = ["PATIENT ID", "BLOOD PRESSURE", "GLUCOSE", "TOBACCO INTAKE",
+                          "BMI", "SODIUM", "WEIGHT", "CHOLESTEROL"]
             file_writer = csv.DictWriter(patient_values_file, fieldnames=fieldnames)
             file_writer.writeheader()
 
@@ -218,7 +217,9 @@ class MachineLearningClient:
                                               "GLUCOSE": patient_value[1],
                                               "TOBACCO INTAKE": patient_value[2],
                                               "BMI": patient_value[3],
-                                              "CHOLESTEROL": patient_value[4]})
+                                              "SODIUM": patient_value[4],
+                                              "WEIGHT": patient_value[5],
+                                              "CHOLESTEROL": patient_value[6]})
                         patient_ids.pop(0)
                         check_id = False
                         if not check_id:
@@ -243,36 +244,45 @@ class MachineLearningClient:
 
         # Prediction
         X = data.drop(["PATIENT ID", "CHOLESTEROL"], 1)
+        # X = preprocessing.scale(X)
         y = data["CHOLESTEROL"]
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=100)
         clf = LinearRegression()
         clf.fit(X_train, y_train)
 
         # Checking the tests
         # print(clf.predict(X_test))
-        # print(X_test)
         # print(y_test)
 
         # Putting all the predicted cholesterol values into a list
         predicted_cholesterol = []
-        for pred_chol in clf.predict(X_test):
-            predicted_cholesterol.append(pred_chol)
-
-        # Getting average value of cholesterol
-        avg = mean(predicted_cholesterol)
+        for predicted_values in clf.predict(X_test):
+            predicted_cholesterol.append(predicted_values)
 
         high_cholesterol_array = []
-        for value in data["CHOLESTEROL"]:
-            if value > avg:
+        for value in predicted_cholesterol:
+            if value > 175:
+                # if value is higher than 175 mg/dl, patient is labelled with 1
                 high_cholesterol_array.append(1)
             else:
+                # if value is lower than 175 mg/dl, patient is labelled with 0
                 high_cholesterol_array.append(0)
 
-        data["HIGH_CHOLESTEROL"] = high_cholesterol_array
-
-        print("The accuracy of the model is " + str(clf.score(X_test, y_test)) + " out of 1.0")
+        # prints the accuracy of the accuracy of the model
+        print("The accuracy of the model is " + str(clf.score(X_test, y_test)) + " out of 1.0\n")
+        # prints the data set
         print(data)
+
+        # creating new data set to show if patients have a high cholesterol level
+        new_data = X_test
+        df = pd.DataFrame(new_data)
+
+        # creating new column in the new data set to indicate which patients have a high cholesterol
+        # from the tested patients
+        df["PREDICTED CHOLESTEROL"] = y_test
+        df["HIGH_CHOLESTEROL"] = high_cholesterol_array
+        print(df)
 
 
 if __name__ == '__main__':

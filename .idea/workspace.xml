@@ -21,6 +21,9 @@
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/data_codes.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/data_codes.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/patient_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/patient_data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/patient_data_set.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/patient_data_set.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -432,7 +435,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589963409351</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be.">
+      <created>1590048344571</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1590048344571</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -483,7 +493,8 @@
     <MESSAGE value="Implementing machine learning method." />
     <MESSAGE value="Adding docstrings to machine_learning_module methods." />
     <MESSAGE value="Updating requirements file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating requirements file" />
+    <MESSAGE value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">
