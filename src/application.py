@@ -44,7 +44,8 @@ class App:
     """
     def __init__(self):
         self.practitioner = None
-        self.client = None
+        self.cholesterol_client = None
+        self.blood_pressure_client = None
         self.update_interval = 30
         self.main_UI = None
         self.entry_field = None
@@ -56,8 +57,11 @@ class App:
         self.all_patients = None
         self.monitored_patients = None
 
-    def set_client(self, client):
-        self.client = client
+    def set_cholesterol_client(self, client):
+        self.cholesterol_client = client
+
+    def set_blood_pressure_client(self, client):
+        self.blood_pressure_client = client
 
     def set_practitioner(self, practitioner):
         self.practitioner = practitioner
@@ -90,12 +94,12 @@ class App:
         self.all_patients.grid(row=1, column=0, columnspan=1)
         self.all_patients.bind("<Double-1>", self.add_monitored_patient)
 
-        # create monitored patients treeview with 3 columns
-        cols = ('Name', 'Total Cholesterol', 'Time')
+        # create monitored patients treeview with 6 columns
+        cols = ('Name', 'Total Cholesterol', 'Time', 'Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time ')
         self.monitored_patients = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.monitored_patients.heading(col, text=col)
-        self.monitored_patients.grid(row=1, column=1, columnspan=3)
+        self.monitored_patients.grid(row=1, column=1, columnspan=6)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
         self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
 
@@ -103,7 +107,7 @@ class App:
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
         add_patient_button.grid(row=4, column=0)
         close_button = tk.Button(self.main_UI, text="Close", width=15, command=self.exit_program)
-        close_button.grid(row=4, column=3)
+        close_button.grid(row=4, column=6)
         more_info_button = tk.Button(self.main_UI, text="More Info", width=15, command=self.display_patient_info)
         more_info_button.grid(row=4, column=1)
         remove_patient_button = tk.Button(self.main_UI, text="Remove Monitor", width=15,
@@ -138,8 +142,15 @@ class App:
                 file.close()
             except FileNotFoundError:
                 print("No data found in storage, requesting from server...")
-                current_practitioner = self.client.get_practitioner_info(practitioner_id)
-                current_practitioner.get_patient_list(self.client)
+                current_practitioner = self.cholesterol_client.get_practitioner_info(practitioner_id)
+                current_practitioner.get_patient_list(self.cholesterol_client)
+
+                # Retrieve and update patient data from the server
+                for patient in current_practitioner.get_all_patients().get_patient_list():
+                    cholesterol_data = self.cholesterol_client.get_patient_data(patient.id)
+                    blood_pressure_data = self.blood_pressure_client.get_patient_data(patient.id)
+                    patient.update_data(cholesterol_data)
+                    patient.update_data(blood_pressure_data)
 
             # Updating the UI with the practitioner's name and time interval input
             self.entry_field.destroy()
@@ -213,7 +224,7 @@ class App:
             # Execute if there's at least one patient being monitored
             if len(self.practitioner.get_monitored_patients()) > 0:
                 # Request data from server
-                self.practitioner.get_patient_data(self.client)
+                self.practitioner.get_patient_data(self.cholesterol_client)
 
                 # Notify Treeview observer of data changes
                 try:
@@ -348,7 +359,7 @@ def is_new_data(values, patient):
     :param patient: a patient object which contains new patient data
     :return: True if data differs, False otherwise
     """
-    patient_data = patient.get_data()
+    patient_data = patient.get_cholesterol_data()
     cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
     effective_time = patient_data[2]
     if values[1] == cholesterol_level and values[2] == effective_time:
@@ -365,7 +376,7 @@ def format_data(patient):
     # Assign patient name
     patient_name = patient.first_name + " " + patient.last_name
     # Assign patient data values
-    patient_data = patient.get_data()
+    patient_data = patient.get_cholesterol_data()
     cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
     effective_time = patient_data[2]
     # Assign new entry values
@@ -403,6 +414,8 @@ def fixed_map(option, style):
 
 if __name__ == '__main__':
     app = App()
-    client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
-    app.set_client(client)
+    cholesterol_client = CholesterolDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
+    blood_pressure_client = BloodPressureDataClient("https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/")
+    app.set_cholesterol_client(cholesterol_client)
+    app.set_blood_pressure_client(blood_pressure_client)
     app.run()
