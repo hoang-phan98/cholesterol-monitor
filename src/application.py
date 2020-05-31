@@ -225,6 +225,7 @@ class App:
             if len(self.practitioner.get_monitored_patients()) > 0:
                 # Request data from server
                 self.practitioner.get_patient_data(self.cholesterol_client)
+                self.practitioner.get_patient_data(self.blood_pressure_client)
 
                 # Notify Treeview observer of data changes
                 try:
@@ -246,10 +247,9 @@ class App:
         for item in selected:
             try:
                 patient = self.all_patients.item(item, "values")
-                new_entry = (patient[0], patient[1], patient[2])
-                if not duplicate_item(self.monitored_patients, new_entry):
+                if not duplicate_item(self.monitored_patients, patient):
                     # Add patient to treeview
-                    self.monitored_patients.insert("", "end", values=new_entry)
+                    self.monitored_patients.insert("", "end", values=patient)
                     # Add patient to practitioner's monitored patient list
                     self.practitioner.add_patient_monitor(patient[0])
                     self.highlight_patients(self.monitored_patients)
@@ -375,12 +375,23 @@ def format_data(patient):
     """
     # Assign patient name
     patient_name = patient.first_name + " " + patient.last_name
+
     # Assign patient data values
-    patient_data = patient.get_cholesterol_data()
-    cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
-    effective_time = patient_data[2]
+    # Cholesterol
+    patient_cholesterol_data = patient.get_cholesterol_data()
+    cholesterol_level = str(patient_cholesterol_data[0]) + " " + patient_cholesterol_data[1]
+    effective_time_cholesterol = patient_cholesterol_data[2]
+
+    # Blood Pressure
+    patient_blood_pressure_data = patient.get_blood_pressure_data()
+    systolic = str(patient_blood_pressure_data[0]) + patient_blood_pressure_data[2]
+    diastolic = str(patient_blood_pressure_data[1]) + patient_blood_pressure_data[2]
+    effective_time_blood_pressure = patient_blood_pressure_data[3]
+
     # Assign new entry values
-    new_entry = (patient_name, cholesterol_level, effective_time)
+    new_entry = (patient_name, cholesterol_level, effective_time_cholesterol,
+                 systolic, diastolic, effective_time_blood_pressure)
+
     return new_entry
 
 
