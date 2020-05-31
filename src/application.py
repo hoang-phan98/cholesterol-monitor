@@ -1,13 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+import matplotlib
 from src.fhir_module import *
 from PIL import ImageTk, Image
-from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 import pickle
 import time
 import threading
 from abc import ABC, abstractmethod
+matplotlib.use("TkAgg")
 
 
 class Observer(ABC):
@@ -99,6 +102,7 @@ class App:
         self.monitored_patients.grid(row=1, column=1, columnspan=4)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
         self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
+        self.monitored_patients.bind("<Double-1>", self.cholesterol_graph)
 
         # create buttons
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
@@ -112,7 +116,7 @@ class App:
                                           command=self.remove_monitored_patient)
         remove_patient_button.grid(row=4, column=2)
         graph_cholesterol_button = tk.Button(self.main_UI, text="Graph Cholesterol", width=15,
-                                             command=self.cholesterol_graph())
+                                             command=self.cholesterol_graph)
         graph_cholesterol_button.grid(row=4, column=3)
 
         # Fix highlighting bug
@@ -327,19 +331,25 @@ class App:
 
         try:
             if self.practitioner is not None:
-                cholesterol_data = []
-                X = self.practitioner.get_monitored_patients()
-                for data in X:
-                    cholesterol_data.append(X.get_patient_data(self.client))
-                Y = cholesterol_data
-                graph = plt.bar(X, Y, label="Cholesterol Levels")
+                patients = []
+                patient_data = []
+                children = self.monitored_patients.get_children('')
+                for child in children:
+                    values = self.monitored_patients.item(child, "values")
+                    patient_cholesterol = values[1].split(' ')[0]
+                    if patient_cholesterol != "No":
+                        patient_data.append(patient_cholesterol)
+                        patient_name = values[0]
+                        patients.append(patient_name)
+                X = patients
+                Y = patient_data
 
-                # Create a pop-up window to display cholesterol graph.
-                info_window = tk.Toplevel()
-                info_window.title("Cholesterol Graph")
-                patient_info = ttk.Treeview(info_window)
-                patient_info.grid(row=400, column=400)
-                patient_info.insert("", "end", values=graph)
+                figure = Figure(figsize=(5, 5), dpi=100)
+                subplot = figure.add_subplot(111)
+                subplot.bar(X, Y)
+
+                canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+                canvas.get_tk_widget().grid()
 
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")

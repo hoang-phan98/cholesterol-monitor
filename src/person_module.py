@@ -107,6 +107,16 @@ class PatientList:
                 return True
         return False
 
+    def __str__(self):
+        length = len(self)
+        if length > 0:
+            output = str(self._patient_list[length - 1])
+            for i in range(length - 2, -1, -1):
+                output += "," + str(self._patient_list[i])
+        else:
+            output = ""
+        return output
+
     def add_patient(self, patient):
         """
         Add the patient to the patient list and recalculate avg cholesterol

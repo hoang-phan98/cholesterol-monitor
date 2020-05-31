@@ -21,8 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Practitioner Data/21550" beforeDir="false" afterPath="$PROJECT_DIR$/src/Practitioner Data/21550" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/person_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,7 +53,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../FIT2085/Pracs/Prac_7_(Interview_2)/Prac_7_files/stack.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -447,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590072870244</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Creating graph_cholesterol method in the application, as well as updating the GUI to accommodate the change (WIP).">
+      <created>1590914390064</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1590914390064</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -500,7 +507,8 @@
     <MESSAGE value="Updating requirements file" />
     <MESSAGE value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
     <MESSAGE value="Creating new data set for the machine learning technique." />
-    <option name="LAST_COMMIT_MESSAGE" value="Creating new data set for the machine learning technique." />
+    <MESSAGE value="Creating graph_cholesterol method in the application, as well as updating the GUI to accommodate the change (WIP)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Creating graph_cholesterol method in the application, as well as updating the GUI to accommodate the change (WIP)." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" timestamp="1588834590216">
