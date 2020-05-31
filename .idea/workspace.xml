@@ -19,12 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
+    <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="Updating cholesterol_graph method so it is displayed in a pop up window.&#10;Adding __str__ method for PatientList so it can be iterable.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/data_codes.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/data_codes.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/patient_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/patient_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Machine Learning Data/patient_data_set.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/Machine Learning Data/patient_data_set.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/machine_learning_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/machine_learning_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +37,37 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="Assignment-3" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1apvNhsZY8K49qlxGqqZYAt8843" />
@@ -77,7 +105,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.machine_learning_module">
+  <component name="RunManager" selected="Python.application">
     <configuration name="TKInter" type="PythonConfigurationType" factoryName="Python">
       <module name="project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -497,72 +525,44 @@
     <option name="LAST_COMMIT_MESSAGE" value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="484" y="13" key="#application" timestamp="1588834590216">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="484" y="13" key="#application/0.0.1536.834@0.0.1536.834" timestamp="1588834590216" />
-    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589730918536">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1589730918536" />
-    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1587807984543" />
-    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" timestamp="1587807984543" />
-    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1589790928899">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.834@0.0.1536.834" timestamp="1589790928899" />
-    <state width="1033" height="466" key="DebuggerActiveHint" timestamp="1588934494032">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1033" height="466" key="DebuggerActiveHint/0.0.1536.834@0.0.1536.834" timestamp="1588934494032" />
-    <state x="549" y="159" key="FileChooserDialogImpl" timestamp="1589787292095">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="549" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1589787292095" />
-    <state width="1515" height="213" key="GridCell.Tab.0.bottom" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="213" key="GridCell.Tab.0.center" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="213" key="GridCell.Tab.0.left" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="213" key="GridCell.Tab.0.right" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="264" key="GridCell.Tab.1.bottom" timestamp="1589808055197">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587872382230" />
-    <state width="1515" height="264" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589808055197" />
-    <state width="1515" height="264" key="GridCell.Tab.1.center" timestamp="1589808055196">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" timestamp="1587872382229" />
-    <state width="1515" height="264" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
-    <state width="1515" height="264" key="GridCell.Tab.1.left" timestamp="1589808055196">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" timestamp="1587872382229" />
-    <state width="1515" height="264" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
-    <state width="1515" height="264" key="GridCell.Tab.1.right" timestamp="1589808055196">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" timestamp="1587872382230" />
-    <state width="1515" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
-    <state x="277" y="62" key="SettingsEditor" timestamp="1589866288015">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="277" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1589866288015" />
+    <state x="484" y="13" key="#application" />
+    <state x="484" y="13" key="#application/0.0.1536.834@0.0.1536.834" />
+    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog" />
+    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" />
+    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser" />
+    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" />
+    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" />
+    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.834@0.0.1536.834" />
+    <state width="1033" height="466" key="DebuggerActiveHint" />
+    <state width="1033" height="466" key="DebuggerActiveHint/0.0.1536.834@0.0.1536.834" />
+    <state x="549" y="159" key="FileChooserDialogImpl" />
+    <state x="549" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.bottom" />
+    <state width="1259" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.center" />
+    <state width="1259" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.left" />
+    <state width="1259" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.right" />
+    <state width="1259" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.bottom" />
+    <state width="1259" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.center" />
+    <state width="1259" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.left" />
+    <state width="1259" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.right" />
+    <state width="1259" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" />
+    <state x="277" y="62" key="SettingsEditor" />
+    <state x="277" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
