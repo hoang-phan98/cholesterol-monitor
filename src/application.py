@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from src.fhir_module import *
 from PIL import ImageTk, Image
+from matplotlib import pyplot as plt
 import pickle
 import time
 import threading
@@ -95,7 +96,7 @@ class App:
         self.monitored_patients = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.monitored_patients.heading(col, text=col)
-        self.monitored_patients.grid(row=1, column=1, columnspan=3)
+        self.monitored_patients.grid(row=1, column=1, columnspan=4)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
         self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
 
@@ -103,12 +104,16 @@ class App:
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
         add_patient_button.grid(row=4, column=0)
         close_button = tk.Button(self.main_UI, text="Close", width=15, command=self.exit_program)
-        close_button.grid(row=4, column=3)
+        # close_button.grid(row=4, column=3)
+        close_button.grid(row=4, column=4)
         more_info_button = tk.Button(self.main_UI, text="More Info", width=15, command=self.display_patient_info)
         more_info_button.grid(row=4, column=1)
         remove_patient_button = tk.Button(self.main_UI, text="Remove Monitor", width=15,
                                           command=self.remove_monitored_patient)
         remove_patient_button.grid(row=4, column=2)
+        graph_cholesterol_button = tk.Button(self.main_UI, text="Graph Cholesterol", width=15,
+                                             command=self.cholesterol_graph())
+        graph_cholesterol_button.grid(row=4, column=3)
 
         # Fix highlighting bug
         style = ttk.Style()
@@ -317,6 +322,27 @@ class App:
             self.highlight_patients(self.monitored_patients)
         except IndexError:
             return
+
+    def cholesterol_graph(self, event=None):
+
+        try:
+            if self.practitioner is not None:
+                cholesterol_data = []
+                X = self.practitioner.get_monitored_patients()
+                for data in X:
+                    cholesterol_data.append(X.get_patient_data(self.client))
+                Y = cholesterol_data
+                graph = plt.bar(X, Y, label="Cholesterol Levels")
+
+                # Create a pop-up window to display cholesterol graph.
+                info_window = tk.Toplevel()
+                info_window.title("Cholesterol Graph")
+                patient_info = ttk.Treeview(info_window)
+                patient_info.grid(row=400, column=400)
+                patient_info.insert("", "end", values=graph)
+
+        except KeyError:
+            messagebox.showinfo("Error", "No practitioner identifier given")
 
     # def update_display(self, tree):
     #     """
