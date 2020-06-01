@@ -120,9 +120,12 @@ class App:
         graph_cholesterol_button = tk.Button(self.main_UI, text="Graph Cholesterol", width=15,
                                              command=self.cholesterol_graph)
         graph_cholesterol_button.grid(row=4, column=3)
+        graph_blood_pressure_button = tk.Button(self.main_UI, text="Graph Blood Pressure", width=20,
+                                                command=self.blood_pressure_graph)
+        graph_blood_pressure_button.grid(row=4, column=4)
         monitor_blood_pressure_button = tk.Button(self.main_UI, text="Monitor Blood Pressure", width=20,
                                                   command=self.monitor_blood_pressure)
-        monitor_blood_pressure_button.grid(row=4, column=4)
+        monitor_blood_pressure_button.grid(row=4, column=5)
 
         # Fix highlighting bug
         style = ttk.Style()
@@ -349,7 +352,7 @@ class App:
                 for child in children:
                     values = self.monitored_patients.item(child, "values")
                     patient_cholesterol = values[1].split(' ')[0]
-                    if patient_cholesterol != "No":
+                    if patient_cholesterol != "-":
                         patient_data.append(patient_cholesterol)
                         patient_name = values[0]
                         patients.append(patient_name)
@@ -357,8 +360,6 @@ class App:
                 Y = patient_data
 
                 figure = Figure(figsize=(5, 5), dpi=100)
-                figure.add_axes()
-
                 subplot = figure.add_subplot(1, 1, 1)
                 subplot.bar(X, Y)
                 subplot.set_title("Patient Cholesterol Data (mg/dL)")
@@ -367,6 +368,46 @@ class App:
 
                 canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
                 canvas.get_tk_widget().grid(row=1, column=1)
+
+        except KeyError:
+            messagebox.showinfo("Error", "No practitioner identifier given")
+
+    def blood_pressure_graph(self, event=None):
+
+        try:
+            if self.practitioner is not None:
+                patients = []
+                patient_systolic_data = []
+                patient_diastolic_data = []
+                children = self.monitored_patients.get_children('')
+                for child in children:
+                    values = self.monitored_patients.item(child, "values")
+                    patient_systolic_blood_pressure = values[3].split('m')[0]
+                    patient_diastolic_blood_pressure = values[4].split('m')[0]
+                    if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
+                        patient_systolic_data.append(patient_systolic_blood_pressure)
+                        patient_diastolic_data.append(patient_diastolic_blood_pressure)
+                        patient_name = values[0]
+                        patients.append(patient_name)
+                X = patients
+                Y1 = patient_systolic_data
+                Y2 = patient_diastolic_data
+
+                figure = Figure(figsize=(5, 5), dpi=100)
+                subplot = figure.add_subplot(1, 2, 1)
+                subplot.plot(X, Y1)
+                subplot.set_title("Patient Systolic Data (mgHg)")
+                subplot.set_xlabel("Patient Names")
+                subplot.set_ylabel("Systolic Blood Pressure Values")
+
+                subplot = figure.add_subplot(1, 2, 2)
+                subplot.plot(X, Y2)
+                subplot.set_title("Patient Diastolic Data (mgHg)")
+                subplot.set_xlabel("Patient Names")
+                subplot.set_ylabel("Diastolic Blood Pressure Values")
+
+                canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+                canvas.get_tk_widget().grid()
 
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
@@ -389,6 +430,7 @@ class App:
                 patient_info.column(col, width=100)
         patient_info.grid(row=0, column=0)
 
+        systolic_values = []
         for item in self.monitored_patients.selection():    # For each patient selected
             values = self.monitored_patients.item(item, "values")
             try:
@@ -406,6 +448,7 @@ class App:
                 try:
                     current_data = patient.get_blood_pressure_data(i)
                     output += str(current_data[0]) + " (" + current_data[-1] + "), "
+                    systolic_values.append(current_data[0])
                 except IndexError:
                     continue
 
@@ -415,6 +458,23 @@ class App:
             # Add new entry for the patient in the table
             new_entry = (patient.first_name + " " + patient.last_name, output)
             patient_info.insert("", "end", values=new_entry)
+
+            Y = systolic_values
+
+            x_values = []
+            for i in range(len(systolic_values)):
+                x_values.append(i)
+            X = x_values
+
+            figure = Figure(figsize=(5, 5), dpi=100)
+            subplot = figure.add_subplot(1, 1, 1)
+            subplot.plot(X, Y)
+            subplot.set_title(patient.first_name + " " + patient.last_name + "'s Systolic Blood Pressure Data (mgHg)")
+            subplot.set_xlabel("Patient Names")
+            subplot.set_ylabel("Diastolic Blood Pressure Values")
+
+            canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+            canvas.get_tk_widget().grid()
 
     # def update_display(self, tree):
     #     """
