@@ -51,15 +51,21 @@ class App:
         self.cholesterol_client = None
         self.blood_pressure_client = None
         self.update_interval = 30
+        self.systolic_limit = 100
+        self.diastolic_limit = 100
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
         self.get_patients_button = None
         self.time_entry_button = None
         self.time_entry_field = None
-        self.interval_entry_label = None
+        self.time_entry_label = None
         self.all_patients = None
         self.monitored_patients = None
+        self.systolic_limit_field = None
+        self.systolic_limit_label = None
+        self.diastolic_limit_field = None
+        self.diastolic_limit_label = None
 
     def set_cholesterol_client(self, client):
         self.cholesterol_client = client
@@ -70,8 +76,19 @@ class App:
     def set_practitioner(self, practitioner):
         self.practitioner = practitioner
 
-    def set_interval(self, interval):
-        self.update_interval = interval
+    def set_systolic_limit(self, event=None):
+        systolic_limit = self.systolic_limit_field.get()
+        self.systolic_limit = systolic_limit
+        self.systolic_limit_label.destroy()
+        self.systolic_limit_label = tk.Label(self.main_UI, text="Systolic BP Limit: " + str(self.systolic_limit))
+        self.systolic_limit_label.grid(row=0, column=3, rowspan=2)
+
+    def set_diastolic_limit(self, event=None):
+        diastolic_limit = self.diastolic_limit_field.get()
+        self.diastolic_limit = diastolic_limit
+        self.diastolic_limit_label.destroy()
+        self.diastolic_limit_label = tk.Label(self.main_UI, text="Diastolic BP Limit: " + str(self.diastolic_limit))
+        self.diastolic_limit_label.grid(row=0, column=5, rowspan=2)
 
     def run(self):
         """
@@ -95,7 +112,7 @@ class App:
         # create all patients treeview
         self.all_patients = ttk.Treeview(self.main_UI, columns="Name", show='headings')
         self.all_patients.heading("Name", text="Name")
-        self.all_patients.grid(row=1, column=0, columnspan=1)
+        self.all_patients.grid(row=2, column=0, columnspan=1)
         self.all_patients.bind("<Double-1>", self.add_monitored_patient)
 
         # create monitored patients treeview with 6 columns
@@ -103,7 +120,7 @@ class App:
         self.monitored_patients = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.monitored_patients.heading(col, text=col)
-        self.monitored_patients.grid(row=1, column=1, columnspan=6)
+        self.monitored_patients.grid(row=2, column=1, columnspan=6)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
         self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
 
@@ -168,18 +185,38 @@ class App:
             self.get_patients_button.destroy()
             practitioner_name = "Dr. " + current_practitioner.first_name + " " + current_practitioner.last_name
             label = tk.Label(self.main_UI, text=practitioner_name)
-            label.grid(row=0, column=0)
-            self.interval_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
-                                                                    str(self.update_interval))
-            self.interval_entry_label.grid(row=0, column=1)
+            label.grid(row=0, column=0, rowspan=2)
+
+            # Time interval entry
+            self.time_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
+                                                                str(self.update_interval))
+            self.time_entry_label.grid(row=0, column=1, rowspan=2)
             self.time_entry_field = tk.Entry(self.main_UI)
             self.time_entry_field.grid(row=0, column=2)
             self.time_entry_field.bind("<Return>", self.set_update_interval)
             self.time_entry_button = tk.Button(self.main_UI, text="Set update interval", width=15,
                                                command=self.set_update_interval)
-            self.time_entry_button.grid(row=0, column=3)
+            self.time_entry_button.grid(row=1, column=2)
 
-            # get the practitioner's patient list
+            # Systolic Limit entry
+            self.systolic_limit_label = tk.Label(self.main_UI, text="Systolic BP Limit: " + str(self.systolic_limit))
+            self.systolic_limit_label.grid(row=0, column=3, rowspan=2)
+            self.systolic_limit_field = tk.Entry(self.main_UI)
+            self.systolic_limit_field.grid(row=0, column=4)
+            systolic_limit_button = tk.Button(self.main_UI, text="Set systolic limit", width=15,
+                                              command=self.set_systolic_limit)
+            systolic_limit_button.grid(row=1, column=4)
+
+            # Diastolic Limit entry
+            self.diastolic_limit_label = tk.Label(self.main_UI, text="Diastolic BP Limit: " + str(self.diastolic_limit))
+            self.diastolic_limit_label.grid(row=0, column=5, rowspan=2)
+            self.diastolic_limit_field = tk.Entry(self.main_UI)
+            self.diastolic_limit_field.grid(row=0, column=6)
+            diastolic_limit_button = tk.Button(self.main_UI, text="Set Diastolic limit", width=15,
+                                               command=self.set_diastolic_limit)
+            diastolic_limit_button.grid(row=1, column=6)
+
+            # Get the practitioner's patient list
             patient_list = current_practitioner.get_all_patients()
 
             # display patient list
@@ -205,10 +242,12 @@ class App:
         Set the update interval for requesting patient's data from the server
         """
         # get interval value from entry field
-        self.set_interval(int(self.time_entry_field.get()))
-        interval_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
-                                                           str(self.update_interval))
-        interval_entry_label.grid(row=0, column=1)
+        update_interval = int(self.time_entry_field.get())
+        self.update_interval = update_interval
+        self.time_entry_label.destroy()
+        self.time_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
+                                                            str(self.update_interval))
+        self.time_entry_label.grid(row=0, column=1, rowspan=2)
 
     def exit_program(self):
         """
@@ -309,14 +348,20 @@ class App:
             for child in children:
                 values = tree.item(child, "values")
                 patient_cholesterol = values[1].split(' ')[0]
+                patient_systolic_blood_pressure = values[3].split('mm')[0]
+                patient_diastolic_blood_pressure = values[4].split('mm')[0]
                 try:
-                    if float(
-                            patient_cholesterol) > self.practitioner.get_monitored_patients().average_cholesterol_level:
-                        tree.item(child, tags=['high'])
+                    if float(patient_cholesterol) > self.practitioner.get_monitored_patients().average_cholesterol_level:
+                        tree.item(child, tags=['high cholesterol'])
                     else:
-                        tree.item(child, tags=['normal'])
+                        if float(patient_systolic_blood_pressure) > self.systolic_limit or \
+                                float(patient_diastolic_blood_pressure) > self.diastolic_limit:
+                            tree.item(child, tags=['high blood pressure'])
+                        else:
+                            tree.item(child, tags=['normal'])
                     tree.tag_configure('normal', foreground=None)
-                    tree.tag_configure('high', foreground='red')
+                    tree.tag_configure('high cholesterol', foreground='red')
+                    tree.tag_configure('high blood pressure', foreground='purple')
                 except ValueError:
                     continue
         except tk.TclError:
