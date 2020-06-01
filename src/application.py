@@ -388,7 +388,9 @@ class App:
             return
 
     def cholesterol_graph(self, event=None):
-
+        """
+        Visually displays the monitored patients cholesterol levels in the form of a bar graph.
+        """
         try:
             if self.practitioner is not None:
                 patients = []
@@ -420,7 +422,9 @@ class App:
             messagebox.showinfo("Error", "No practitioner identifier given")
 
     def blood_pressure_graph(self, event=None):
-
+        """
+        Visually displays the monitored patients blood pressure levels in the form of a line graph.
+        """
         try:
             if self.practitioner is not None:
                 patients = []
@@ -463,7 +467,8 @@ class App:
 
     def monitor_blood_pressure(self, event=None):
         """
-        Displays the selected patient's latest systolic blood pressure observations in a pop-up window
+        Displays the selected patient's latest systolic blood pressure observations in a pop-up window, gives the
+        option to visually represent the data in the form of a line graph.
         """
 
         # Create a pop-up window to display latest blood pressure values
