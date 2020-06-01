@@ -484,7 +484,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590980566605</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph.">
+      <created>1590981307828</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1590981307828</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -538,7 +545,8 @@
     <MESSAGE value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
     <MESSAGE value="Implementing cholesterol_graph method, creates pop up window of graph." />
     <MESSAGE value="Graphing the monitored systolic blood pressure for selected patient." />
-    <option name="LAST_COMMIT_MESSAGE" value="Graphing the monitored systolic blood pressure for selected patient." />
+    <MESSAGE value="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />

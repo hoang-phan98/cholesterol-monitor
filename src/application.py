@@ -366,7 +366,9 @@ class App:
                 subplot.set_xlabel("Patient Names")
                 subplot.set_ylabel("Cholesterol Values")
 
-                canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+                cholesterol_graph = tk.Toplevel()
+                cholesterol_graph.title("Cholesterol Graph")
+                canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
                 canvas.get_tk_widget().grid()
 
         except KeyError:
@@ -406,7 +408,9 @@ class App:
                 subplot.set_xlabel("Patient Names")
                 subplot.set_ylabel("Diastolic Blood Pressure Values")
 
-                canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+                blood_pressure_graphs = tk.Toplevel()
+                blood_pressure_graphs.title("Blood Pressure Graphs")
+                canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
                 canvas.get_tk_widget().grid()
 
         except KeyError:
@@ -473,7 +477,9 @@ class App:
                 subplot.set_xlabel("Patient Names")
                 subplot.set_ylabel("Diastolic Blood Pressure Values")
 
-                canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+                systolic_graph = tk.Toplevel()
+                systolic_graph.title(patient.first_name + " " + patient.last_name + "'s Systolic Blood Pressure graph")
+                canvas = FigureCanvasTkAgg(figure, master=systolic_graph)
                 canvas.get_tk_widget().grid()
 
             graph_button = tk.Button(info_window, text="Graph Data", width=15, command=graph_data)
