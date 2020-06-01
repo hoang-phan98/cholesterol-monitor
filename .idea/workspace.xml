@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="Updating cholesterol_graph method so it is displayed in a pop up window.&#10;Adding __str__ method for PatientList so it can be iterable.">
+    <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
     </list>
@@ -470,7 +470,28 @@
       <option name="project" value="LOCAL" />
       <updated>1590048344571</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Implementing cholesterol_graph method, creates pop up window of graph.">
+      <created>1590934894697</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1590934894697</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Graphing the monitored systolic blood pressure for selected patient.">
+      <created>1590980566605</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1590980566605</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph.">
+      <created>1590981307828</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1590981307828</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -522,7 +543,10 @@
     <MESSAGE value="Adding docstrings to machine_learning_module methods." />
     <MESSAGE value="Updating requirements file" />
     <MESSAGE value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
+    <MESSAGE value="Implementing cholesterol_graph method, creates pop up window of graph." />
+    <MESSAGE value="Graphing the monitored systolic blood pressure for selected patient." />
+    <MESSAGE value="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />
