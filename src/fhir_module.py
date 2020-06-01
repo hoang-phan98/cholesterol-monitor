@@ -17,8 +17,8 @@ class FHIRClient(ABC):
         """
         next_page = True
         next_url = self._root_url + "Encounter?_include=Encounter.participant.individual&_include=" \
-                                 "Encounter.patient&participant.identifier=" \
-                                 "http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id) + "&_count=50"
+                                    "Encounter.patient&participant.identifier=" \
+                                    "http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id) + "&_count=50"
         page_count = 1
         patient_list = PatientList()
 
@@ -49,7 +49,8 @@ class FHIRClient(ABC):
         :param practitioner_id: identifier
         :return: HealthPractitioner object
         """
-        res = requests.get(self._root_url + "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id))
+        res = requests.get(
+            self._root_url + "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|" + str(practitioner_id))
         data = res.json()
         name = data["entry"][0]["resource"]["name"][0]
         first_name = "".join(x for x in name["given"][0] if not x.isdigit())
@@ -124,22 +125,23 @@ class BloodPressureDataClient(FHIRClient):
         :param patient_id: patient's id
         :return: BloodPressureData object
         """
-        # Sort by decreasing date, only need 1 entry for latest value
+        # Sort by decreasing date, get 5 latest observations
         res = requests.get(self._root_url + "Observation?patient=" +
-                           str(patient_id) +
-                           "&code=55284-4&_sort=-date&_count=5")
+                           str(patient_id) + "&code=55284-4&_sort=-date&_count=5"
+                           )
 
         # Convert to json & extract relevant data
         data = res.json()
 
         # Check if response contains cholesterol data
         if data["total"] == 0:
-            return BloodPressureData("-", "-", "", "-")
+            return [BloodPressureData("-", "-", "", "-")]
 
         systolic_blood_pressure = None
         diastolic_blood_pressure = None
         unit = None
         effective_date_time = data["entry"][0]["resource"]["effectiveDateTime"]
+        latest_observations = []
 
         # Assign cholesterol data
         for observation in data["entry"]:
@@ -148,10 +150,15 @@ class BloodPressureDataClient(FHIRClient):
                 if component["code"]["coding"][0]["code"] == "8480-6":  # Systolic Blood Pressure
                     systolic_blood_pressure = component["valueQuantity"]["value"]
                     unit = component["valueQuantity"]["unit"]
-                elif component["code"]["coding"][0]["code"] == "8462-4":    # Diastolic Blood Pressure
+                elif component["code"]["coding"][0]["code"] == "8462-4":  # Diastolic Blood Pressure
                     diastolic_blood_pressure = component["valueQuantity"]["value"]
 
-        return BloodPressureData(systolic_blood_pressure, diastolic_blood_pressure, unit, effective_date_time)
+            # Add to array of blood pressure data
+            latest_observations.append(BloodPressureData(
+                systolic_blood_pressure, diastolic_blood_pressure, unit, effective_date_time
+            ))
+
+        return latest_observations
 
 
 if __name__ == '__main__':

@@ -25,25 +25,27 @@ class MonitoredTreeview(Observer, ttk.Treeview):
     This class is the table which displays all of the patients being monitored and their data
     It observes the monitored patient list and update its display accordingly
     """
+
     def update(self):
         """
         Update the view according to the Patient List object being observed
         :return: None
         """
-        if self._subject is not None:   # If subject has not been specified, do nothing
+        if self._subject is not None:  # If subject has not been specified, do nothing
             children = self.get_children('')
             for item in children:
                 values = self.item(item, "values")
                 patient_name = values[0]
                 current_patient = self._subject.select_patient(patient_name)
-                if is_new_data(values, current_patient):    # Check if the new values are different
-                    self.item(item, values=format_data(current_patient))    # update the display with new data
+                if is_new_data(values, current_patient):  # Check if the new values are different
+                    self.item(item, values=format_data(current_patient))  # update the display with new data
 
 
 class App:
     """
     Driver class which contains the logged in practitioner, client and UI components
     """
+
     def __init__(self):
         self.practitioner = None
         self.cholesterol_client = None
@@ -104,7 +106,6 @@ class App:
         self.monitored_patients.grid(row=1, column=1, columnspan=6)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
         self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
-        self.monitored_patients.bind("<Double-1>", self.cholesterol_graph)
 
         # create buttons
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
@@ -119,7 +120,9 @@ class App:
         graph_cholesterol_button = tk.Button(self.main_UI, text="Graph Cholesterol", width=15,
                                              command=self.cholesterol_graph)
         graph_cholesterol_button.grid(row=4, column=3)
-
+        monitor_blood_pressure_button = tk.Button(self.main_UI, text="Monitor Blood Pressure", width=20,
+                                                  command=self.monitor_blood_pressure)
+        monitor_blood_pressure_button.grid(row=4, column=4)
 
         # Fix highlighting bug
         style = ttk.Style()
@@ -139,7 +142,7 @@ class App:
         practitioner_id = self.entry_field.get()
 
         try:
-            if practitioner_id == "":   # if no identifier specified
+            if practitioner_id == "":  # if no identifier specified
                 raise KeyError
             try:
                 # Try to get load data from local storage
@@ -269,32 +272,32 @@ class App:
         """
         Display the selected patient's personal info in a pop-up window
         """
-        item = self.monitored_patients.selection()
-        values = self.monitored_patients.item(item, "values")
-        try:
-            # Select patient from the list
-            patient = self.practitioner.get_monitored_patients().select_patient(values[0])
-        except AttributeError:
-            return
-        except IndexError:
-            return
-        if patient is None:
-            return
+        for item in self.monitored_patients.selection():
+            values = self.monitored_patients.item(item, "values")
+            try:
+                # Select patient from the list
+                patient = self.practitioner.get_monitored_patients().select_patient(values[0])
+            except AttributeError:
+                return
+            except IndexError:
+                return
+            if patient is None:
+                return
 
-        # Create a pop-up window to display patient's personal info
-        info_window = tk.Toplevel()
-        info_window.title(patient.first_name + " " + patient.last_name)
-        cols = ("Birth date", "Gender", "Address")
-        patient_info = ttk.Treeview(info_window, columns=cols, show='headings')
-        for col in cols:
-            patient_info.heading(col, text=col)
-            if col == "Address":
-                patient_info.column(col, width=400)
-            else:
-                patient_info.column(col, width=80)
-        patient_info.grid(row=0, column=0)
-        new_entry = (patient.birth_date, patient.gender, patient.get_address())
-        patient_info.insert("", "end", values=new_entry)
+            # Create a pop-up window to display patient's personal info
+            info_window = tk.Toplevel()
+            info_window.title(patient.first_name + " " + patient.last_name)
+            cols = ("Birth date", "Gender", "Address")
+            patient_info = ttk.Treeview(info_window, columns=cols, show='headings')
+            for col in cols:
+                patient_info.heading(col, text=col)
+                if col == "Address":
+                    patient_info.column(col, width=400)
+                else:
+                    patient_info.column(col, width=80)
+            patient_info.grid(row=0, column=0)
+            new_entry = (patient.birth_date, patient.gender, patient.get_address())
+            patient_info.insert("", "end", values=new_entry)
 
     def highlight_patients(self, tree):
         """
@@ -368,6 +371,50 @@ class App:
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
 
+    def monitor_blood_pressure(self, event=None):
+        """
+        Displays the selected patient's latest systolic blood pressure observations in a pop-up window
+        """
+
+        # Create a pop-up window to display latest blood pressure values
+        info_window = tk.Toplevel()
+        info_window.title("Blood Pressure Monitor")
+        cols = ("Name", "Latest systolic blood pressure observations")
+        patient_info = ttk.Treeview(info_window, columns=cols, show='headings')
+        for col in cols:
+            patient_info.heading(col, text=col)
+            if col == "Latest systolic blood pressure observations":
+                patient_info.column(col, width=1000)
+            else:
+                patient_info.column(col, width=100)
+        patient_info.grid(row=0, column=0)
+
+        for item in self.monitored_patients.selection():    # For each patient selected
+            values = self.monitored_patients.item(item, "values")
+            try:
+                # Select patient from the list
+                patient = self.practitioner.get_monitored_patients().select_patient(values[0])
+            except AttributeError:
+                return
+            except IndexError:
+                return
+            if patient is None:
+                return
+
+            output = ""     # output string with latest observations and effective time
+            for i in range(5):  # get the latest 5 systolic observations
+                try:
+                    current_data = patient.get_blood_pressure_data(i)
+                    output += str(current_data[0]) + " (" + current_data[-1] + "), "
+                except IndexError:
+                    continue
+
+            if output == "- (-), ":
+                output = "No data"
+
+            # Add new entry for the patient in the table
+            new_entry = (patient.first_name + " " + patient.last_name, output)
+            patient_info.insert("", "end", values=new_entry)
 
     # def update_display(self, tree):
     #     """
@@ -423,7 +470,7 @@ def format_data(patient):
     effective_time_cholesterol = patient_cholesterol_data[2]
 
     # Blood Pressure
-    patient_blood_pressure_data = patient.get_blood_pressure_data()
+    patient_blood_pressure_data = patient.get_blood_pressure_data(0)  # Display latest observation at index 0
     systolic = str(patient_blood_pressure_data[0]) + patient_blood_pressure_data[2]
     diastolic = str(patient_blood_pressure_data[1]) + patient_blood_pressure_data[2]
     effective_time_blood_pressure = patient_blood_pressure_data[3]

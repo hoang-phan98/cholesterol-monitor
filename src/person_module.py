@@ -28,15 +28,15 @@ class Patient(Person):
     def update_data(self, data):
         if isinstance(data, CholesterolData):
             self.cholesterol_data = data
-        elif isinstance(data, BloodPressureData):
+        else:
             self.blood_pressure_data = data
         return
 
     def get_cholesterol_data(self):
         return self.cholesterol_data.get_data()
 
-    def get_blood_pressure_data(self):
-        return self.blood_pressure_data.get_data()
+    def get_blood_pressure_data(self, index):
+        return self.blood_pressure_data[index].get_data()
 
 
 class HealthPractitioner(Person):
