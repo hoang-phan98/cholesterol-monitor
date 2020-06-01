@@ -477,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590934894697</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Graphing the monitored systolic blood pressure for selected patient.">
+      <created>1590980566605</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1590980566605</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -530,7 +537,8 @@
     <MESSAGE value="Updating requirements file" />
     <MESSAGE value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
     <MESSAGE value="Implementing cholesterol_graph method, creates pop up window of graph." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementing cholesterol_graph method, creates pop up window of graph." />
+    <MESSAGE value="Graphing the monitored systolic blood pressure for selected patient." />
+    <option name="LAST_COMMIT_MESSAGE" value="Graphing the monitored systolic blood pressure for selected patient." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />

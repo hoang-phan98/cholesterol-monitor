@@ -359,7 +359,7 @@ class App:
                 X = patients
                 Y = patient_data
 
-                figure = Figure(figsize=(5, 5), dpi=100)
+                figure = Figure(figsize=(15, 5), dpi=100)
                 subplot = figure.add_subplot(1, 1, 1)
                 subplot.bar(X, Y)
                 subplot.set_title("Patient Cholesterol Data (mg/dL)")
@@ -367,7 +367,7 @@ class App:
                 subplot.set_ylabel("Cholesterol Values")
 
                 canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
-                canvas.get_tk_widget().grid(row=1, column=1)
+                canvas.get_tk_widget().grid()
 
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
@@ -393,7 +393,7 @@ class App:
                 Y1 = patient_systolic_data
                 Y2 = patient_diastolic_data
 
-                figure = Figure(figsize=(5, 5), dpi=100)
+                figure = Figure(figsize=(15, 5), dpi=100)
                 subplot = figure.add_subplot(1, 2, 1)
                 subplot.plot(X, Y1)
                 subplot.set_title("Patient Systolic Data (mgHg)")
@@ -459,22 +459,25 @@ class App:
             new_entry = (patient.first_name + " " + patient.last_name, output)
             patient_info.insert("", "end", values=new_entry)
 
-            Y = systolic_values
+            def graph_data():
+                x_values = []
+                for i in range(len(systolic_values)):
+                    x_values.append(i)
+                X = x_values
+                Y = systolic_values
 
-            x_values = []
-            for i in range(len(systolic_values)):
-                x_values.append(i)
-            X = x_values
+                figure = Figure(figsize=(5, 5), dpi=100)
+                subplot = figure.add_subplot(1, 1, 1)
+                subplot.plot(X, Y)
+                subplot.set_title(patient.first_name + " " + patient.last_name + "'s Systolic Blood Pressure Data (mgHg)")
+                subplot.set_xlabel("Patient Names")
+                subplot.set_ylabel("Diastolic Blood Pressure Values")
 
-            figure = Figure(figsize=(5, 5), dpi=100)
-            subplot = figure.add_subplot(1, 1, 1)
-            subplot.plot(X, Y)
-            subplot.set_title(patient.first_name + " " + patient.last_name + "'s Systolic Blood Pressure Data (mgHg)")
-            subplot.set_xlabel("Patient Names")
-            subplot.set_ylabel("Diastolic Blood Pressure Values")
+                canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
+                canvas.get_tk_widget().grid()
 
-            canvas = FigureCanvasTkAgg(figure, master=tk.Toplevel())
-            canvas.get_tk_widget().grid()
+            graph_button = tk.Button(info_window, text="Graph Data", width=15, command=graph_data)
+            graph_button.grid(row=4, column=0)
 
     # def update_display(self, tree):
     #     """
