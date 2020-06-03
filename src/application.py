@@ -287,6 +287,10 @@ class App:
 
                 self.highlight_patients(self.monitored_patients)
 
+                self.cholesterol_graph(self.monitored_patients)
+                self.blood_pressure_graph(self.monitored_patients)
+                self.monitor_blood_pressure(self.monitored_patients)
+
                 # Sleep
                 time.sleep(self.update_interval)
 
@@ -387,7 +391,7 @@ class App:
         except IndexError:
             return
 
-    def cholesterol_graph(self, event=None):
+    def cholesterol_graph(self, tree):
         """
         Visually displays the monitored patients cholesterol levels in the form of a bar graph.
         """
@@ -395,9 +399,11 @@ class App:
             if self.practitioner is not None:
                 patients = []
                 patient_data = []
-                children = self.monitored_patients.get_children('')
+                # children = self.monitored_patients.get_children('')
+                children = tree.get_children('')
                 for child in children:
-                    values = self.monitored_patients.item(child, "values")
+                    # values = self.monitored_patients.item(child, "values")
+                    values = tree.item(child, "values")
                     patient_cholesterol = values[1].split(' ')[0]
                     if patient_cholesterol != "-":
                         patient_data.append(patient_cholesterol)
@@ -421,7 +427,7 @@ class App:
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
 
-    def blood_pressure_graph(self, event=None):
+    def blood_pressure_graph(self, tree):
         """
         Visually displays the monitored patients blood pressure levels in the form of a line graph.
         """
@@ -430,9 +436,11 @@ class App:
                 patients = []
                 patient_systolic_data = []
                 patient_diastolic_data = []
-                children = self.monitored_patients.get_children('')
+                # children = self.monitored_patients.get_children('')
+                children = tree.get_children('')
                 for child in children:
-                    values = self.monitored_patients.item(child, "values")
+                    # values = self.monitored_patients.item(child, "values")
+                    values = tree.item(child, "values")
                     patient_systolic_blood_pressure = values[3].split('m')[0]
                     patient_diastolic_blood_pressure = values[4].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
@@ -465,7 +473,7 @@ class App:
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
 
-    def monitor_blood_pressure(self, event=None):
+    def monitor_blood_pressure(self, tree):
         """
         Displays the selected patient's latest systolic blood pressure observations in a pop-up window, gives the
         option to visually represent the data in the form of a line graph.
@@ -485,8 +493,10 @@ class App:
         patient_info.grid(row=0, column=0)
 
         systolic_values = []
-        for item in self.monitored_patients.selection():    # For each patient selected
-            values = self.monitored_patients.item(item, "values")
+        # for item in self.monitored_patients.selection():    # For each patient selected
+        for item in tree.selection():  # For each patient selected
+            values = tree.item(item, "values")
+            # values = self.monitored_patients.item(item, "values")
             try:
                 # Select patient from the list
                 patient = self.practitioner.get_monitored_patients().select_patient(values[0])

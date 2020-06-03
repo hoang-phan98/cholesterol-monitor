@@ -83,7 +83,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../FIT2085/Pracs/Prac_10_(Interview_3)/code_files" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -276,11 +276,11 @@
     </configuration>
     <list>
       <item itemvalue="Python.TKInter" />
-      <item itemvalue="Python.__init__" />
       <item itemvalue="Python.address_module" />
-      <item itemvalue="Python.application" />
       <item itemvalue="Python.fhir_module" />
       <item itemvalue="Python.machine_learning_module" />
+      <item itemvalue="Python.__init__" />
+      <item itemvalue="Python.application" />
       <item itemvalue="Python.person_module" />
     </list>
     <recent_temporary>
@@ -498,7 +498,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590982648941</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Updating docstrings in application module.">
+      <created>1590990922677</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1590990922677</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -528,7 +535,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updating Subject class methods.&#10;Creating observer_module.&#10;adding select_patient method to PatientList class." />
     <MESSAGE value="Removing unnecessary method in subject_module." />
     <MESSAGE value="Adding title to the GUI window." />
     <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
@@ -553,7 +559,8 @@
     <MESSAGE value="Graphing the monitored systolic blood pressure for selected patient." />
     <MESSAGE value="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph." />
     <MESSAGE value="Updating pop up window titles." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating pop up window titles." />
+    <MESSAGE value="Updating docstrings in application module." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating docstrings in application module." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />
