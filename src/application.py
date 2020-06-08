@@ -66,6 +66,7 @@ class App:
         self.systolic_limit_label = None
         self.diastolic_limit_field = None
         self.diastolic_limit_label = None
+        self.blood_pressure_monitor = None
 
     def set_cholesterol_client(self, client):
         self.cholesterol_client = client
@@ -112,17 +113,26 @@ class App:
         # create all patients treeview
         self.all_patients = ttk.Treeview(self.main_UI, columns="Name", show='headings')
         self.all_patients.heading("Name", text="Name")
+        self.all_patients.column("Name", width=150)
         self.all_patients.grid(row=2, column=0, columnspan=1)
         self.all_patients.bind("<Double-1>", self.add_monitored_patient)
 
         # create monitored patients treeview with 6 columns
-        cols = ('Name', 'Total Cholesterol', 'Time', 'Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time ')
+        cols = ('Name', 'Total Cholesterol', 'Time')
         self.monitored_patients = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.monitored_patients.heading(col, text=col)
-        self.monitored_patients.grid(row=2, column=1, columnspan=6)
+            self.monitored_patients.column(col, width=150)
+        self.monitored_patients.grid(row=2, column=1, columnspan=3)
         self.monitored_patients.bind("<Double-1>", self.display_patient_info)
         self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
+
+        # create blood pressure monitor treeview
+        cols = ('Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time')
+        self.blood_pressure_monitor = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
+        for col in cols:
+            self.blood_pressure_monitor.heading(col, text=col)
+        self.blood_pressure_monitor.grid(row=2, column=4, columnspan=4)
 
         # create buttons
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
@@ -143,6 +153,12 @@ class App:
         monitor_blood_pressure_button = tk.Button(self.main_UI, text="Monitor Blood Pressure", width=20,
                                                   command=self.monitor_blood_pressure)
         monitor_blood_pressure_button.grid(row=4, column=5)
+
+        # Select monitor type
+        monitor_options = ["Cholesterol", "Blood Pressure", "Both"]
+        self.selected_monitor_option = tk.StringVar(self.main_UI)
+        self.selected_monitor_option.set(monitor_options[0])
+        self.option_menu = tk.OptionMenu(self.main_UI, self.selected_monitor_option, *)
 
         # Fix highlighting bug
         style = ttk.Style()
@@ -194,7 +210,7 @@ class App:
             self.time_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
                                                                 str(self.update_interval))
             self.time_entry_label.grid(row=0, column=1, rowspan=2)
-            self.time_entry_field = tk.Entry(self.main_UI)
+            self.time_entry_field = tk.Entry(self.main_UI, width=15)
             self.time_entry_field.grid(row=0, column=2)
             self.time_entry_field.bind("<Return>", self.set_update_interval)
             self.time_entry_button = tk.Button(self.main_UI, text="Set update interval", width=15,
@@ -203,21 +219,21 @@ class App:
 
             # Systolic Limit entry
             self.systolic_limit_label = tk.Label(self.main_UI, text="Systolic BP Limit: " + str(self.systolic_limit))
-            self.systolic_limit_label.grid(row=0, column=3, rowspan=2)
-            self.systolic_limit_field = tk.Entry(self.main_UI)
-            self.systolic_limit_field.grid(row=0, column=4)
-            systolic_limit_button = tk.Button(self.main_UI, text="Set systolic limit", width=15,
+            self.systolic_limit_label.grid(row=0, column=4, rowspan=2)
+            self.systolic_limit_field = tk.Entry(self.main_UI, width=15)
+            self.systolic_limit_field.grid(row=0, column=5)
+            systolic_limit_button = tk.Button(self.main_UI, text="Set Systolic limit", width=15,
                                               command=self.set_systolic_limit)
-            systolic_limit_button.grid(row=1, column=4)
+            systolic_limit_button.grid(row=1, column=5)
 
             # Diastolic Limit entry
             self.diastolic_limit_label = tk.Label(self.main_UI, text="Diastolic BP Limit: " + str(self.diastolic_limit))
-            self.diastolic_limit_label.grid(row=0, column=5, rowspan=2)
-            self.diastolic_limit_field = tk.Entry(self.main_UI)
-            self.diastolic_limit_field.grid(row=0, column=6)
+            self.diastolic_limit_label.grid(row=0, column=6, rowspan=2)
+            self.diastolic_limit_field = tk.Entry(self.main_UI, width=15)
+            self.diastolic_limit_field.grid(row=0, column=7)
             diastolic_limit_button = tk.Button(self.main_UI, text="Set Diastolic limit", width=15,
                                                command=self.set_diastolic_limit)
-            diastolic_limit_button.grid(row=1, column=6)
+            diastolic_limit_button.grid(row=1, column=7)
 
             # Get the practitioner's patient list
             patient_list = current_practitioner.get_all_patients()
