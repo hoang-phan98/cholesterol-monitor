@@ -231,7 +231,7 @@ class App:
             self.selected_monitor_option.set(monitor_options[0])
             self.option_menu = tk.OptionMenu(self.main_UI, self.selected_monitor_option, *monitor_options)
             self.option_menu.grid(row=0, column=3)
-            update_monitor_button = tk.Button(self.main_UI, text="Update Monitor", width=15, command=self.update_monitor)
+            update_monitor_button = tk.Button(self.main_UI, text="Update Monitor", width=15)
             update_monitor_button.grid(row=1, column=3)
 
             # Time interval entry
@@ -494,11 +494,11 @@ class App:
                 patients = []
                 patient_systolic_data = []
                 patient_diastolic_data = []
-                children = self.cholesterol_monitor.get_children('')
+                children = self.blood_pressure_monitor.get_children('')
                 for child in children:
-                    values = self.cholesterol_monitor.item(child, "values")
-                    patient_systolic_blood_pressure = values[3].split('m')[0]
-                    patient_diastolic_blood_pressure = values[4].split('m')[0]
+                    values = self.blood_pressure_monitor.item(child, "values")
+                    patient_systolic_blood_pressure = values[0].split('m')[0]
+                    patient_diastolic_blood_pressure = values[1].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
                         patient_systolic_data.append(patient_systolic_blood_pressure)
                         patient_diastolic_data.append(patient_diastolic_blood_pressure)
@@ -552,12 +552,17 @@ class App:
                 patient_info.column(col, width=100)
         patient_info.grid(row=0, column=0)
 
-        systolic_values = []
-        for item in self.cholesterol_monitor.selection():  # For each patient selected
-            values = self.cholesterol_monitor.item(item, "values")
+        for item in self.blood_pressure_monitor.get_children():  # For each patient
+            systolic_values = []
+            values = self.blood_pressure_monitor.item(item, "values")
+            systolic_value = values[0].split("m")[0]
+
+            if int(systolic_value) < self.systolic_limit:
+                continue    # Skip if systolic pressure does not exceed limit
+
             try:
                 # Select patient from the list
-                patient = self.practitioner.get_monitored_patients().select_patient(values[0])
+                patient = self.practitioner.get_monitored_patients().select_patient(values[-1])
             except AttributeError:
                 return
             except IndexError:
@@ -583,7 +588,7 @@ class App:
 
             x_values = []
             for i in range(len(systolic_values)):
-                x_values.append(i)
+                x_values.append(i+1)
             X = x_values
             Y = systolic_values
 
