@@ -20,7 +20,7 @@ class Observer(ABC):
         pass
 
 
-class MonitoredTreeview(Observer, ttk.Treeview):
+class CholesterolMonitorTreeview(Observer, ttk.Treeview):
     """
     This class is the table which displays all of the patients being monitored and their data
     It observes the monitored patient list and update its display accordingly
@@ -37,8 +37,29 @@ class MonitoredTreeview(Observer, ttk.Treeview):
                 values = self.item(item, "values")
                 patient_name = values[0]
                 current_patient = self._subject.select_patient(patient_name)
-                if is_new_data(values, current_patient):  # Check if the new values are different
-                    self.item(item, values=format_data(current_patient))  # update the display with new data
+                if is_new_cholesterol_data(values, current_patient):  # Check if the new values are different
+                    self.item(item, values=format_data(current_patient)[:3])  # update the display with new data
+
+
+class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
+    """
+    This class is the table which displays all of the patients being monitored and their data
+    It observes the monitored patient list and update its display accordingly
+    """
+
+    def update(self):
+        """
+        Update the view according to the Patient List object being observed
+        :return: None
+        """
+        if self._subject is not None:  # If subject has not been specified, do nothing
+            children = self.get_children('')
+            for item in children:
+                values = self.item(item, "values")
+                patient_name = values[-1]
+                current_patient = self._subject.select_patient(patient_name)
+                if is_new_blood_pressure_data(values, current_patient):  # Check if the new values are different
+                    self.item(item, values=format_data(current_patient)[3:])  # update the display with new data
 
 
 class App:
@@ -51,8 +72,8 @@ class App:
         self.cholesterol_client = None
         self.blood_pressure_client = None
         self.update_interval = 30
-        self.systolic_limit = 100
-        self.diastolic_limit = 100
+        self.systolic_limit = 130
+        self.diastolic_limit = 80
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
@@ -61,12 +82,14 @@ class App:
         self.time_entry_field = None
         self.time_entry_label = None
         self.all_patients = None
-        self.monitored_patients = None
+        self.cholesterol_monitor = None
         self.systolic_limit_field = None
         self.systolic_limit_label = None
         self.diastolic_limit_field = None
         self.diastolic_limit_label = None
         self.blood_pressure_monitor = None
+        self.selected_monitor_option = None
+        self.option_menu = None
 
     def set_cholesterol_client(self, client):
         self.cholesterol_client = client
@@ -79,17 +102,19 @@ class App:
 
     def set_systolic_limit(self, event=None):
         systolic_limit = self.systolic_limit_field.get()
-        self.systolic_limit = systolic_limit
+        self.systolic_limit = int(systolic_limit)
         self.systolic_limit_label.destroy()
         self.systolic_limit_label = tk.Label(self.main_UI, text="Systolic BP Limit: " + str(self.systolic_limit))
-        self.systolic_limit_label.grid(row=0, column=3, rowspan=2)
+        self.systolic_limit_label.grid(row=0, column=4, rowspan=2)
+        self.highlight_patients()
 
     def set_diastolic_limit(self, event=None):
         diastolic_limit = self.diastolic_limit_field.get()
-        self.diastolic_limit = diastolic_limit
+        self.diastolic_limit = int(diastolic_limit)
         self.diastolic_limit_label.destroy()
         self.diastolic_limit_label = tk.Label(self.main_UI, text="Diastolic BP Limit: " + str(self.diastolic_limit))
-        self.diastolic_limit_label.grid(row=0, column=5, rowspan=2)
+        self.diastolic_limit_label.grid(row=0, column=6, rowspan=2)
+        self.highlight_patients()
 
     def run(self):
         """
@@ -119,17 +144,17 @@ class App:
 
         # create monitored patients treeview with 6 columns
         cols = ('Name', 'Total Cholesterol', 'Time')
-        self.monitored_patients = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
+        self.cholesterol_monitor = CholesterolMonitorTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
-            self.monitored_patients.heading(col, text=col)
-            self.monitored_patients.column(col, width=150)
-        self.monitored_patients.grid(row=2, column=1, columnspan=3)
-        self.monitored_patients.bind("<Double-1>", self.display_patient_info)
-        self.monitored_patients.bind("<Delete>", self.remove_monitored_patient)
+            self.cholesterol_monitor.heading(col, text=col)
+            self.cholesterol_monitor.column(col, width=150)
+        self.cholesterol_monitor.grid(row=2, column=1, columnspan=3)
+        self.cholesterol_monitor.bind("<Double-1>", self.display_patient_info)
+        self.cholesterol_monitor.bind("<Delete>", self.remove_monitored_patient)
 
         # create blood pressure monitor treeview
         cols = ('Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time')
-        self.blood_pressure_monitor = MonitoredTreeview(self.main_UI, columns=cols, show='headings')
+        self.blood_pressure_monitor = BloodPressureMonitorTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.blood_pressure_monitor.heading(col, text=col)
         self.blood_pressure_monitor.grid(row=2, column=4, columnspan=4)
@@ -153,12 +178,6 @@ class App:
         monitor_blood_pressure_button = tk.Button(self.main_UI, text="Monitor Blood Pressure", width=20,
                                                   command=self.monitor_blood_pressure)
         monitor_blood_pressure_button.grid(row=4, column=5)
-
-        # Select monitor type
-        monitor_options = ["Cholesterol", "Blood Pressure", "Both"]
-        self.selected_monitor_option = tk.StringVar(self.main_UI)
-        self.selected_monitor_option.set(monitor_options[0])
-        self.option_menu = tk.OptionMenu(self.main_UI, self.selected_monitor_option, *)
 
         # Fix highlighting bug
         style = ttk.Style()
@@ -206,9 +225,17 @@ class App:
             label = tk.Label(self.main_UI, text=practitioner_name)
             label.grid(row=0, column=0, rowspan=2)
 
+            # Select monitor type
+            monitor_options = ["Cholesterol", "Blood Pressure", "Both"]
+            self.selected_monitor_option = tk.StringVar(self.main_UI)
+            self.selected_monitor_option.set(monitor_options[0])
+            self.option_menu = tk.OptionMenu(self.main_UI, self.selected_monitor_option, *monitor_options)
+            self.option_menu.grid(row=0, column=3)
+            update_monitor_button = tk.Button(self.main_UI, text="Update Monitor", width=15, command=self.update_monitor)
+            update_monitor_button.grid(row=1, column=3)
+
             # Time interval entry
-            self.time_entry_label = tk.Label(self.main_UI, text="Current update interval: " +
-                                                                str(self.update_interval))
+            self.time_entry_label = tk.Label(self.main_UI, text="Current update interval: " + str(self.update_interval))
             self.time_entry_label.grid(row=0, column=1, rowspan=2)
             self.time_entry_field = tk.Entry(self.main_UI, width=15)
             self.time_entry_field.grid(row=0, column=2)
@@ -251,7 +278,8 @@ class App:
             subthread.start()
 
             # Attach monitored patient list to treeview observer
-            self.practitioner.get_monitored_patients().attach(self.monitored_patients)
+            self.practitioner.get_monitored_patients().attach(self.cholesterol_monitor)
+            self.practitioner.get_monitored_patients().attach(self.blood_pressure_monitor)
 
         except KeyError:
             messagebox.showinfo("Error", "Invalid practitioner identifier")
@@ -301,7 +329,7 @@ class App:
                 except AttributeError:
                     time.sleep(1)
 
-                self.highlight_patients(self.monitored_patients)
+                self.highlight_patients()
                 self.cholesterol_graph_data()
                 self.blood_pressure_graph_data()
 
@@ -316,24 +344,43 @@ class App:
         selected = self.all_patients.selection()
         for item in selected:
             try:
-                patient = self.all_patients.item(item, "values")
-                if not duplicate_item(self.monitored_patients, patient):
+                values = self.all_patients.item(item, "values")
+                if not duplicate_item(self.cholesterol_monitor, values):
                     # Add patient to treeview
-                    self.monitored_patients.insert("", "end", values=patient)
+                    self.cholesterol_monitor.insert("", "end", values=values[:3])
+                    self.blood_pressure_monitor.insert("", "end", values=values[3:])
                     # Add patient to practitioner's monitored patient list
-                    self.practitioner.add_patient_monitor(patient[0])
-                    self.highlight_patients(self.monitored_patients)
+                    self.practitioner.add_patient_monitor(values[0])
+                    self.highlight_patients()
             except IndexError:
                 return
             except ValueError:
-                print("No patient data for " + patient[0])
+                print("No patient data for " + values[0])
+
+    def remove_monitored_patient(self, event=None):
+        """
+        Remove a patient from the list of monitored patients
+        also remove the patient to the practitioner's monitored patients list object
+        """
+        try:
+            selected = self.cholesterol_monitor.selection()
+            for item in selected:
+                values = self.cholesterol_monitor.item(item, "values")
+                # Remove item from practitioner's monitored patient list
+                self.practitioner.remove_patient_monitor(values[0])
+                # Remove item from treeviews
+                self.cholesterol_monitor.delete(item)
+                self.blood_pressure_monitor.delete(item)
+            self.highlight_patients()
+        except IndexError:
+            return
 
     def display_patient_info(self, event=None):
         """
         Display the selected patient's personal info in a pop-up window
         """
-        for item in self.monitored_patients.selection():
-            values = self.monitored_patients.item(item, "values")
+        for item in self.cholesterol_monitor.selection():
+            values = self.cholesterol_monitor.item(item, "values")
             try:
                 # Select patient from the list
                 patient = self.practitioner.get_monitored_patients().select_patient(values[0])
@@ -359,50 +406,45 @@ class App:
             new_entry = (patient.birth_date, patient.gender, patient.get_address())
             patient_info.insert("", "end", values=new_entry)
 
-    def highlight_patients(self, tree):
+    def highlight_patients(self):
         """
         Check the cholesterol level of each monitored patient
         If the level is higher than the average of all monitored patients, highlight this patient in red
         """
         try:
-            children = tree.get_children('')
+            # Cholesterol Monitor
+            children = self.cholesterol_monitor.get_children('')
             for child in children:
-                values = tree.item(child, "values")
+                values = self.cholesterol_monitor.item(child, "values")
                 patient_cholesterol = values[1].split(' ')[0]
-                patient_systolic_blood_pressure = values[3].split('mm')[0]
-                patient_diastolic_blood_pressure = values[4].split('mm')[0]
                 try:
                     if float(patient_cholesterol) > self.practitioner.get_monitored_patients().average_cholesterol_level:
-                        tree.item(child, tags=['high cholesterol'])
+                        self.cholesterol_monitor.item(child, tags=['high cholesterol'])
                     else:
-                        if float(patient_systolic_blood_pressure) > self.systolic_limit or \
-                                float(patient_diastolic_blood_pressure) > self.diastolic_limit:
-                            tree.item(child, tags=['high blood pressure'])
-                        else:
-                            tree.item(child, tags=['normal'])
-                    tree.tag_configure('normal', foreground=None)
-                    tree.tag_configure('high cholesterol', foreground='red')
-                    tree.tag_configure('high blood pressure', foreground='purple')
+                        self.cholesterol_monitor.item(child, tags=['normal'])
+                    self.cholesterol_monitor.tag_configure('normal', foreground=None)
+                    self.cholesterol_monitor.tag_configure('high cholesterol', foreground='red')
                 except ValueError:
                     continue
-        except tk.TclError:
-            return
 
-    def remove_monitored_patient(self, event=None):
-        """
-        Remove a patient from the list of monitored patients
-        also remove the patient to the practitioner's monitored patients list object
-        """
-        try:
-            selected = self.monitored_patients.selection()
-            for item in selected:
-                values = self.monitored_patients.item(item, "values")
-                # Remove item from practitioner's monitored patient list
-                self.practitioner.remove_patient_monitor(values[0])
-                # Remove item from treeview
-                self.monitored_patients.delete(item)
-            self.highlight_patients(self.monitored_patients)
-        except IndexError:
+            # Blood pressure monitor
+            children = self.blood_pressure_monitor.get_children('')
+            for child in children:
+                values = self.blood_pressure_monitor.item(child, "values")
+                patient_systolic_blood_pressure = values[0].split('mm')[0]
+                patient_diastolic_blood_pressure = values[1].split('mm')[0]
+                try:
+                    if float(patient_systolic_blood_pressure) > self.systolic_limit or \
+                            float(patient_diastolic_blood_pressure) > self.diastolic_limit:
+                        self.blood_pressure_monitor.item(child, tags=['high blood pressure'])
+                    else:
+                        self.blood_pressure_monitor.item(child, tags=['normal'])
+                    self.blood_pressure_monitor.tag_configure('normal', foreground=None)
+                    self.blood_pressure_monitor.tag_configure('high blood pressure', foreground='purple')
+                except ValueError:
+                    continue
+
+        except tk.TclError:
             return
 
     def cholesterol_graph_data(self, event=None):
@@ -413,9 +455,9 @@ class App:
             if self.practitioner is not None:
                 patients = []
                 patient_data = []
-                children = self.monitored_patients.get_children('')
+                children = self.cholesterol_monitor.get_children('')
                 for child in children:
-                    values = self.monitored_patients.item(child, "values")
+                    values = self.cholesterol_monitor.item(child, "values")
                     patient_cholesterol = values[1].split(' ')[0]
                     if patient_cholesterol != "-":
                         patient_data.append(patient_cholesterol)
@@ -452,9 +494,9 @@ class App:
                 patients = []
                 patient_systolic_data = []
                 patient_diastolic_data = []
-                children = self.monitored_patients.get_children('')
+                children = self.cholesterol_monitor.get_children('')
                 for child in children:
-                    values = self.monitored_patients.item(child, "values")
+                    values = self.cholesterol_monitor.item(child, "values")
                     patient_systolic_blood_pressure = values[3].split('m')[0]
                     patient_diastolic_blood_pressure = values[4].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
@@ -511,8 +553,8 @@ class App:
         patient_info.grid(row=0, column=0)
 
         systolic_values = []
-        for item in self.monitored_patients.selection():  # For each patient selected
-            values = self.monitored_patients.item(item, "values")
+        for item in self.cholesterol_monitor.selection():  # For each patient selected
+            values = self.cholesterol_monitor.item(item, "values")
             try:
                 # Select patient from the list
                 patient = self.practitioner.get_monitored_patients().select_patient(values[0])
@@ -561,30 +603,8 @@ class App:
         graph_button = tk.Button(info_window, text="Graph Data", width=15, command=monitored_blood_pressure_graph)
         graph_button.grid(row=4, column=0)
 
-    # def update_display(self, tree):
-    #     """
-    #     Request new data from the server for each patient in the practitioner's monitored patients list
-    #     Update the information in the GUI display accordingly
-    #     """
-    #     # Get the practitioner's list of monitored patients
-    #     patient_list = self.practitioner.get_monitored_patients()
-    #     children = tree.get_children('')
-    #
-    #     # for each item, collect corresponding patient data and update
-    #     for child in children:
-    #         values = tree.item(child, "values")
-    #         # Get patient and patient data based on their full name
-    #         current_patient = patient_list.select_patient(values[0])
-    #         patient_data = current_patient.get_data()
-    #         # Update table with newly retrieved patient data
-    #         update_entry = (values[0], str(patient_data[0]) + " " + patient_data[1], patient_data[2])
-    #         tree.item(child, values=update_entry)
-    #
-    #     # Highlight patients with abnormal cholesterol value
-    #     self.highlight_patients(tree)
 
-
-def is_new_data(values, patient):
+def is_new_cholesterol_data(values, patient):
     """
     Check whether the new patient data is different to the current values
     :param values: current cholesterol values being displayed by the app
@@ -595,6 +615,22 @@ def is_new_data(values, patient):
     cholesterol_level = str(patient_data[0]) + " " + patient_data[1]
     effective_time = patient_data[2]
     if values[1] == cholesterol_level and values[2] == effective_time:
+        return False
+    return True
+
+
+def is_new_blood_pressure_data(values, patient):
+    """
+    Check whether the new patient data is different to the current values
+    :param values: current blood pressure values being displayed by the app
+    :param patient: a patient object which contains new patient data
+    :return: True if data differs, False otherwise
+    """
+    patient_data = patient.get_blood_pressure_data(0)
+    systolic_level = str(patient_data[0]) + patient_data[2]
+    diastolic_level = str(patient_data[1]) + patient_data[2]
+    effective_time = patient_data[3]
+    if values[0] == systolic_level and values[1] == diastolic_level and values[2] == effective_time:
         return False
     return True
 
@@ -622,7 +658,7 @@ def format_data(patient):
 
     # Assign new entry values
     new_entry = (patient_name, cholesterol_level, effective_time_cholesterol,
-                 systolic, diastolic, effective_time_blood_pressure)
+                 systolic, diastolic, effective_time_blood_pressure, patient_name)
 
     return new_entry
 
