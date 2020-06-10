@@ -20,6 +20,20 @@ class Observer(ABC):
         pass
 
 
+class CholesterolGraphicalMonitor(Observer, FigureCanvasTkAgg):
+
+    def update(self):
+        if self._subject is not None:  # If subject has not been specified, do nothing
+            self.get_tk_widget().grid()
+
+
+class BPGraphicalMonitor(Observer, FigureCanvasTkAgg):
+
+    def update(self):
+        if self._subject is not None:  # If subject has not been specified, do nothing
+            self.get_tk_widget().grid()
+
+
 class CholesterolMonitorTreeview(Observer, ttk.Treeview):
     """
     This class is the table which displays all of the patients being monitored and their data
@@ -77,8 +91,13 @@ class App:
         self.cholesterol_client = None
         self.blood_pressure_client = None
         self.update_interval = 30
+<<<<<<< HEAD
         self.systolic_limit = '125'
         self.diastolic_limit = '80'
+=======
+        self.systolic_limit = "130"
+        self.diastolic_limit = "80"
+>>>>>>> 26de348d2b270bc84525d21f162568b3c7e23227
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
@@ -93,6 +112,8 @@ class App:
         self.diastolic_limit_field = None
         self.diastolic_limit_label = None
         self.blood_pressure_monitor = None
+        self.cholesterol_graphical_monitor = None
+        self.BP_graphical_monitor = None
         self.selected_monitor_option = None
         self.option_menu = None
 
@@ -147,7 +168,7 @@ class App:
         self.all_patients.grid(row=2, column=0, columnspan=1)
         self.all_patients.bind("<Double-1>", self.add_monitored_patient)
 
-        # create monitored patients treeview with 6 columns
+        # create cholesterol monitor treeview
         cols = ('Name', 'Total Cholesterol', 'Time')
         self.cholesterol_monitor = CholesterolMonitorTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
@@ -336,6 +357,11 @@ class App:
                     time.sleep(1)
 
                 self.highlight_patients()
+<<<<<<< HEAD
+=======
+                # self.cholesterol_graph_data()
+                # self.blood_pressure_graph_data()
+>>>>>>> 26de348d2b270bc84525d21f162568b3c7e23227
 
                 # Sleep
                 time.sleep(self.update_interval)
@@ -489,8 +515,11 @@ class App:
 
         cholesterol_graph = tk.Toplevel()
         cholesterol_graph.title("Cholesterol Graph")
-        canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
-        canvas.get_tk_widget().grid()
+        self.cholesterol_graphical_monitor = CholesterolGraphicalMonitor(figure, master=cholesterol_graph)
+        self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
+        self.practitioner.get_monitored_patients().notify()
+        # canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
+        # canvas.get_tk_widget().grid()
 
     def blood_pressure_graph_data(self, event=None):
         """
@@ -501,16 +530,23 @@ class App:
                 patients = []
                 patient_systolic_data = []
                 patient_diastolic_data = []
-                children = self.blood_pressure_monitor.get_children('')
-                for child in children:
+                children_blood_pressure = self.blood_pressure_monitor.get_children('')
+                children_cholesterol = self.cholesterol_monitor.get_children('')
+                for child in children_blood_pressure:
                     values = self.blood_pressure_monitor.item(child, "values")
                     patient_systolic_blood_pressure = values[0].split('m')[0]
                     patient_diastolic_blood_pressure = values[1].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
                         patient_systolic_data.append(patient_systolic_blood_pressure)
                         patient_diastolic_data.append(patient_diastolic_blood_pressure)
-                        patient_name = values[0]
+
+                for child in children_cholesterol:
+                    values = self.cholesterol_monitor.item(child, "values")
+                    patient_cholesterol = values[1].split(' ')[0]
+                    patient_name = values[0]
+                    if patient_cholesterol != "-":
                         patients.append(patient_name)
+
                 X = patients
                 Y1 = patient_systolic_data
                 Y2 = patient_diastolic_data
@@ -537,8 +573,11 @@ class App:
 
         blood_pressure_graphs = tk.Toplevel()
         blood_pressure_graphs.title("Blood Pressure Graphs")
-        canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
-        canvas.get_tk_widget().grid()
+        self.BP_graphical_monitor = BPGraphicalMonitor(figure, master=blood_pressure_graphs)
+        self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
+        self.practitioner.get_monitored_patients().notify()
+        # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
+        # canvas.get_tk_widget().grid()
 
     def monitor_blood_pressure(self, event=None):
         """
