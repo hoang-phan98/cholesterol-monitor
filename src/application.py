@@ -142,7 +142,7 @@ class App:
         self.all_patients.grid(row=2, column=0, columnspan=1)
         self.all_patients.bind("<Double-1>", self.add_monitored_patient)
 
-        # create monitored patients treeview with 6 columns
+        # create cholesterol monitor treeview
         cols = ('Name', 'Total Cholesterol', 'Time')
         self.cholesterol_monitor = CholesterolMonitorTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
@@ -494,16 +494,23 @@ class App:
                 patients = []
                 patient_systolic_data = []
                 patient_diastolic_data = []
-                children = self.blood_pressure_monitor.get_children('')
-                for child in children:
+                children_blood_pressure = self.blood_pressure_monitor.get_children('')
+                children_cholesterol = self.cholesterol_monitor.get_children('')
+                for child in children_blood_pressure:
                     values = self.blood_pressure_monitor.item(child, "values")
                     patient_systolic_blood_pressure = values[0].split('m')[0]
                     patient_diastolic_blood_pressure = values[1].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
                         patient_systolic_data.append(patient_systolic_blood_pressure)
                         patient_diastolic_data.append(patient_diastolic_blood_pressure)
-                        patient_name = values[0]
+
+                for child in children_cholesterol:
+                    values = self.cholesterol_monitor.item(child, "values")
+                    patient_cholesterol = values[1].split(' ')[0]
+                    patient_name = values[0]
+                    if patient_cholesterol != "-":
                         patients.append(patient_name)
+
                 X = patients
                 Y1 = patient_systolic_data
                 Y2 = patient_diastolic_data

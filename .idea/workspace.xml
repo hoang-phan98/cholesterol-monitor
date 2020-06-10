@@ -512,7 +512,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591166140477</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Updated application graphs so the data is updated depending on the time interval.">
+      <created>1591238045892</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1591238045892</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -542,7 +549,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Adding title to the GUI window." />
     <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
     <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
     <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
@@ -567,7 +573,8 @@
     <MESSAGE value="Updating pop up window titles." />
     <MESSAGE value="Updating docstrings in application module." />
     <MESSAGE value="Updated application so the graphs update depending on the update interval." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated application so the graphs update depending on the update interval." />
+    <MESSAGE value="Updated application graphs so the data is updated depending on the time interval." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated application graphs so the data is updated depending on the time interval." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />
