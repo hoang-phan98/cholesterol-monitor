@@ -62,6 +62,11 @@ class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
                     self.item(item, values=format_data(current_patient)[3:])  # update the display with new data
 
 
+class GraphicalMonitor(Observer, Figure):
+    def update(self):
+        return
+
+
 class App:
     """
     Driver class which contains the logged in practitioner, client and UI components
@@ -72,8 +77,8 @@ class App:
         self.cholesterol_client = None
         self.blood_pressure_client = None
         self.update_interval = 30
-        self.systolic_limit = 130
-        self.diastolic_limit = 80
+        self.systolic_limit = '125'
+        self.diastolic_limit = '80'
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
@@ -158,6 +163,7 @@ class App:
         for col in cols:
             self.blood_pressure_monitor.heading(col, text=col)
         self.blood_pressure_monitor.grid(row=2, column=4, columnspan=4)
+        self.blood_pressure_monitor.bind("<Delete>", self.remove_monitored_patient)
 
         # create buttons
         add_patient_button = tk.Button(self.main_UI, text="Add Monitor", width=15, command=self.add_monitored_patient)
@@ -330,8 +336,6 @@ class App:
                     time.sleep(1)
 
                 self.highlight_patients()
-                self.cholesterol_graph_data()
-                self.blood_pressure_graph_data()
 
                 # Sleep
                 time.sleep(self.update_interval)
@@ -342,6 +346,7 @@ class App:
         also add the patient to the practitioner's monitored patients list object
         """
         selected = self.all_patients.selection()
+        values = None
         for item in selected:
             try:
                 values = self.all_patients.item(item, "values")
@@ -364,6 +369,8 @@ class App:
         """
         try:
             selected = self.cholesterol_monitor.selection()
+            if len(selected) == 0:
+                selected = self.blood_pressure_monitor.selection()
             for item in selected:
                 values = self.cholesterol_monitor.item(item, "values")
                 # Remove item from practitioner's monitored patient list
@@ -434,8 +441,8 @@ class App:
                 patient_systolic_blood_pressure = values[0].split('mm')[0]
                 patient_diastolic_blood_pressure = values[1].split('mm')[0]
                 try:
-                    if float(patient_systolic_blood_pressure) > self.systolic_limit or \
-                            float(patient_diastolic_blood_pressure) > self.diastolic_limit:
+                    if int(patient_systolic_blood_pressure) > int(self.systolic_limit) or \
+                            int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
                         self.blood_pressure_monitor.item(child, tags=['high blood pressure'])
                     else:
                         self.blood_pressure_monitor.item(child, tags=['normal'])
@@ -465,7 +472,7 @@ class App:
                         patients.append(patient_name)
                 X = patients
                 Y = patient_data
-                return (X, Y)
+                return X, Y
 
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
@@ -557,7 +564,7 @@ class App:
             values = self.blood_pressure_monitor.item(item, "values")
             systolic_value = values[0].split("m")[0]
 
-            if int(systolic_value) < self.systolic_limit:
+            if int(systolic_value) < int(self.systolic_limit):
                 continue    # Skip if systolic pressure does not exceed limit
 
             try:
