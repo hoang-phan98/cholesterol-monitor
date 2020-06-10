@@ -86,13 +86,8 @@ class App:
         self.cholesterol_client = None
         self.blood_pressure_client = None
         self.update_interval = 30
-<<<<<<< HEAD
         self.systolic_limit = '125'
         self.diastolic_limit = '80'
-=======
-        self.systolic_limit = "130"
-        self.diastolic_limit = "80"
->>>>>>> 26de348d2b270bc84525d21f162568b3c7e23227
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
@@ -352,11 +347,9 @@ class App:
                     time.sleep(1)
 
                 self.highlight_patients()
-<<<<<<< HEAD
-=======
+
                 # self.cholesterol_graph_data()
                 # self.blood_pressure_graph_data()
->>>>>>> 26de348d2b270bc84525d21f162568b3c7e23227
 
                 # Sleep
                 time.sleep(self.update_interval)
