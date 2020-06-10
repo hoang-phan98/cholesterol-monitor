@@ -20,6 +20,20 @@ class Observer(ABC):
         pass
 
 
+class CholesterolGraphicalMonitor(Observer, FigureCanvasTkAgg):
+
+    def update(self):
+        if self._subject is not None:  # If subject has not been specified, do nothing
+            self.get_tk_widget().grid()
+
+
+class BPGraphicalMonitor(Observer, FigureCanvasTkAgg):
+
+    def update(self):
+        if self._subject is not None:  # If subject has not been specified, do nothing
+            self.get_tk_widget().grid()
+
+
 class CholesterolMonitorTreeview(Observer, ttk.Treeview):
     """
     This class is the table which displays all of the patients being monitored and their data
@@ -72,8 +86,8 @@ class App:
         self.cholesterol_client = None
         self.blood_pressure_client = None
         self.update_interval = 30
-        self.systolic_limit = 130
-        self.diastolic_limit = 80
+        self.systolic_limit = "130"
+        self.diastolic_limit = "80"
         self.main_UI = None
         self.entry_field = None
         self.entry_label = None
@@ -88,6 +102,8 @@ class App:
         self.diastolic_limit_field = None
         self.diastolic_limit_label = None
         self.blood_pressure_monitor = None
+        self.cholesterol_graphical_monitor = None
+        self.BP_graphical_monitor = None
         self.selected_monitor_option = None
         self.option_menu = None
 
@@ -330,8 +346,8 @@ class App:
                     time.sleep(1)
 
                 self.highlight_patients()
-                self.cholesterol_graph_data()
-                self.blood_pressure_graph_data()
+                # self.cholesterol_graph_data()
+                # self.blood_pressure_graph_data()
 
                 # Sleep
                 time.sleep(self.update_interval)
@@ -434,8 +450,8 @@ class App:
                 patient_systolic_blood_pressure = values[0].split('mm')[0]
                 patient_diastolic_blood_pressure = values[1].split('mm')[0]
                 try:
-                    if float(patient_systolic_blood_pressure) > self.systolic_limit or \
-                            float(patient_diastolic_blood_pressure) > self.diastolic_limit:
+                    if int(patient_systolic_blood_pressure) > int(self.systolic_limit) or \
+                            int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
                         self.blood_pressure_monitor.item(child, tags=['high blood pressure'])
                     else:
                         self.blood_pressure_monitor.item(child, tags=['normal'])
@@ -482,8 +498,11 @@ class App:
 
         cholesterol_graph = tk.Toplevel()
         cholesterol_graph.title("Cholesterol Graph")
-        canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
-        canvas.get_tk_widget().grid()
+        self.cholesterol_graphical_monitor = CholesterolGraphicalMonitor(figure, master=cholesterol_graph)
+        self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
+        self.practitioner.get_monitored_patients().notify()
+        # canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
+        # canvas.get_tk_widget().grid()
 
     def blood_pressure_graph_data(self, event=None):
         """
@@ -537,8 +556,11 @@ class App:
 
         blood_pressure_graphs = tk.Toplevel()
         blood_pressure_graphs.title("Blood Pressure Graphs")
-        canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
-        canvas.get_tk_widget().grid()
+        self.BP_graphical_monitor = BPGraphicalMonitor(figure, master=blood_pressure_graphs)
+        self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
+        self.practitioner.get_monitored_patients().notify()
+        # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
+        # canvas.get_tk_widget().grid()
 
     def monitor_blood_pressure(self, event=None):
         """
@@ -564,7 +586,7 @@ class App:
             values = self.blood_pressure_monitor.item(item, "values")
             systolic_value = values[0].split("m")[0]
 
-            if int(systolic_value) < self.systolic_limit:
+            if int(systolic_value) < int(self.systolic_limit):
                 continue    # Skip if systolic pressure does not exceed limit
 
             try:

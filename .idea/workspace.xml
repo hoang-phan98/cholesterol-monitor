@@ -519,7 +519,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591238045892</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Updating blood pressure graphs so that it takes the new treeview instance correctly.">
+      <created>1591774702525</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1591774702525</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -549,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
     <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
     <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
     <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
@@ -574,7 +580,8 @@
     <MESSAGE value="Updating docstrings in application module." />
     <MESSAGE value="Updated application so the graphs update depending on the update interval." />
     <MESSAGE value="Updated application graphs so the data is updated depending on the time interval." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated application graphs so the data is updated depending on the time interval." />
+    <MESSAGE value="Updating blood pressure graphs so that it takes the new treeview instance correctly." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating blood pressure graphs so that it takes the new treeview instance correctly." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />
