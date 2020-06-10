@@ -526,7 +526,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591774702525</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Updating application to have a graphical observer.">
+      <created>1591786647924</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1591786647924</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -556,7 +563,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
     <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
     <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
     <MESSAGE value="removing unnecessary method after re evaluating the specs." />
@@ -581,7 +587,8 @@
     <MESSAGE value="Updated application so the graphs update depending on the update interval." />
     <MESSAGE value="Updated application graphs so the data is updated depending on the time interval." />
     <MESSAGE value="Updating blood pressure graphs so that it takes the new treeview instance correctly." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating blood pressure graphs so that it takes the new treeview instance correctly." />
+    <MESSAGE value="Updating application to have a graphical observer." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating application to have a graphical observer." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />

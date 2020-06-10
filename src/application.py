@@ -1,14 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
 from src.fhir_module import *
 from PIL import ImageTk, Image
 import pickle
 import time
 import threading
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 from abc import ABC, abstractmethod
+matplotlib.use("TkAgg")
 
 
 class Observer(ABC):
@@ -20,14 +22,7 @@ class Observer(ABC):
         pass
 
 
-class CholesterolGraphicalMonitor(Observer, FigureCanvasTkAgg):
-
-    def update(self):
-        if self._subject is not None:  # If subject has not been specified, do nothing
-            self.get_tk_widget().grid()
-
-
-class BPGraphicalMonitor(Observer, FigureCanvasTkAgg):
+class GraphicalMonitor(Observer, FigureCanvasTkAgg):
 
     def update(self):
         if self._subject is not None:  # If subject has not been specified, do nothing
@@ -434,7 +429,8 @@ class App:
                 values = self.cholesterol_monitor.item(child, "values")
                 patient_cholesterol = values[1].split(' ')[0]
                 try:
-                    if float(patient_cholesterol) > self.practitioner.get_monitored_patients().average_cholesterol_level:
+                    if float(
+                            patient_cholesterol) > self.practitioner.get_monitored_patients().average_cholesterol_level:
                         self.cholesterol_monitor.item(child, tags=['high cholesterol'])
                     else:
                         self.cholesterol_monitor.item(child, tags=['normal'])
@@ -476,7 +472,11 @@ class App:
                     values = self.cholesterol_monitor.item(child, "values")
                     patient_cholesterol = values[1].split(' ')[0]
                     if patient_cholesterol != "-":
-                        patient_data.append(patient_cholesterol)
+                        patient_data.append(float(patient_cholesterol))
+                        patient_name = values[0]
+                        patients.append(patient_name)
+                    else:
+                        patient_data.append(0)
                         patient_name = values[0]
                         patients.append(patient_name)
                 X = patients
@@ -491,14 +491,14 @@ class App:
         graph_data = self.cholesterol_graph_data()
         figure = Figure(figsize=(10, 5), dpi=100)
         subplot = figure.add_subplot(1, 1, 1)
-        subplot.bar(graph_data[0], graph_data[1])
+        subplot.bar(graph_data[0], graph_data[1], bottom=0)
         subplot.set_title("Patient Cholesterol Data (mg/dL)")
         subplot.set_xlabel("Patient Names")
         subplot.set_ylabel("Cholesterol Values")
 
         cholesterol_graph = tk.Toplevel()
         cholesterol_graph.title("Cholesterol Graph")
-        self.cholesterol_graphical_monitor = CholesterolGraphicalMonitor(figure, master=cholesterol_graph)
+        self.cholesterol_graphical_monitor = GraphicalMonitor(figure, master=cholesterol_graph)
         self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
         self.practitioner.get_monitored_patients().notify()
         # canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
@@ -520,8 +520,8 @@ class App:
                     patient_systolic_blood_pressure = values[0].split('m')[0]
                     patient_diastolic_blood_pressure = values[1].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
-                        patient_systolic_data.append(patient_systolic_blood_pressure)
-                        patient_diastolic_data.append(patient_diastolic_blood_pressure)
+                        patient_systolic_data.append(int(patient_systolic_blood_pressure))
+                        patient_diastolic_data.append(int(patient_diastolic_blood_pressure))
 
                 for child in children_cholesterol:
                     values = self.cholesterol_monitor.item(child, "values")
@@ -556,7 +556,7 @@ class App:
 
         blood_pressure_graphs = tk.Toplevel()
         blood_pressure_graphs.title("Blood Pressure Graphs")
-        self.BP_graphical_monitor = BPGraphicalMonitor(figure, master=blood_pressure_graphs)
+        self.BP_graphical_monitor = GraphicalMonitor(figure, master=blood_pressure_graphs)
         self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
         self.practitioner.get_monitored_patients().notify()
         # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
@@ -587,7 +587,7 @@ class App:
             systolic_value = values[0].split("m")[0]
 
             if int(systolic_value) < int(self.systolic_limit):
-                continue    # Skip if systolic pressure does not exceed limit
+                continue  # Skip if systolic pressure does not exceed limit
 
             try:
                 # Select patient from the list
@@ -599,7 +599,7 @@ class App:
             if patient is None:
                 return
 
-            output = ""     # output string with latest observations and effective time
+            output = ""  # output string with latest observations and effective time
             for i in range(5):  # get the latest 5 systolic observations
                 try:
                     current_data = patient.get_blood_pressure_data(i)
@@ -617,7 +617,7 @@ class App:
 
             x_values = []
             for i in range(len(systolic_values)):
-                x_values.append(i+1)
+                x_values.append(i + 1)
             X = x_values
             Y = systolic_values
 
