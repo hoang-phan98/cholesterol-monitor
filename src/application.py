@@ -22,12 +22,11 @@ class Observer(ABC):
         pass
 
 
-class GraphicalMonitor(Observer, FigureCanvasTkAgg):
+class GraphicalMonitor(Observer, Figure):
 
     def update(self):
         if self._subject is not None:  # If subject has not been specified, do nothing
-            return self
-            # self.get_tk_widget().grid()
+            self.show()
 
 
 class CholesterolMonitorTreeview(Observer, ttk.Treeview):
@@ -520,7 +519,7 @@ class App:
                         patients.append(patient_name)
                 X = patients
                 Y = patient_data
-                return X, Y
+                return (X, Y)
 
         except KeyError:
             messagebox.showinfo("Error", "No practitioner identifier given")
@@ -528,21 +527,19 @@ class App:
     def cholesterol_graph(self, event=None):
 
         graph_data = self.cholesterol_graph_data()
-        figure = Figure(figsize=(5, 5), dpi=100)
-        subplot = figure.add_subplot(1, 1, 1)
-        subplot.bar(graph_data[0], graph_data[1], bottom=0)
+        self.cholesterol_graphical_monitor = GraphicalMonitor(figsize=(5, 5), dpi=100)
+        subplot = self.cholesterol_graphical_monitor.add_subplot(1, 1, 1)
+        subplot.bar(graph_data[0], graph_data[1])
         subplot.set_title("Patient Cholesterol Data (mg/dL)")
         subplot.set_xlabel("Patient Names")
         subplot.set_ylabel("Cholesterol Values")
+        self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
 
         cholesterol_graph = tk.Toplevel()
         cholesterol_graph.title("Cholesterol Graph")
-        self.cholesterol_graphical_monitor = GraphicalMonitor(figure, master=cholesterol_graph)
-        self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
-        self.cholesterol_graphical_monitor.get_tk_widget().grid()
-        # self.practitioner.get_monitored_patients().notify()
-        # canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
-        # canvas.get_tk_widget().grid()
+        canvas = FigureCanvasTkAgg(self.cholesterol_graphical_monitor, master=cholesterol_graph)
+        canvas.get_tk_widget().grid()
+
 
     def blood_pressure_graph_data(self, event=None):
         """
@@ -582,26 +579,25 @@ class App:
 
         try:
             graph_data = self.blood_pressure_graph_data()
-            figure = Figure(figsize=(10, 5), dpi=100)
-            subplot = figure.add_subplot(1, 2, 1)
+            self.BP_graphical_monitor = GraphicalMonitor(figsize=(10, 5), dpi=100)
+            subplot = self.BP_graphical_monitor.add_subplot(1, 2, 1)
             subplot.bar(graph_data[0], graph_data[1])
             subplot.set_title("Patient Systolic Data (mgHg)")
             subplot.set_xlabel("Patient Names")
             subplot.set_ylabel("Systolic Blood Pressure Values")
 
-            subplot = figure.add_subplot(1, 2, 2)
+            subplot = self.BP_graphical_monitor.add_subplot(1, 2, 2)
             subplot.bar(graph_data[0], graph_data[2])
             subplot.set_title("Patient Diastolic Data (mgHg)")
             subplot.set_xlabel("Patient Names")
             subplot.set_ylabel("Diastolic Blood Pressure Values")
+            self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
 
             blood_pressure_graphs = tk.Toplevel()
             blood_pressure_graphs.title("Blood Pressure Graphs")
-            self.BP_graphical_monitor = GraphicalMonitor(figure, master=blood_pressure_graphs)
-            self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
-            self.BP_graphical_monitor.get_tk_widget().grid()
-            # self.practitioner.get_monitored_patients().notify()
-            # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
+            canvas = FigureCanvasTkAgg(self.BP_graphical_monitor, master=blood_pressure_graphs)
+            canvas.get_tk_widget().grid()
+
         except ValueError:
             print("Can't compute this graph, as there is not enough data")
 
@@ -680,19 +676,19 @@ class App:
                     X = x_values
                     Y = y_values
 
-                    figure = Figure(figsize=(5, 5), dpi=100)
+                    figure = GraphicalMonitor(figsize=(5, 5), dpi=100)
                     subplot = figure.add_subplot(1, 1, 1)
                     subplot.plot(X, Y)
                     subplot.set_title(patient_name + "'s Systolic Blood Pressure Data (mgHg)")
                     subplot.set_xlabel("Patient Names")
                     subplot.set_ylabel("Diastolic Blood Pressure Values")
+                    self.practitioner.get_monitored_patients().attach(figure)
 
                     systolic_graph = tk.Toplevel()
                     systolic_graph.title(patient_name + "'s Systolic Blood Pressure graph")
-                    graph_monitor = GraphicalMonitor(figure, master=systolic_graph)
-                    graph_monitor.get_tk_widget().grid()
-                    # canvas = FigureCanvasTkAgg(figure, master=systolic_graph)
-                    # canvas.get_tk_widget().grid()
+                    canvas = FigureCanvasTkAgg(figure, master=systolic_graph)
+                    canvas.get_tk_widget().grid()
+
                 else:
                     print("Can't compute this graph")
 

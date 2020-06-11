@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="16448be1-b86b-46db-b98a-df340a05f9e6" name="Default Changelist" comment="">
+    <list default="true" id="16448be1-b86b-46db-b98a-df340a05f9e6" name="Default Changelist" comment="Updating the monitored blood pressure graphs so it displays when selected in the pop up window.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
     </list>
@@ -276,11 +276,11 @@
     </configuration>
     <list>
       <item itemvalue="Python.TKInter" />
+      <item itemvalue="Python.__init__" />
       <item itemvalue="Python.address_module" />
+      <item itemvalue="Python.application" />
       <item itemvalue="Python.fhir_module" />
       <item itemvalue="Python.machine_learning_module" />
-      <item itemvalue="Python.__init__" />
-      <item itemvalue="Python.application" />
       <item itemvalue="Python.person_module" />
     </list>
     <recent_temporary>
@@ -296,7 +296,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="" />
+      <changelist id="16448be1-b86b-46db-b98a-df340a05f9e6" name="Default Changelist" comment="" />
       <created>1587445311843</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -519,7 +519,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591842580002</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Updating the monitored blood pressure graphs so it displays when selected in the pop up window.">
+      <created>1591854004003</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1591854004003</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -549,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
     <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
     <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
     <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
@@ -574,7 +580,8 @@
     <MESSAGE value="Updating docstrings in application module." />
     <MESSAGE value="Updated application so the graphs update depending on the update interval." />
     <MESSAGE value="Updating the graphical observer to notify the graphs if the data changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating the graphical observer to notify the graphs if the data changes." />
+    <MESSAGE value="Updating the monitored blood pressure graphs so it displays when selected in the pop up window." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating the monitored blood pressure graphs so it displays when selected in the pop up window." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />
