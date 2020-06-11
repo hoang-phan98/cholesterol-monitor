@@ -603,8 +603,9 @@ class App:
             values = self.blood_pressure_monitor.item(item, "values")
             systolic_value = values[0].split("m")[0]
 
-            if int(systolic_value) < int(self.systolic_limit):
-                continue  # Skip if systolic pressure does not exceed limit
+            if systolic_value != "-":
+                if int(systolic_value) < int(self.systolic_limit):
+                    continue  # Skip if systolic pressure does not exceed limit
 
             try:
                 # Select patient from the list
