@@ -482,12 +482,19 @@ class App:
                 patient_systolic_blood_pressure = values[0].split('mm')[0]
                 patient_diastolic_blood_pressure = values[1].split('mm')[0]
                 try:
-                    if int(patient_systolic_blood_pressure) > int(self.systolic_limit) or \
+                    if int(patient_systolic_blood_pressure) > int(self.systolic_limit) and \
                             int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
                         self.blood_pressure_monitor.item(child, tags=['high blood pressure'])
+                    elif int(patient_systolic_blood_pressure) > int(self.systolic_limit):
+                        self.blood_pressure_monitor.item(child, tags=['high systolic pressure'])
+                    elif int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
+                        self.blood_pressure_monitor.item(child, tags=['high diastolic pressure'])
                     else:
                         self.blood_pressure_monitor.item(child, tags=['normal'])
+
                     self.blood_pressure_monitor.tag_configure('normal', foreground=None)
+                    self.blood_pressure_monitor.tag_configure('high systolic pressure', foreground='yellow')
+                    self.blood_pressure_monitor.tag_configure('high diastolic pressure', foreground='blue')
                     self.blood_pressure_monitor.tag_configure('high blood pressure', foreground='purple')
                 except ValueError:
                     continue
