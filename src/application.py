@@ -573,27 +573,30 @@ class App:
 
     def blood_pressure_graph(self, event=None):
 
-        graph_data = self.blood_pressure_graph_data()
-        figure = Figure(figsize=(15, 5), dpi=100)
-        subplot = figure.add_subplot(1, 2, 1)
-        subplot.plot(graph_data[0], graph_data[1])
-        subplot.set_title("Patient Systolic Data (mgHg)")
-        subplot.set_xlabel("Patient Names")
-        subplot.set_ylabel("Systolic Blood Pressure Values")
+        try:
+            graph_data = self.blood_pressure_graph_data()
+            figure = Figure(figsize=(10, 5), dpi=100)
+            subplot = figure.add_subplot(1, 2, 1)
+            subplot.bar(graph_data[0], graph_data[1])
+            subplot.set_title("Patient Systolic Data (mgHg)")
+            subplot.set_xlabel("Patient Names")
+            subplot.set_ylabel("Systolic Blood Pressure Values")
 
-        subplot = figure.add_subplot(1, 2, 2)
-        subplot.plot(graph_data[0], graph_data[2])
-        subplot.set_title("Patient Diastolic Data (mgHg)")
-        subplot.set_xlabel("Patient Names")
-        subplot.set_ylabel("Diastolic Blood Pressure Values")
+            subplot = figure.add_subplot(1, 2, 2)
+            subplot.bar(graph_data[0], graph_data[2])
+            subplot.set_title("Patient Diastolic Data (mgHg)")
+            subplot.set_xlabel("Patient Names")
+            subplot.set_ylabel("Diastolic Blood Pressure Values")
 
-        blood_pressure_graphs = tk.Toplevel()
-        blood_pressure_graphs.title("Blood Pressure Graphs")
-        self.BP_graphical_monitor = GraphicalMonitor(figure, master=blood_pressure_graphs)
-        self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
-        self.BP_graphical_monitor.get_tk_widget().grid()
-        # self.practitioner.get_monitored_patients().notify()
-        # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
+            blood_pressure_graphs = tk.Toplevel()
+            blood_pressure_graphs.title("Blood Pressure Graphs")
+            self.BP_graphical_monitor = GraphicalMonitor(figure, master=blood_pressure_graphs)
+            self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
+            self.BP_graphical_monitor.get_tk_widget().grid()
+            # self.practitioner.get_monitored_patients().notify()
+            # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
+        except ValueError:
+            print("Can't compute this graph, as there is not enough data")
 
     def monitor_blood_pressure(self, event=None):
         """
@@ -649,24 +652,42 @@ class App:
             new_entry = (patient.first_name + " " + patient.last_name, output)
             patient_info.insert("", "end", values=new_entry)
 
-            x_values = []
-            for i in range(len(systolic_values)):
-                x_values.append(i + 1)
-            X = x_values
-            Y = systolic_values
-
         def monitored_blood_pressure_graph():
-            figure = Figure(figsize=(5, 5), dpi=100)
-            subplot = figure.add_subplot(1, 1, 1)
-            subplot.plot(X, Y)
-            subplot.set_title(patient.first_name + " " + patient.last_name + "'s Systolic Blood Pressure Data (mgHg)")
-            subplot.set_xlabel("Patient Names")
-            subplot.set_ylabel("Diastolic Blood Pressure Values")
 
-            systolic_graph = tk.Toplevel()
-            systolic_graph.title(patient.first_name + " " + patient.last_name + "'s Systolic Blood Pressure graph")
-            canvas = FigureCanvasTkAgg(figure, master=systolic_graph)
-            canvas.get_tk_widget().grid()
+            for item in patient_info.selection():
+                values = patient_info.item(item, "values")
+                patient_name = values[0]
+                systolic_data = values[1]
+                if systolic_data != "No data":
+                    data = systolic_data.rstrip()
+                    data = data.split(", ")
+                    # data = systolic_data.split(", ")
+                    y_values = []
+                    for value in data:
+                        value = value.split(" ")[0]
+                        y_values.append(float(value))
+
+                    x_values = []
+                    for i in range(len(y_values)):
+                        x_values.append(i + 1)
+                    X = x_values
+                    Y = y_values
+
+                    figure = Figure(figsize=(5, 5), dpi=100)
+                    subplot = figure.add_subplot(1, 1, 1)
+                    subplot.plot(X, Y)
+                    subplot.set_title(patient_name + "'s Systolic Blood Pressure Data (mgHg)")
+                    subplot.set_xlabel("Patient Names")
+                    subplot.set_ylabel("Diastolic Blood Pressure Values")
+
+                    systolic_graph = tk.Toplevel()
+                    systolic_graph.title(patient_name + "'s Systolic Blood Pressure graph")
+                    graph_monitor = GraphicalMonitor(figure, master=systolic_graph)
+                    graph_monitor.get_tk_widget().grid()
+                    # canvas = FigureCanvasTkAgg(figure, master=systolic_graph)
+                    # canvas.get_tk_widget().grid()
+                else:
+                    print("Can't compute this graph")
 
         graph_button = tk.Button(info_window, text="Graph Data", width=15, command=monitored_blood_pressure_graph)
         graph_button.grid(row=4, column=0)
