@@ -26,7 +26,8 @@ class GraphicalMonitor(Observer, FigureCanvasTkAgg):
 
     def update(self):
         if self._subject is not None:  # If subject has not been specified, do nothing
-            self.get_tk_widget().grid()
+            return self
+            # self.get_tk_widget().grid()
 
 
 class CholesterolMonitorTreeview(Observer, ttk.Treeview):
@@ -344,9 +345,8 @@ class App:
                     time.sleep(1)
 
                 self.highlight_patients()
-
-                # self.cholesterol_graph_data()
-                # self.blood_pressure_graph_data()
+                self.cholesterol_graph_data()
+                self.blood_pressure_graph_data()
 
                 # Sleep
                 time.sleep(self.update_interval)
@@ -511,10 +511,6 @@ class App:
                         patient_data.append(float(patient_cholesterol))
                         patient_name = values[0]
                         patients.append(patient_name)
-                    else:
-                        patient_data.append(0)
-                        patient_name = values[0]
-                        patients.append(patient_name)
                 X = patients
                 Y = patient_data
                 return X, Y
@@ -525,7 +521,7 @@ class App:
     def cholesterol_graph(self, event=None):
 
         graph_data = self.cholesterol_graph_data()
-        figure = Figure(figsize=(10, 5), dpi=100)
+        figure = Figure(figsize=(5, 5), dpi=100)
         subplot = figure.add_subplot(1, 1, 1)
         subplot.bar(graph_data[0], graph_data[1], bottom=0)
         subplot.set_title("Patient Cholesterol Data (mg/dL)")
@@ -536,7 +532,8 @@ class App:
         cholesterol_graph.title("Cholesterol Graph")
         self.cholesterol_graphical_monitor = GraphicalMonitor(figure, master=cholesterol_graph)
         self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
-        self.practitioner.get_monitored_patients().notify()
+        self.cholesterol_graphical_monitor.get_tk_widget().grid()
+        # self.practitioner.get_monitored_patients().notify()
         # canvas = FigureCanvasTkAgg(figure, master=cholesterol_graph)
         # canvas.get_tk_widget().grid()
 
@@ -594,9 +591,9 @@ class App:
         blood_pressure_graphs.title("Blood Pressure Graphs")
         self.BP_graphical_monitor = GraphicalMonitor(figure, master=blood_pressure_graphs)
         self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
-        self.practitioner.get_monitored_patients().notify()
+        self.BP_graphical_monitor.get_tk_widget().grid()
+        # self.practitioner.get_monitored_patients().notify()
         # canvas = FigureCanvasTkAgg(figure, master=blood_pressure_graphs)
-        # canvas.get_tk_widget().grid()
 
     def monitor_blood_pressure(self, event=None):
         """
@@ -622,8 +619,9 @@ class App:
             values = self.blood_pressure_monitor.item(item, "values")
             systolic_value = values[0].split("m")[0]
 
-            if int(systolic_value) < int(self.systolic_limit):
-                continue  # Skip if systolic pressure does not exceed limit
+            if systolic_value != "-":
+                if int(systolic_value) < int(self.systolic_limit):
+                    continue  # Skip if systolic pressure does not exceed limit
 
             try:
                 # Select patient from the list
