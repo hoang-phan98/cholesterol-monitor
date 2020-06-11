@@ -71,11 +71,6 @@ class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
                     self.item(item, values=format_data(current_patient)[3:])  # update the display with new data
 
 
-class GraphicalMonitor(Observer, Figure):
-    def update(self):
-        return
-
-
 class App:
     """
     Driver class which contains the logged in practitioner, client and UI components
@@ -248,7 +243,7 @@ class App:
             self.selected_monitor_option.set(monitor_options[0])
             self.option_menu = tk.OptionMenu(self.main_UI, self.selected_monitor_option, *monitor_options)
             self.option_menu.grid(row=0, column=3)
-            update_monitor_button = tk.Button(self.main_UI, text="Update Monitor", width=15)
+            update_monitor_button = tk.Button(self.main_UI, text="Update Monitor", width=15, command=self.update_monitor)
             update_monitor_button.grid(row=1, column=3)
 
             # Time interval entry
@@ -336,9 +331,11 @@ class App:
         while True:
             # Execute if there's at least one patient being monitored
             if len(self.practitioner.get_monitored_patients()) > 0:
-                # Request data from server
-                self.practitioner.get_patient_data(self.cholesterol_client)
-                self.practitioner.get_patient_data(self.blood_pressure_client)
+                # Request data from server depending on monitor option
+                if self.selected_monitor_option.get() == "Cholesterol" or self.selected_monitor_option.get() == "Both":
+                    self.practitioner.get_patient_data(self.cholesterol_client)
+                if self.selected_monitor_option.get() == "Blood Pressure" or self.selected_monitor_option.get() == "Both":
+                    self.practitioner.get_patient_data(self.blood_pressure_client)
 
                 # Notify Treeview observer of data changes
                 try:
@@ -364,10 +361,15 @@ class App:
         for item in selected:
             try:
                 values = self.all_patients.item(item, "values")
-                if not duplicate_item(self.cholesterol_monitor, values):
-                    # Add patient to treeview
-                    self.cholesterol_monitor.insert("", "end", values=values[:3])
-                    self.blood_pressure_monitor.insert("", "end", values=values[3:])
+                if not duplicate_item(self.cholesterol_monitor, values[:3]) and \
+                        not duplicate_item(self.blood_pressure_monitor, values[3:]):
+
+                    # Add patient to treeview depending on monitor option
+                    if self.selected_monitor_option.get() == "Cholesterol" or self.selected_monitor_option.get() == "Both":
+                        self.cholesterol_monitor.insert("", "end", values=values[:3])
+                    if self.selected_monitor_option.get() == "Blood Pressure" or self.selected_monitor_option.get() == "Both":
+                        self.blood_pressure_monitor.insert("", "end", values=values[3:])
+
                     # Add patient to practitioner's monitored patient list
                     self.practitioner.add_patient_monitor(values[0])
                     self.highlight_patients()
@@ -386,12 +388,36 @@ class App:
             if len(selected) == 0:
                 selected = self.blood_pressure_monitor.selection()
             for item in selected:
-                values = self.cholesterol_monitor.item(item, "values")
-                # Remove item from practitioner's monitored patient list
-                self.practitioner.remove_patient_monitor(values[0])
-                # Remove item from treeviews
-                self.cholesterol_monitor.delete(item)
-                self.blood_pressure_monitor.delete(item)
+
+                try:
+                    # Get the values from cholesterol monitor
+                    values = self.cholesterol_monitor.item(item, "values")
+
+                    # Remove item from practitioner's monitored patient list
+                    self.practitioner.remove_patient_monitor(values[0])
+
+                    # Remove item from Cholesterol monitor
+                    index = self.cholesterol_monitor.get_children().index(item)
+                    self.cholesterol_monitor.delete(item)
+
+                    # Remove the same item from BP monitor
+                    item = self.blood_pressure_monitor.get_children()[index]
+                    self.blood_pressure_monitor.delete(item)
+                except tk.TclError:
+                    # Get the values from BP monitor
+                    values = self.blood_pressure_monitor.item(item, "values")
+
+                    # Remove item from practitioner's monitored patient list
+                    self.practitioner.remove_patient_monitor(values[-1])
+
+                    # Remove item from BP monitor
+                    index = self.blood_pressure_monitor.get_children().index(item)
+                    self.blood_pressure_monitor.delete(item)
+
+                    # Remove the same item from Cholesterol monitor
+                    item = self.cholesterol_monitor.get_children()[index]
+                    self.cholesterol_monitor.delete(item)
+
             self.highlight_patients()
         except IndexError:
             return
@@ -647,6 +673,33 @@ class App:
         graph_button = tk.Button(info_window, text="Graph Data", width=15, command=monitored_blood_pressure_graph)
         graph_button.grid(row=4, column=0)
 
+    def update_monitor(self):
+        if self.selected_monitor_option.get() == "Cholesterol":
+            self.blood_pressure_monitor.delete(*self.blood_pressure_monitor.get_children())
+            for patient in self.practitioner.get_monitored_patients().get_patient_list():
+                values = format_data(patient)
+                if not duplicate_item(self.cholesterol_monitor, values[:3]):
+                    self.cholesterol_monitor.insert("", "end", values=values[:3])
+
+        if self.selected_monitor_option.get() == "Blood Pressure":
+            self.cholesterol_monitor.delete(*self.cholesterol_monitor.get_children())
+            for patient in self.practitioner.get_monitored_patients().get_patient_list():
+                values = format_data(patient)
+                if not duplicate_item(self.blood_pressure_monitor, values[3:]):
+                    self.blood_pressure_monitor.insert("", "end", values=values[3:])
+
+        if self.selected_monitor_option.get() == "Both":
+            self.cholesterol_monitor.delete(*self.cholesterol_monitor.get_children())
+            self.blood_pressure_monitor.delete(*self.blood_pressure_monitor.get_children())
+            for patient in self.practitioner.get_monitored_patients().get_patient_list():
+                values = format_data(patient)
+                if not duplicate_item(self.cholesterol_monitor, values[:3]):
+                    self.cholesterol_monitor.insert("", "end", values=values[:3])
+                if not duplicate_item(self.blood_pressure_monitor, values[3:]):
+                    self.blood_pressure_monitor.insert("", "end", values=values[3:])
+
+        self.highlight_patients()
+
 
 def is_new_cholesterol_data(values, patient):
     """
@@ -714,7 +767,7 @@ def duplicate_item(tree, item):
     :param item: an item to be added
     :return: True if item already in list of children, False otherwise
     """
-    children = tree.get_children('')
+    children = tree.get_children()
     for child in children:
         values = tree.item(child, "values")
         if values == item:
