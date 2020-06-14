@@ -65,7 +65,7 @@ class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
             children = self.get_children('')
             for item in children:
                 values = self.item(item, "values")
-                patient_name = values[-1]
+                patient_name = values[0]
                 current_patient = self._subject.select_patient(patient_name)
                 if is_new_blood_pressure_data(values, current_patient):  # Check if the new values are different
                     self.item(item, values=format_data(current_patient)[3:])  # update the display with new data
@@ -164,7 +164,7 @@ class App:
         self.cholesterol_monitor.bind("<Delete>", self.remove_monitored_patient)
 
         # create blood pressure monitor treeview
-        cols = ('Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time')
+        cols = ('Name', 'Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time')
         self.blood_pressure_monitor = BloodPressureMonitorTreeview(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.blood_pressure_monitor.heading(col, text=col)
@@ -414,7 +414,7 @@ class App:
                     values = self.blood_pressure_monitor.item(item, "values")
 
                     # Remove item from practitioner's monitored patient list
-                    self.practitioner.remove_patient_monitor(values[-1])
+                    self.practitioner.remove_patient_monitor(values[0])
 
                     # Remove item from BP monitor
                     index = self.blood_pressure_monitor.get_children().index(item)
@@ -499,8 +499,8 @@ class App:
             children = self.blood_pressure_monitor.get_children('')
             for child in children:
                 values = self.blood_pressure_monitor.item(child, "values")
-                patient_systolic_blood_pressure = values[0].split('mm')[0]
-                patient_diastolic_blood_pressure = values[1].split('mm')[0]
+                patient_systolic_blood_pressure = values[1].split('mm')[0]
+                patient_diastolic_blood_pressure = values[2].split('mm')[0]
                 try:
                     if int(patient_systolic_blood_pressure) > int(self.systolic_limit) and \
                             int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
@@ -574,8 +574,8 @@ class App:
                 children_cholesterol = self.cholesterol_monitor.get_children('')
                 for child in children_blood_pressure:
                     values = self.blood_pressure_monitor.item(child, "values")
-                    patient_systolic_blood_pressure = values[0].split('m')[0]
-                    patient_diastolic_blood_pressure = values[1].split('m')[0]
+                    patient_systolic_blood_pressure = values[1].split('m')[0]
+                    patient_diastolic_blood_pressure = values[2].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
                         patient_systolic_data.append(int(patient_systolic_blood_pressure))
                         patient_diastolic_data.append(int(patient_diastolic_blood_pressure))
@@ -643,15 +643,17 @@ class App:
         for item in self.blood_pressure_monitor.get_children():  # For each patient
             systolic_values = []
             values = self.blood_pressure_monitor.item(item, "values")
-            systolic_value = values[0].split("m")[0]
+            systolic_value = values[1].split("m")[0]
 
             if systolic_value != "-":
                 if int(systolic_value) < int(self.systolic_limit):
                     continue  # Skip if systolic pressure does not exceed limit
+            else:
+                continue
 
             try:
                 # Select patient from the list
-                patient = self.practitioner.get_monitored_patients().select_patient(values[-1])
+                patient = self.practitioner.get_monitored_patients().select_patient(values[0])
             except AttributeError:
                 return
             except IndexError:
@@ -663,6 +665,7 @@ class App:
             for i in range(5):  # get the latest 5 systolic observations
                 try:
                     current_data = patient.get_blood_pressure_data(i)
+                    # append systolic value and effective date to output
                     output += str(current_data[0]) + " (" + current_data[-1] + "), "
                     systolic_values.append(current_data[0])
                 except IndexError:
@@ -815,7 +818,7 @@ def format_data(patient):
 
     # Assign new entry values
     new_entry = (patient_name, cholesterol_level, effective_time_cholesterol,
-                 systolic, diastolic, effective_time_blood_pressure, patient_name)
+                 patient_name, systolic, diastolic, effective_time_blood_pressure)
 
     return new_entry
 
