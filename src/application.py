@@ -326,11 +326,12 @@ class App:
 
     def request_patient_data(self):
         """
-        Request new patient data from server and update display every N seconds
+        Request new patient data from server depending on monitor type and update display every N seconds
         """
         while True:
             # Execute if there's at least one patient being monitored
             if len(self.practitioner.get_monitored_patients()) > 0:
+
                 # Request data from server depending on monitor option
                 if self.selected_monitor_option.get() == "Cholesterol" or self.selected_monitor_option.get() == "Both":
                     self.practitioner.get_patient_data(self.cholesterol_client)
@@ -352,7 +353,7 @@ class App:
 
     def add_monitored_patient(self, event=None):
         """
-        Add a patient from the list of all patients to the list of monitored patients
+        Add a patient from the list of all patients to the relevant monitor(s)
         also add the patient to the practitioner's monitored patients list object
         """
         selected = self.all_patients.selection()
@@ -383,9 +384,14 @@ class App:
         also remove the patient to the practitioner's monitored patients list object
         """
         try:
+
+            # Prioritize selection from cholesterol monitor
             selected = self.cholesterol_monitor.selection()
             if len(selected) == 0:
+                # If no selection from cholesterol monitor, try blood pressure monitor
                 selected = self.blood_pressure_monitor.selection()
+
+            # For each selected patients
             for item in selected:
 
                 try:
@@ -402,6 +408,7 @@ class App:
                     # Remove the same item from BP monitor
                     item = self.blood_pressure_monitor.get_children()[index]
                     self.blood_pressure_monitor.delete(item)
+
                 except tk.TclError:
                     # Get the values from BP monitor
                     values = self.blood_pressure_monitor.item(item, "values")
@@ -425,10 +432,24 @@ class App:
         """
         Display the selected patient's personal info in a pop-up window
         """
-        for item in self.cholesterol_monitor.selection():
-            values = self.cholesterol_monitor.item(item, "values")
+        # Prioritize selection from cholesterol monitor
+        selected_patients = self.cholesterol_monitor.selection()
+        if len(selected_patients) == 0:
+            # If no selection from cholesterol monitor, try blood pressure monitor
+            selected_patients = self.blood_pressure_monitor.selection()
+
+        # For each selected patient
+        for item in selected_patients:
+            # Get the values from the cholesterol monitor
             try:
-                # Select patient from the list
+                values = self.cholesterol_monitor.item(item, "values")
+            except tk.TclError:
+                index = self.blood_pressure_monitor.get_children().index(item)
+                item = self.cholesterol_monitor.get_children()[index]
+                values = self.cholesterol_monitor.item(item, "values")
+
+            # Select patient from the list
+            try:
                 patient = self.practitioner.get_monitored_patients().select_patient(values[0])
             except AttributeError:
                 return
@@ -539,7 +560,6 @@ class App:
         cholesterol_graph.title("Cholesterol Graph")
         canvas = FigureCanvasTkAgg(self.cholesterol_graphical_monitor, master=cholesterol_graph)
         canvas.get_tk_widget().grid()
-
 
     def blood_pressure_graph_data(self, event=None):
         """
@@ -696,23 +716,40 @@ class App:
         graph_button.grid(row=4, column=0)
 
     def update_monitor(self):
+        """Updates the app's GUI display depending on the selected monitor type"""
+
+        # If the selected monitor option is Cholesterol only
         if self.selected_monitor_option.get() == "Cholesterol":
+
+            # Delete existing blood pressure display
             self.blood_pressure_monitor.delete(*self.blood_pressure_monitor.get_children())
+
+            # Build the cholesterol display based on the practitioner's monitored patient list
             for patient in self.practitioner.get_monitored_patients().get_patient_list():
                 values = format_data(patient)
                 if not duplicate_item(self.cholesterol_monitor, values[:3]):
                     self.cholesterol_monitor.insert("", "end", values=values[:3])
 
+        # If the selected monitor option is Blood Pressure only
         if self.selected_monitor_option.get() == "Blood Pressure":
+
+            # Delete existing cholesterol display
             self.cholesterol_monitor.delete(*self.cholesterol_monitor.get_children())
+
+            # Build the blood pressure display based on the practitioner's monitored patient list
             for patient in self.practitioner.get_monitored_patients().get_patient_list():
                 values = format_data(patient)
                 if not duplicate_item(self.blood_pressure_monitor, values[3:]):
                     self.blood_pressure_monitor.insert("", "end", values=values[3:])
 
+        # If the selected monitor option is both cholesterol and blood pressure
         if self.selected_monitor_option.get() == "Both":
+
+            # Delete both existing monitors
             self.cholesterol_monitor.delete(*self.cholesterol_monitor.get_children())
             self.blood_pressure_monitor.delete(*self.blood_pressure_monitor.get_children())
+
+            # Rebuild the monitors based on the practitioner's monitored patient list
             for patient in self.practitioner.get_monitored_patients().get_patient_list():
                 values = format_data(patient)
                 if not duplicate_item(self.cholesterol_monitor, values[:3]):
@@ -720,12 +757,13 @@ class App:
                 if not duplicate_item(self.blood_pressure_monitor, values[3:]):
                     self.blood_pressure_monitor.insert("", "end", values=values[3:])
 
+        # Highlight the abnormal values in each monitors
         self.highlight_patients()
 
 
 def is_new_cholesterol_data(values, patient):
     """
-    Check whether the new patient data is different to the current values
+    Check whether the new patient cholesterol data is different to the current values
     :param values: current cholesterol values being displayed by the app
     :param patient: a patient object which contains new patient data
     :return: True if data differs, False otherwise
@@ -740,7 +778,7 @@ def is_new_cholesterol_data(values, patient):
 
 def is_new_blood_pressure_data(values, patient):
     """
-    Check whether the new patient data is different to the current values
+    Check whether the new patient blood pressure data is different to the current values
     :param values: current blood pressure values being displayed by the app
     :param patient: a patient object which contains new patient data
     :return: True if data differs, False otherwise
