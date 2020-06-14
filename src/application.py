@@ -113,7 +113,7 @@ class App:
 
     def set_systolic_limit(self, event=None):
         systolic_limit = self.systolic_limit_field.get()
-        self.systolic_limit = int(systolic_limit)
+        self.systolic_limit = float(systolic_limit)
         self.systolic_limit_label.destroy()
         self.systolic_limit_label = tk.Label(self.main_UI, text="Systolic BP Limit: " + str(self.systolic_limit))
         self.systolic_limit_label.grid(row=0, column=4, rowspan=2)
@@ -121,7 +121,7 @@ class App:
 
     def set_diastolic_limit(self, event=None):
         diastolic_limit = self.diastolic_limit_field.get()
-        self.diastolic_limit = int(diastolic_limit)
+        self.diastolic_limit = float(diastolic_limit)
         self.diastolic_limit_label.destroy()
         self.diastolic_limit_label = tk.Label(self.main_UI, text="Diastolic BP Limit: " + str(self.diastolic_limit))
         self.diastolic_limit_label.grid(row=0, column=6, rowspan=2)
@@ -502,12 +502,12 @@ class App:
                 patient_systolic_blood_pressure = values[1].split('mm')[0]
                 patient_diastolic_blood_pressure = values[2].split('mm')[0]
                 try:
-                    if int(patient_systolic_blood_pressure) > int(self.systolic_limit) and \
-                            int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
+                    if float(patient_systolic_blood_pressure) > float(self.systolic_limit) and \
+                            float(patient_diastolic_blood_pressure) > float(self.diastolic_limit):
                         self.blood_pressure_monitor.item(child, tags=['high blood pressure'])
-                    elif int(patient_systolic_blood_pressure) > int(self.systolic_limit):
+                    elif float(patient_systolic_blood_pressure) > float(self.systolic_limit):
                         self.blood_pressure_monitor.item(child, tags=['high systolic pressure'])
-                    elif int(patient_diastolic_blood_pressure) > int(self.diastolic_limit):
+                    elif float(patient_diastolic_blood_pressure) > float(self.diastolic_limit):
                         self.blood_pressure_monitor.item(child, tags=['high diastolic pressure'])
                     else:
                         self.blood_pressure_monitor.item(child, tags=['normal'])
@@ -577,8 +577,8 @@ class App:
                     patient_systolic_blood_pressure = values[1].split('m')[0]
                     patient_diastolic_blood_pressure = values[2].split('m')[0]
                     if patient_systolic_blood_pressure != "-" and patient_diastolic_blood_pressure != "-":
-                        patient_systolic_data.append(int(patient_systolic_blood_pressure))
-                        patient_diastolic_data.append(int(patient_diastolic_blood_pressure))
+                        patient_systolic_data.append(float(patient_systolic_blood_pressure))
+                        patient_diastolic_data.append(float(patient_diastolic_blood_pressure))
 
                 for child in children_cholesterol:
                     values = self.cholesterol_monitor.item(child, "values")
@@ -646,7 +646,7 @@ class App:
             systolic_value = values[1].split("m")[0]
 
             if systolic_value != "-":
-                if int(systolic_value) < int(self.systolic_limit):
+                if float(systolic_value) < float(self.systolic_limit):
                     continue  # Skip if systolic pressure does not exceed limit
             else:
                 continue
