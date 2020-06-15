@@ -595,11 +595,15 @@ class App:
         graph_data = self.cholesterol_graph_data()
         self.cholesterol_graphical_monitor = GraphicalMonitor(figsize=(5, 5), dpi=100)
         subplot = self.cholesterol_graphical_monitor.add_subplot(1, 1, 1)
-        subplot.bar(graph_data[0], graph_data[1])
-        subplot.set_title("Patient Cholesterol Data (mg/dL)")
+        bars = subplot.bar(graph_data[0], graph_data[1])
+        subplot.set_title("Patient Cholesterol Data")
         subplot.set_xlabel("Patient Names")
-        subplot.set_ylabel("Cholesterol Values")
+        subplot.set_ylabel("Cholesterol Values (mg/dL)")
         self.practitioner.get_monitored_patients().attach(self.cholesterol_graphical_monitor)
+
+        for bar in bars:
+            yval = bar.get_height()
+            subplot.text(bar.get_x(), yval + 1, yval)
 
         cholesterol_graph = tk.Toplevel()
         cholesterol_graph.title("Cholesterol Graph")
@@ -645,18 +649,26 @@ class App:
         try:
             graph_data = self.blood_pressure_graph_data()
             self.BP_graphical_monitor = GraphicalMonitor(figsize=(10, 5), dpi=100)
-            subplot = self.BP_graphical_monitor.add_subplot(1, 2, 1)
-            subplot.bar(graph_data[0], graph_data[1])
-            subplot.set_title("Patient Systolic Data (mgHg)")
-            subplot.set_xlabel("Patient Names")
-            subplot.set_ylabel("Systolic Blood Pressure Values")
+            subplot1 = self.BP_graphical_monitor.add_subplot(1, 2, 1)
+            bars1 = subplot1.bar(graph_data[0], graph_data[1])
+            subplot1.set_title("Patient Systolic Data")
+            subplot1.set_xlabel("Patient Names")
+            subplot1.set_ylabel("Systolic Blood Pressure Values (mmHg)")
 
-            subplot = self.BP_graphical_monitor.add_subplot(1, 2, 2)
-            subplot.bar(graph_data[0], graph_data[2])
-            subplot.set_title("Patient Diastolic Data (mgHg)")
-            subplot.set_xlabel("Patient Names")
-            subplot.set_ylabel("Diastolic Blood Pressure Values")
+            subplot2 = self.BP_graphical_monitor.add_subplot(1, 2, 2)
+            bars2 = subplot2.bar(graph_data[0], graph_data[2])
+            subplot2.set_title("Patient Diastolic Data")
+            subplot2.set_xlabel("Patient Names")
+            subplot2.set_ylabel("Diastolic Blood Pressure Values (mmHg)")
             self.practitioner.get_monitored_patients().attach(self.BP_graphical_monitor)
+
+            for bar1 in bars1:
+                yval1 = bar1.get_height()
+                subplot1.text(bar1.get_x(), yval1 + 1, yval1)
+
+            for bar2 in bars2:
+                yval2 = bar2.get_height()
+                subplot2.text(bar2.get_x(), yval2 + 1, yval2)
 
             blood_pressure_graphs = tk.Toplevel()
             blood_pressure_graphs.title("Blood Pressure Graphs")
@@ -742,6 +754,7 @@ class App:
                         value = value.split(" ")[0]
                         y_values.append(float(value))
 
+                    y_values.reverse()                  # gets the systolic values in chronological order
                     x_values = []
                     for i in range(len(y_values)):
                         x_values.append(i + 1)
@@ -751,9 +764,9 @@ class App:
                     figure = GraphicalMonitor(figsize=(5, 5), dpi=100)
                     subplot = figure.add_subplot(1, 1, 1)
                     subplot.plot(X, Y)
-                    subplot.set_title(patient_name + "'s Systolic Blood Pressure Data (mgHg)")
+                    subplot.set_title(patient_name + "'s Systolic Blood Pressure Data")
                     subplot.set_xlabel("Patient Names")
-                    subplot.set_ylabel("Diastolic Blood Pressure Values")
+                    subplot.set_ylabel("Systolic Blood Pressure Values (mmHg)")
                     self.practitioner.get_monitored_patients().attach(figure)
 
                     systolic_graph = tk.Toplevel()
