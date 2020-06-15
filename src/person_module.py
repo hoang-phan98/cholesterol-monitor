@@ -1,4 +1,5 @@
 from src.patientdata_module import CholesterolData, BloodPressureData
+import tkinter as tk
 
 
 class Person:
@@ -60,7 +61,7 @@ class HealthPractitioner(Person):
         :return: None
         """
         for patient in self._monitored_patients.get_patient_list():
-            print("Requesting data for " + patient.first_name+" "+patient.last_name+"...")
+            # print("Requesting data for " + patient.first_name+" "+patient.last_name+"...")
             patient.update_data(client.get_patient_data(patient.id))
 
     def get_all_patients(self):
@@ -193,7 +194,10 @@ class PatientList:
 
     def notify(self):
         for observer in self._observers:
-            observer.update()
+            try:
+                observer.update()
+            except tk.TclError:
+                self.detach(observer)
 
 
 class Address:

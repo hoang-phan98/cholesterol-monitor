@@ -71,6 +71,28 @@ class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
                     self.item(item, values=format_data(current_patient)[3:])  # update the display with new data
 
 
+class BloodPressureHistoricalMonitor(Observer, ttk.Treeview):
+    """
+    This class is a table which displays the latest 5 systolic blood pressure observations for all patients with
+    a high systolic blood pressure level
+    """
+
+    def update(self):
+        """
+        Update the table according to the Patient List object being observed
+        :return: None
+        """
+        if self._subject is not None:  # If subject has not been specified, do nothing
+            children = self.get_children('')
+            for item in children:
+                values = self.item(item, "values")
+                patient_name = values[0]
+                current_patient = self._subject.select_patient(patient_name)
+                new_data = format_historical_systolic_data(current_patient)
+                if new_data != values:  # Check if the new values are different
+                    self.item(item, values=new_data)  # update the display with new data
+
+
 class App:
     """
     Driver class which contains the logged in practitioner, client and UI components
@@ -80,7 +102,7 @@ class App:
         self.practitioner = None
         self.cholesterol_client = None
         self.blood_pressure_client = None
-        self.update_interval = 30
+        self.update_interval = 5
         self.systolic_limit = '125'
         self.diastolic_limit = '80'
         self.main_UI = None
@@ -112,19 +134,33 @@ class App:
         self.practitioner = practitioner
 
     def set_systolic_limit(self, event=None):
+        """Set the systolic limit entered and update the display"""
+
+        # Get value from entry field and update the app's attribute
         systolic_limit = self.systolic_limit_field.get()
         self.systolic_limit = float(systolic_limit)
+
+        # Update the display
         self.systolic_limit_label.destroy()
         self.systolic_limit_label = tk.Label(self.main_UI, text="Systolic BP Limit: " + str(self.systolic_limit))
         self.systolic_limit_label.grid(row=0, column=4, rowspan=2)
+
+        # Highlight the patients based on the new limit
         self.highlight_patients()
 
     def set_diastolic_limit(self, event=None):
+        """Set the diastolic limit entered and update the display"""
+
+        # Get value from entry field and update the app's attribute
         diastolic_limit = self.diastolic_limit_field.get()
         self.diastolic_limit = float(diastolic_limit)
+
+        # Update the display
         self.diastolic_limit_label.destroy()
         self.diastolic_limit_label = tk.Label(self.main_UI, text="Diastolic BP Limit: " + str(self.diastolic_limit))
         self.diastolic_limit_label.grid(row=0, column=6, rowspan=2)
+
+        # Highlight the patients based on the new limit
         self.highlight_patients()
 
     def run(self):
@@ -334,8 +370,12 @@ class App:
 
                 # Request data from server depending on monitor option
                 if self.selected_monitor_option.get() == "Cholesterol" or self.selected_monitor_option.get() == "Both":
+                    print("Requesting cholesterol data for " +
+                          str(len(self.practitioner.get_monitored_patients().get_patient_list())) + " patient(s)")
                     self.practitioner.get_patient_data(self.cholesterol_client)
                 if self.selected_monitor_option.get() == "Blood Pressure" or self.selected_monitor_option.get() == "Both":
+                    print("Requesting blood pressure data for " +
+                          str(len(self.practitioner.get_monitored_patients().get_patient_list())) + " patient(s)")
                     self.practitioner.get_patient_data(self.blood_pressure_client)
 
                 # Notify Treeview observer of data changes
@@ -475,8 +515,13 @@ class App:
 
     def highlight_patients(self):
         """
-        Check the cholesterol level of each monitored patient
-        If the level is higher than the average of all monitored patients, highlight this patient in red
+        For the cholesterol monitor:
+        If the cholesterol level is higher than the average of all monitored patients, highlight this patient in red
+
+        For the blood pressure monitor:
+        If the systolic level is higher than the limit, highlight this patient in yellow
+        If the diastolic level is higher than the limit, highlight this patient in blue
+        If the both levels are higher than the limits, highlight this patient in purple
         """
         try:
             # Cholesterol Monitor
@@ -513,7 +558,7 @@ class App:
                         self.blood_pressure_monitor.item(child, tags=['normal'])
 
                     self.blood_pressure_monitor.tag_configure('normal', foreground=None)
-                    self.blood_pressure_monitor.tag_configure('high systolic pressure', foreground='yellow')
+                    self.blood_pressure_monitor.tag_configure('high systolic pressure', foreground='green')
                     self.blood_pressure_monitor.tag_configure('high diastolic pressure', foreground='blue')
                     self.blood_pressure_monitor.tag_configure('high blood pressure', foreground='purple')
                 except ValueError:
@@ -631,7 +676,7 @@ class App:
         info_window = tk.Toplevel()
         info_window.title("Blood Pressure Monitor")
         cols = ("Name", "Latest systolic blood pressure observations")
-        patient_info = ttk.Treeview(info_window, columns=cols, show='headings')
+        patient_info = BloodPressureHistoricalMonitor(info_window, columns=cols, show='headings')
         for col in cols:
             patient_info.heading(col, text=col)
             if col == "Latest systolic blood pressure observations":
@@ -645,6 +690,7 @@ class App:
             values = self.blood_pressure_monitor.item(item, "values")
             systolic_value = values[1].split("m")[0]
 
+            # If systolic value is not nothing
             if systolic_value != "-":
                 if float(systolic_value) < float(self.systolic_limit):
                     continue  # Skip if systolic pressure does not exceed limit
@@ -677,6 +723,9 @@ class App:
             # Add new entry for the patient in the table
             new_entry = (patient.first_name + " " + patient.last_name, output)
             patient_info.insert("", "end", values=new_entry)
+
+            # Add to observer list
+            self.practitioner.get_monitored_patients().attach(patient_info)
 
         def monitored_blood_pressure_graph():
 
@@ -821,6 +870,24 @@ def format_data(patient):
                  patient_name, systolic, diastolic, effective_time_blood_pressure)
 
     return new_entry
+
+
+def format_historical_systolic_data(patient):
+    """
+    Return the historical systolic data in a format which can be used by the display
+    :param patient:  patient which contains patient data
+    :return: a tuple of the patient's name and the formatted data
+    """
+    output = ""  # output string with latest observations and effective time
+    for i in range(5):  # get the latest 5 systolic observations
+        try:
+            current_data = patient.get_blood_pressure_data(i)
+            # append systolic value and effective date to output
+            output += str(current_data[0]) + " (" + current_data[-1] + "), "
+        except IndexError:
+            continue
+
+    return patient.first_name + " " + patient.last_name, output
 
 
 def duplicate_item(tree, item):
