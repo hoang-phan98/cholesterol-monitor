@@ -533,7 +533,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591880549349</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Updating the monitored graphs to show the data in chronological order.">
+      <created>1592131738577</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1592131738577</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -563,7 +570,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
     <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
     <MESSAGE value="removing unnecessary method after re evaluating the specs." />
     <MESSAGE value="Adding necessary import to fhir_module." />
@@ -588,7 +594,8 @@
     <MESSAGE value="Updating the graphical observer to notify the graphs if the data changes." />
     <MESSAGE value="Updating the monitored blood pressure graphs so it displays when selected in the pop up window." />
     <MESSAGE value="Updating the GraphicalMonitor (observer) class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating the GraphicalMonitor (observer) class" />
+    <MESSAGE value="Updating the monitored graphs to show the data in chronological order." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating the monitored graphs to show the data in chronological order." />
   </component>
   <component name="WindowStateProjectService">
     <state x="484" y="13" key="#application" />
