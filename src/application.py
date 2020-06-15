@@ -29,7 +29,7 @@ class GraphicalMonitor(Observer, Figure):
             self.show()
 
 
-class CholesterolMonitorTreeview(Observer, ttk.Treeview):
+class CholesterolMonitor(Observer, ttk.Treeview):
     """
     This class is the table which displays all of the patients being monitored and their data
     It observes the monitored patient list and update its display accordingly
@@ -50,7 +50,7 @@ class CholesterolMonitorTreeview(Observer, ttk.Treeview):
                     self.item(item, values=format_data(current_patient)[:3])  # update the display with new data
 
 
-class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
+class BloodPressureMonitor(Observer, ttk.Treeview):
     """
     This class is the table which displays all of the patients being monitored and their data
     It observes the monitored patient list and update its display accordingly
@@ -71,7 +71,7 @@ class BloodPressureMonitorTreeview(Observer, ttk.Treeview):
                     self.item(item, values=format_data(current_patient)[3:])  # update the display with new data
 
 
-class BloodPressureHistoricalMonitor(Observer, ttk.Treeview):
+class HistoricalSystolicMonitor(Observer, ttk.Treeview):
     """
     This class is a table which displays the latest 5 systolic blood pressure observations for all patients with
     a high systolic blood pressure level
@@ -191,7 +191,7 @@ class App:
 
         # create cholesterol monitor treeview
         cols = ('Name', 'Total Cholesterol', 'Time')
-        self.cholesterol_monitor = CholesterolMonitorTreeview(self.main_UI, columns=cols, show='headings')
+        self.cholesterol_monitor = CholesterolMonitor(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.cholesterol_monitor.heading(col, text=col)
             self.cholesterol_monitor.column(col, width=150)
@@ -201,7 +201,7 @@ class App:
 
         # create blood pressure monitor treeview
         cols = ('Name', 'Systolic Blood Pressure', 'Diastolic Blood Pressure', 'Time')
-        self.blood_pressure_monitor = BloodPressureMonitorTreeview(self.main_UI, columns=cols, show='headings')
+        self.blood_pressure_monitor = BloodPressureMonitor(self.main_UI, columns=cols, show='headings')
         for col in cols:
             self.blood_pressure_monitor.heading(col, text=col)
         self.blood_pressure_monitor.grid(row=2, column=4, columnspan=4)
@@ -688,7 +688,7 @@ class App:
         info_window = tk.Toplevel()
         info_window.title("Blood Pressure Monitor")
         cols = ("Name", "Latest systolic blood pressure observations")
-        patient_info = BloodPressureHistoricalMonitor(info_window, columns=cols, show='headings')
+        patient_info = HistoricalSystolicMonitor(info_window, columns=cols, show='headings')
         for col in cols:
             patient_info.heading(col, text=col)
             if col == "Latest systolic blood pressure observations":
