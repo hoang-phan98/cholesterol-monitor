@@ -765,7 +765,7 @@ class App:
                     subplot = figure.add_subplot(1, 1, 1)
                     subplot.plot(X, Y)
                     subplot.set_title(patient_name + "'s Systolic Blood Pressure Data")
-                    subplot.set_xlabel("Patient Names")
+                    subplot.set_xlabel("Observations")
                     subplot.set_ylabel("Systolic Blood Pressure Values (mmHg)")
                     self.practitioner.get_monitored_patients().attach(figure)
 
