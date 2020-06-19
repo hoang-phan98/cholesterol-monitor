@@ -19,10 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="">
+    <list default="true" id="16448be1-b86b-46db-b98a-df340a05f9e6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/person_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/person_module.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +37,37 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="Assignment-3" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1apvNhsZY8K49qlxGqqZYAt8843" />
@@ -53,7 +83,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../FIT2085/Pracs/Prac_7_(Interview_2)/Prac_7_files/stack.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -266,7 +296,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0de74e52-c3f6-492c-b852-1a2a47b4ed5b" name="Default Changelist" comment="" />
+      <changelist id="16448be1-b86b-46db-b98a-df340a05f9e6" name="Default Changelist" comment="" />
       <created>1587445311843</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -440,21 +470,84 @@
       <option name="project" value="LOCAL" />
       <updated>1590048344571</updated>
     </task>
-    <task id="LOCAL-00025" summary="Creating new data set for the machine learning technique.">
-      <created>1590072870244</created>
+    <task id="LOCAL-00025" summary="Implementing cholesterol_graph method, creates pop up window of graph.">
+      <created>1590934894697</created>
       <option name="number" value="00025" />
       <option name="presentableId" value="LOCAL-00025" />
       <option name="project" value="LOCAL" />
-      <updated>1590072870244</updated>
+      <updated>1590934894697</updated>
     </task>
-    <task id="LOCAL-00026" summary="Creating graph_cholesterol method in the application, as well as updating the GUI to accommodate the change (WIP).">
-      <created>1590914390064</created>
+    <task id="LOCAL-00026" summary="Graphing the monitored systolic blood pressure for selected patient.">
+      <created>1590980566605</created>
       <option name="number" value="00026" />
       <option name="presentableId" value="LOCAL-00026" />
       <option name="project" value="LOCAL" />
-      <updated>1590914390064</updated>
+      <updated>1590980566605</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph.">
+      <created>1590981307828</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1590981307828</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Updating pop up window titles.">
+      <created>1590982648941</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1590982648941</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Updating docstrings in application module.">
+      <created>1590990922677</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1590990922677</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Updated application so the graphs update depending on the update interval.">
+      <created>1591166140477</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1591166140477</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Updating the graphical observer to notify the graphs if the data changes.">
+      <created>1591842580002</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1591842580002</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Updating the monitored blood pressure graphs so it displays when selected in the pop up window.">
+      <created>1591854004003</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1591854004003</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Updating the GraphicalMonitor (observer) class">
+      <created>1591880549349</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1591880549349</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Updating the monitored graphs to show the data in chronological order.">
+      <created>1592131738577</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1592131738577</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Updating bar graphs so the value is shown above the graph data.">
+      <created>1592188736066</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1592188736066</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -484,14 +577,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="creating address, person and subject modules (WIP)" />
-    <MESSAGE value="Updating Subject class methods.&#10;Creating observer_module.&#10;adding select_patient method to PatientList class." />
-    <MESSAGE value="Removing unnecessary method in subject_module." />
-    <MESSAGE value="Adding title to the GUI window." />
-    <MESSAGE value="Inserting image on the GUI, need to configure the file path (WIP)." />
-    <MESSAGE value="Installing tensorflow package for machine learning task, and creating module for algorithms." />
-    <MESSAGE value="Updating machine_learning_module to use linear regression (WIP)" />
-    <MESSAGE value="creating get_patient_diagnostics method which returns the reason for a patients high cholesterol. (WIP)" />
     <MESSAGE value="removing unnecessary method after re evaluating the specs." />
     <MESSAGE value="Adding necessary import to fhir_module." />
     <MESSAGE value="Adding patient_id csv file." />
@@ -506,77 +591,58 @@
     <MESSAGE value="Adding docstrings to machine_learning_module methods." />
     <MESSAGE value="Updating requirements file" />
     <MESSAGE value="Updating the machine learning algorithm to predict if a patients cholesterol value is higher than it should be." />
-    <MESSAGE value="Creating new data set for the machine learning technique." />
-    <MESSAGE value="Creating graph_cholesterol method in the application, as well as updating the GUI to accommodate the change (WIP)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Creating graph_cholesterol method in the application, as well as updating the GUI to accommodate the change (WIP)." />
+    <MESSAGE value="Implementing cholesterol_graph method, creates pop up window of graph." />
+    <MESSAGE value="Graphing the monitored systolic blood pressure for selected patient." />
+    <MESSAGE value="Updating the monitored blood pressure pop up window so the practitioner must press a button to view the graph." />
+    <MESSAGE value="Updating pop up window titles." />
+    <MESSAGE value="Updating docstrings in application module." />
+    <MESSAGE value="Updated application so the graphs update depending on the update interval." />
+    <MESSAGE value="Updating the graphical observer to notify the graphs if the data changes." />
+    <MESSAGE value="Updating the monitored blood pressure graphs so it displays when selected in the pop up window." />
+    <MESSAGE value="Updating the GraphicalMonitor (observer) class" />
+    <MESSAGE value="Updating the monitored graphs to show the data in chronological order." />
+    <MESSAGE value="Updating bar graphs so the value is shown above the graph data." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating bar graphs so the value is shown above the graph data." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="484" y="13" key="#application" timestamp="1588834590216">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="484" y="13" key="#application/0.0.1536.834@0.0.1536.834" timestamp="1588834590216" />
-    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1589730918536">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1589730918536" />
-    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1587807984543" />
-    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" timestamp="1587807984543" />
-    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1589790928899">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.834@0.0.1536.834" timestamp="1589790928899" />
-    <state width="1033" height="466" key="DebuggerActiveHint" timestamp="1588934494032">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1033" height="466" key="DebuggerActiveHint/0.0.1536.834@0.0.1536.834" timestamp="1588934494032" />
-    <state x="549" y="159" key="FileChooserDialogImpl" timestamp="1589787292095">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="549" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1589787292095" />
-    <state width="1515" height="213" key="GridCell.Tab.0.bottom" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="213" key="GridCell.Tab.0.center" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="213" key="GridCell.Tab.0.left" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="213" key="GridCell.Tab.0.right" timestamp="1589881563662">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" timestamp="1587872382423" />
-    <state width="1515" height="213" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589881563662" />
-    <state width="1515" height="264" key="GridCell.Tab.1.bottom" timestamp="1589808055197">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" timestamp="1587872382230" />
-    <state width="1515" height="264" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589808055197" />
-    <state width="1515" height="264" key="GridCell.Tab.1.center" timestamp="1589808055196">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" timestamp="1587872382229" />
-    <state width="1515" height="264" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
-    <state width="1515" height="264" key="GridCell.Tab.1.left" timestamp="1589808055196">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" timestamp="1587872382229" />
-    <state width="1515" height="264" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
-    <state width="1515" height="264" key="GridCell.Tab.1.right" timestamp="1589808055196">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="1259" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" timestamp="1587872382230" />
-    <state width="1515" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1589808055196" />
-    <state x="277" y="62" key="SettingsEditor" timestamp="1589866288015">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="277" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1589866288015" />
+    <state x="484" y="13" key="#application" />
+    <state x="484" y="13" key="#application/0.0.1536.834@0.0.1536.834" />
+    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog" />
+    <state x="223" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" />
+    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser" />
+    <state x="406" y="147" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1280.689@0.0.1280.689" />
+    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" />
+    <state x="499" y="164" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.834@0.0.1536.834" />
+    <state width="1033" height="466" key="DebuggerActiveHint" />
+    <state width="1033" height="466" key="DebuggerActiveHint/0.0.1536.834@0.0.1536.834" />
+    <state x="549" y="159" key="FileChooserDialogImpl" />
+    <state x="549" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.bottom" />
+    <state width="1259" height="208" key="GridCell.Tab.0.bottom/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.center" />
+    <state width="1259" height="208" key="GridCell.Tab.0.center/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.left" />
+    <state width="1259" height="208" key="GridCell.Tab.0.left/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="213" key="GridCell.Tab.0.right" />
+    <state width="1259" height="208" key="GridCell.Tab.0.right/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="213" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.bottom" />
+    <state width="1259" height="208" key="GridCell.Tab.1.bottom/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.center" />
+    <state width="1259" height="208" key="GridCell.Tab.1.center/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.left" />
+    <state width="1259" height="208" key="GridCell.Tab.1.left/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" />
+    <state width="1515" height="264" key="GridCell.Tab.1.right" />
+    <state width="1259" height="208" key="GridCell.Tab.1.right/0.0.1280.689@0.0.1280.689" />
+    <state width="1515" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" />
+    <state x="277" y="62" key="SettingsEditor" />
+    <state x="277" y="62" key="SettingsEditor/0.0.1536.834@0.0.1536.834" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

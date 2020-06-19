@@ -1,3 +1,7 @@
+from src.patientdata_module import CholesterolData, BloodPressureData
+import tkinter as tk
+
+
 class Person:
     def __init__(self, first_name, last_name, person_id):
         self.first_name = first_name
@@ -6,12 +10,14 @@ class Person:
 
 
 class Patient(Person):
-    def __init__(self, first_name, last_name, person_id, birth_date, gender, address, patient_data=None):
+    def __init__(self, first_name, last_name, person_id, birth_date, gender, address,
+                 cholesterol_data=None, blood_pressure_data=None):
         super().__init__(first_name, last_name, person_id)
         self.birth_date = birth_date
         self.gender = gender
         self.address = address
-        self.patient_data = patient_data
+        self.cholesterol_data = cholesterol_data
+        self.blood_pressure_data = blood_pressure_data
 
     def get_address(self):
         """
@@ -20,12 +26,18 @@ class Patient(Person):
         """
         return self.address.line[0]+", "+self.address.city+", "+self.address.state+", "+self.address.country
 
-    def update_data(self, patient_data):
-        self.patient_data = patient_data
+    def update_data(self, data):
+        if isinstance(data, CholesterolData):
+            self.cholesterol_data = data
+        else:
+            self.blood_pressure_data = data
         return
 
-    def get_data(self):
-        return self.patient_data.get_data()
+    def get_cholesterol_data(self):
+        return self.cholesterol_data.get_data()
+
+    def get_blood_pressure_data(self, index):
+        return self.blood_pressure_data[index].get_data()
 
 
 class HealthPractitioner(Person):
@@ -49,7 +61,7 @@ class HealthPractitioner(Person):
         :return: None
         """
         for patient in self._monitored_patients.get_patient_list():
-            print("Requesting data for " + patient.first_name+" "+patient.last_name+"...")
+            # print("Requesting data for " + patient.first_name+" "+patient.last_name+"...")
             patient.update_data(client.get_patient_data(patient.id))
 
     def get_all_patients(self):
@@ -169,9 +181,13 @@ class PatientList:
         total = 0
         no_of_valid_patients = 0
         for patient in self._patient_list:
-            if isinstance(patient.get_data()[0], float):
-                total += patient.get_data()[0]
+            try:
+                total += patient.get_cholesterol_data()[0]
                 no_of_valid_patients += 1
+            except AttributeError:
+                continue
+            except TypeError:
+                continue
         if no_of_valid_patients == 0:
             return 0
         average = total/no_of_valid_patients
@@ -188,7 +204,10 @@ class PatientList:
 
     def notify(self):
         for observer in self._observers:
-            observer.update()
+            try:
+                observer.update()
+            except tk.TclError:
+                self.detach(observer)
 
 
 class Address:
